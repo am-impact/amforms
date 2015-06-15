@@ -1,0 +1,28 @@
+{% extends 'amforms/_layouts/settings' %}
+
+{% set title = 'General'|t %}
+{% set selectedTab = 'general' %}
+
+{% block fields %}
+    {{ forms.lightswitchField({
+        label: general.quietErrors.name|t,
+        id: general.quietErrors.handle,
+        name: general.quietErrors.handle,
+        on: general.quietErrors.value,
+        instructions: 'Whether to silently log an error or throw an exception if a form does not exist. By default, it will throw an exception.'|t
+    }) }}
+    {{ forms.lightswitchField({
+        label: general.storeSubmissions.name|t,
+        id: general.storeSubmissions.handle,
+        name: general.storeSubmissions.handle,
+        on: general.storeSubmissions.value,
+        instructions: 'Whether to store new form submissions.'|t
+    }) }}
+    {{ forms.lightswitchField({
+        label: general.useMandrillForEmail.name|t,
+        id: general.useMandrillForEmail.handle,
+        name: general.useMandrillForEmail.handle,
+        on: general.useMandrillForEmail.value,
+        instructions: 'Switching this on will require a&m mailer in order to work.'|t
+    }) }}
+{% endblock %}

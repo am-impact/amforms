@@ -1,0 +1,28 @@
+{%- set submitValue = (form.submitButton ? form.submitButton : 'Submit'|t) -%}
+{%- set submitAction = (form.submitAction ? form.submitAction : 'amForms/submissions/saveSubmission') -%}
+
+<form method="post" accept-charset="utf-8" enctype="multipart/form-data">
+    {% if form.submitAction -%}
+        {# Submit form to third party #}
+        <input type="hidden" name="action" value="{{ submitAction }}">
+    {% else -%}
+        {# Submit form to Am Forms #}
+        {{ getCsrfInput() }}
+        <input type="hidden" name="action" value="{{ submitAction }}">
+        <input type="hidden" name="handle" value="{{ form.handle }}">
+    {% endif -%}
+
+    {% if form.redirectUri -%}
+        <input type="hidden" name="redirect" value="{{ form.redirectUri }}">
+    {% endif %}
+
+    <div class="fields">
+        {% include 'tab' with {
+            tabs: form.getFieldLayout().getTabs()
+        } %}
+    </div>
+
+    <div class="submit">
+        <input type="submit" value="{{ submitValue }}">
+    </div>
+</form>

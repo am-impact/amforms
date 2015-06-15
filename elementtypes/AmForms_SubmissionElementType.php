@@ -1,0 +1,188 @@
+<?php
+namespace Craft;
+
+class AmForms_SubmissionElementType extends BaseElementType
+{
+    /**
+     * Returns the element type name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return Craft::t('Submission');
+    }
+
+    /**
+     * Returns whether this element type has content.
+     *
+     * @return bool
+     */
+    public function hasContent()
+    {
+        return true;
+    }
+
+    /**
+     * Returns whether this element type has titles.
+     *
+     * @return bool
+     */
+    public function hasTitles()
+    {
+        return true;
+    }
+
+    /**
+     * Returns whether this element type stores data on a per-locale basis.
+     *
+     * @return bool
+     */
+    public function isLocalized()
+    {
+        return false;
+    }
+
+    /**
+     * Returns this element type's sources.
+     *
+     * @param string|null $context
+     *
+     * @return array|false
+     */
+    public function getSources($context = null)
+    {
+        $sources = array(
+            '*' => array(
+                'label' => Craft::t('All submissions'),
+            )
+        );
+
+        $forms = craft()->amForms_forms->getAllForms();
+        if ($forms) {
+            foreach ($forms as $form) {
+                $key = 'formId:'.$form->id;
+                $sources[$key] = array(
+                    'label'    => $form->name,
+                    'criteria' => array('formId' => $form->id)
+                );
+            }
+        }
+
+        return $sources;
+    }
+
+    /**
+     * Returns the attributes that can be shown/sorted by in table views.
+     *
+     * @param string|null $source
+     *
+     * @return array
+     */
+    public function defineTableAttributes($source = null)
+    {
+        return array(
+            'title'       => Craft::t('Title'),
+            'formName'    => Craft::t('Form name'),
+            'dateCreated' => Craft::t('Date created'),
+            'dateUpdated' => Craft::t('Date updated')
+        );
+    }
+
+    /**
+     * Returns the attributes that can be sorted by in table views.
+     *
+     * @return array
+     */
+    public function defineSortableAttributes()
+    {
+        return array(
+            'formName'    => Craft::t('Form name'),
+            'dateCreated' => Craft::t('Date created'),
+            'dateUpdated' => Craft::t('Date updated')
+        );
+    }
+
+    /**
+     * Defines any custom element criteria attributes for this element type.
+     *
+     * @return array
+     */
+    public function defineCriteriaAttributes()
+    {
+        return array(
+            'order'      => array(AttributeType::String, 'default' => 'dateCreated desc'),
+            'title'      => AttributeType::String,
+            'formId'     => AttributeType::Number,
+            'formHandle' => AttributeType::String
+        );
+    }
+
+    /**
+     * Defines which model attributes should be searchable.
+     *
+     * @return array
+     */
+    public function defineSearchableAttributes()
+    {
+        return array('id', 'title', 'formName');
+    }
+
+    /**
+     * Modifies an element query targeting elements of this type.
+     *
+     * @param DbCommand            $query
+     * @param ElementCriteriaModel $criteria
+     *
+     * @return mixed
+     */
+    public function modifyElementsQuery(DbCommand $query, ElementCriteriaModel $criteria)
+    {
+        $query->addSelect('submissions.id,
+                           submissions.ipAddress,
+                           submissions.userAgent,
+                           submissions.dateCreated,
+                           submissions.dateUpdated,
+                           submissions.uid,
+                           forms.id as formId,
+                           forms.name as formName');
+        $query->join('amforms_submissions submissions', 'submissions.id = elements.id');
+        $query->join('amforms_forms forms', 'forms.id = submissions.formId');
+
+        if ($criteria->id) {
+            $query->andWhere(DbHelper::parseParam('submissions.id', $criteria->id, $query->params));
+        }
+        if ($criteria->formId) {
+            $query->andWhere(DbHelper::parseParam('submissions.formId', $criteria->formId, $query->params));
+        }
+        if ($criteria->formHandle) {
+            $query->andWhere(DbHelper::parseParam('forms.handle', $criteria->formHandle, $query->params));
+        }
+        if ($criteria->order) {
+            // Trying to order by date creates ambiguity errors
+            // Let's make sure mysql knows what we want to sort by
+            if (stripos($criteria->order, 'elements.') === false) {
+                $criteria->order = str_replace('dateCreated', 'submissions.dateCreated', $criteria->order);
+                $criteria->order = str_replace('dateUpdated', 'submissions.dateUpdated', $criteria->order);
+            }
+
+            // If we are sorting by title and do not have a source
+            // We won't be able to sort, so bail on it
+            if (stripos($criteria->order, 'title') !== false && ! $criteria->formId) {
+                $criteria->order = null;
+            }
+        }
+    }
+
+    /**
+     * Populates an element model based on a query result.
+     *
+     * @param array $row
+     *
+     * @return array
+     */
+    public function populateElementModel($row)
+    {
+        return AmForms_SubmissionModel::populateModel($row);
+    }
+}

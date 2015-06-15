@@ -1,0 +1,12 @@
+{% for tab in tabs -%}
+    {% set fields = tab.getFields() -%}
+
+    <div class="tab">
+        {% for field in fields %}
+            {% include 'field' with {
+                field:    field.getField(),
+                required: field.required
+            } %}
+        {% endfor %}
+    </div>
+{% endfor %}

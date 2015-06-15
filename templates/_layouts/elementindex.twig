@@ -1,0 +1,20 @@
+{% extends '_layouts/elementindex' %}
+
+{% set title = craft.amForms.name %}
+
+{% set tabs = {
+    forms:  {
+        label: 'Forms'|t,
+        url: url('amforms/forms')
+    },
+    submissions:  {
+        label: 'Submissions'|t,
+        url: url('amforms/submissions')
+    }
+} %}
+
+{% if currentUser.can('editAmFormsSettings') %}
+    {% set extraPageHeaderHtml %}
+      <a class="btn settings icon" href="{{ url('amforms/settings') }}" title="{{ 'Settings'|t }}"></a>
+    {% endset %}
+{% endif %}

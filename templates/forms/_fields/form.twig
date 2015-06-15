@@ -1,0 +1,68 @@
+{{ forms.textField({
+    label: 'Name'|t,
+    id: 'name',
+    name: 'name',
+    value: form.name,
+    errors: form.getErrors('name'),
+    first: true,
+    autofocus: true,
+    required: true,
+    instructions: 'Name of this form in the CP.'|t
+}) }}
+{{ forms.textField({
+    label: 'Handle'|t,
+    id: 'handle',
+    name: 'handle',
+    value: form.handle,
+    errors: form.getErrors('handle'),
+    required: true,
+    instructions: 'Name of this form in the templates.'|t
+}) }}
+<hr>
+{{ forms.textField({
+    label: 'Redirect page'|t,
+    id: 'redirectUri',
+    name: 'redirectUri',
+    value: form.redirectUri,
+    errors: form.getErrors('redirectUri'),
+    instructions: 'Where to redirect to upon form submission.'|t,
+    placeholder: siteUrl
+}) }}
+<hr>
+{{ forms.textField({
+    label: 'Title format'|t,
+    id: 'titleFormat',
+    name: 'titleFormat',
+    value: form.titleFormat,
+    errors: form.getErrors('titleFormat'),
+    required: true,
+    instructions: 'Submission titles are auto-generated based on the title format you enter here.'|t
+}) }}
+<hr>
+{{ forms.textField({
+    label: 'Custom submit button text'|t,
+    id: 'submitButton',
+    name: 'submitButton',
+    value: form.submitButton,
+    errors: form.getErrors('submitButton'),
+    instructions: 'What the text in the submit button should be.'|t,
+    placeholder: 'Submit'|t
+}) }}
+{{ forms.textField({
+    label: 'Custom submit action URL'|t,
+    id: 'submitAction',
+    name: 'submitAction',
+    value: form.submitAction,
+    errors: form.getErrors('submitAction'),
+    instructions: 'Use this if you want to submit the form to a different URL.'|t,
+    placeholder: 'http://www.domain.com/submit-here'
+}) }}
+
+<div class="right">
+    <input type="button" class="btn small formsubmit" value="{{ 'Delete'|t }}" data-action="amForms/forms/deleteForm" data-confirm="{{ "Are you sure you want to delete this form and all of it's data?"|t }}" data-redirect="amforms/forms">
+</div>
+
+{% set js %}
+    {% if not form.handle %}new Craft.HandleGenerator('#name', '#handle');{% endif %}
+{% endset %}
+{% includeJs js %}

@@ -1,0 +1,56 @@
+{% extends '_layouts/cp' %}
+
+{% import '_includes/forms' as forms %}
+
+{% set title = (formId is defined ? 'Edit form'|t : 'New form'|t) %}
+
+{% set crumbs = [
+    { label: craft.amForms.name, url: url('amforms') },
+    { label: 'Forms'|t, url: url('amforms/forms') },
+    { label: title, url: '#' }
+] %}
+
+{% set tabs = {
+    formfields:  {
+        label: "Fields"|t,
+        url: '#designer'
+    },
+    notifications:  {
+        label: "Notifications"|t,
+        url: '#notification'
+    }
+} %}
+
+{% block main %}
+    <form method="post" accept-charset="UTF-8" data-saveshortcut="1" data-saveshortcut-redirect="amforms/forms/edit/{id}" data-confirm-unload>
+        {{ getCsrfInput() }}
+        <input type="hidden" name="action" value="amForms/forms/saveForm">
+        <input type="hidden" name="redirect" value="amforms/forms/edit/{id}">
+        {% if formId is defined -%}<input type="hidden" name="formId" value="{{ formId }}">{% endif %}
+
+        <div class="grid first">
+            <div class="item first" data-position="left" data-min-colspan="2" data-max-colspan="3">
+                <div class="pane">
+                    {% include "_includes/tabs" %}
+
+                    <div id="designer">
+                        {% include 'amforms/forms/_tabs/designer' %}
+                    </div>
+
+                    <div id="notification" class="hidden">
+                        {% include 'amforms/forms/_fields/notifications' %}
+                    </div>
+                </div>
+            </div>
+            <div class="item" data-position="right" data-colspan="1">
+                <div class="pane">
+                    {% include 'amforms/forms/_fields/form' %}
+                </div>
+                <hr>
+                <div class="buttons first">
+                    <input type="submit" class="btn submit" value="{{ 'Save'|t }}">
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

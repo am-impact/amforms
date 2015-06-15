@@ -1,0 +1,11 @@
+{% extends 'amforms/_layouts/elementindex' %}
+
+{% set selectedTab = 'forms' %}
+
+{% block sidebar %}
+    <div class="buttons">
+        <a class="btn submit add icon" href="{{ url('amforms/forms/new') }}">{{ 'New form'|t }}</a>
+    </div>
+
+    {{ parent() }}
+{% endblock %}
