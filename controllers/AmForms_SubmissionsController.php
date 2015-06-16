@@ -85,7 +85,7 @@ class AmForms_SubmissionsController extends BaseController
 
         // Get the submission
         if (isset($submissionId)) {
-            $submission = craft()->AmForms_submissions->getSubmissionById($submissionId);
+            $submission = craft()->amForms_submissions->getSubmissionById($submissionId);
 
             if (! $submission) {
                 throw new Exception(Craft::t('No submission exists with the ID “{id}”.', array('id' => $submissionId)));
@@ -114,7 +114,7 @@ class AmForms_SubmissionsController extends BaseController
             elseif (craft()->request->isCpRequest()) {
                 craft()->userSession->setNotice(Craft::t('Submission saved.'));
 
-                $this->redirectToPostedUrl($form);
+                $this->redirectToPostedUrl($submission);
             }
             else {
                 $this->_doRedirect($submission);
