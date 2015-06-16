@@ -67,12 +67,20 @@ class AmForms_FormsController extends BaseController
         $form->setFieldLayout($fieldLayout);
 
         // Form attributes
-        $form->name         = craft()->request->getPost('name');
-        $form->handle       = craft()->request->getPost('handle');
-        $form->titleFormat  = craft()->request->getPost('titleFormat');
-        $form->redirectUri  = craft()->request->getPost('redirectUri');
-        $form->submitAction = craft()->request->getPost('submitAction');
-        $form->submitButton = craft()->request->getPost('submitButton');
+        $form->name                     = craft()->request->getPost('name');
+        $form->handle                   = craft()->request->getPost('handle');
+        $form->titleFormat              = craft()->request->getPost('titleFormat');
+        $form->redirectUri              = craft()->request->getPost('redirectUri');
+        $form->submitAction             = craft()->request->getPost('submitAction');
+        $form->submitButton             = craft()->request->getPost('submitButton');
+        $form->submissionEnabled        = craft()->request->getPost('submissionEnabled');
+        $form->notificationEnabled      = craft()->request->getPost('notificationEnabled');
+        $form->notificationRecipients   = craft()->request->getPost('notificationRecipients');
+        $form->notificationSubject      = craft()->request->getPost('notificationSubject');
+        $form->notificationSenderName   = craft()->request->getPost('notificationSenderName');
+        $form->notificationSenderEmail  = craft()->request->getPost('notificationSenderEmail');
+        $form->notificationReplyToEmail = craft()->request->getPost('notificationReplyToEmail');
+        $form->notificationTemplate     = craft()->request->getPost('notificationTemplate');
 
         // Save form
         if (craft()->amForms_forms->saveForm($form)) {

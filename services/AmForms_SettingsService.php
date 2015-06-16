@@ -57,6 +57,21 @@ class AmForms_SettingsService extends BaseApplicationComponent
     }
 
     /**
+     * Check whether a setting value is enabled.
+     * Note: Only for (booleans) light switches.
+     *
+     * @return bool
+     */
+    public function isSettingValueEnabled($handle, $type)
+    {
+        $setting = $this->getSettingsByHandleAndType($handle, $type);
+        if (is_null($setting)) {
+            return false;
+        }
+        return $setting->value;
+    }
+
+    /**
      * Save settings.
      *
      * @param AmForms_SettingModel

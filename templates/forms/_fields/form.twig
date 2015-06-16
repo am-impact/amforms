@@ -29,6 +29,14 @@
     placeholder: siteUrl
 }) }}
 <hr>
+{{ forms.lightswitchField({
+    label: 'Enable submissions'|t,
+    id: 'submissionEnabled',
+    name: 'submissionEnabled',
+    on: form.submissionEnabled,
+    errors: form.getErrors('submissionEnabled'),
+    instructions: 'Whether to store form submissions.'|t
+}) }}
 {{ forms.textField({
     label: 'Title format'|t,
     id: 'titleFormat',

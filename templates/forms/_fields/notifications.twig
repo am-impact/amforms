@@ -1,1 +1,58 @@
-Nog niet beschikbaar.
+{{ forms.lightswitchField({
+    label: 'Enable notifications'|t,
+    id: 'notificationEnabled',
+    name: 'notificationEnabled',
+    on: form.notificationEnabled,
+    first: true,
+    onLabel: 'Enable'|t,
+    offLabel: 'Disable'|t,
+    instructions: 'Whether to email form submissions.'|t
+}) }}
+{{ forms.textField({
+    label: 'Email recipients'|t,
+    id: 'notificationRecipients',
+    name: 'notificationRecipients',
+    value: form.notificationRecipients,
+    errors: form.getErrors('notificationRecipients'),
+    instructions: 'Who will receive the notification? Enter comma separated email addresses for more recipients.'|t
+}) }}
+{{ forms.textField({
+    label: 'Subject'|t,
+    id: 'notificationSubject',
+    name: 'notificationSubject',
+    value: form.notificationSubject,
+    errors: form.getErrors('notificationSubject'),
+    instructions: 'The subject of your notification email.'|t
+}) }}
+{{ forms.textField({
+    label: 'Sender name'|t,
+    id: 'notificationSenderName',
+    name: 'notificationSenderName',
+    value: form.notificationSenderName,
+    errors: form.getErrors('notificationSenderName'),
+    instructions: 'The name of the sender of your notification email.'|t
+}) }}
+{{ forms.textField({
+    label: 'Sender email address'|t,
+    id: 'notificationSenderEmail',
+    name: 'notificationSenderEmail',
+    value: form.notificationSenderEmail,
+    errors: form.getErrors('notificationSenderEmail'),
+    instructions: 'The email address of the sender of your notification email.'|t
+}) }}
+{{ forms.textField({
+    label: 'Reply to email address'|t,
+    id: 'notificationReplyToEmail',
+    name: 'notificationReplyToEmail',
+    value: form.notificationReplyToEmail,
+    errors: form.getErrors('notificationReplyToEmail'),
+    instructions: 'The reply to email address of your notification email.'|t
+}) }}
+{{ forms.textField({
+    label: 'Notification template'|t,
+    id: 'notificationTemplate',
+    name: 'notificationTemplate',
+    value: form.notificationTemplate,
+    errors: form.getErrors('notificationTemplate'),
+    instructions: 'Override default template with your own template. Enter the folder with template, e.g.: _amforms/email'|t
+}) }}

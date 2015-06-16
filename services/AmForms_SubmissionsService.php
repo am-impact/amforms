@@ -81,6 +81,11 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
     {
         $isNewSubmission = ! $submission->id;
 
+        // If we don't need to save it, return a success for other events
+        if ($isNewSubmission && ! $submission->form->submissionEnabled) {
+            return true;
+        }
+
         // Get the submission record
         if ($submission->id) {
             $submissionRecord = AmForms_SubmissionRecord::model()->findById($submission->id);
@@ -165,5 +170,99 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         }
 
         return false;
+    }
+
+    /**
+     * Email a submission.
+     *
+     * @param AmForms_SubmissionModel $submission
+     *
+     * @return bool
+     */
+    public function emailSubmission(AmForms_SubmissionModel $submission)
+    {
+        // Do we even have a form ID?
+        if (! $submission->formId) {
+            return false;
+        }
+
+        // Get form if not already set
+        $submission->getForm();
+        $form = $submission->form;
+        $submission->formName = $form->name;
+        if (! $form->notificationEnabled) {
+            return false;
+        }
+
+        // Get our recipients
+        $recipients = ArrayHelper::stringToArray($form->notificationRecipients);
+        $recipients = array_unique($recipients);
+        if (! count($recipients)) {
+            return false;
+        }
+
+        // Email template
+        $template = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
+        if ($form->notificationTemplate) {
+            $templateFile = craft()->path->getSiteTemplatesPath() . $form->notificationTemplate;
+
+            foreach (craft()->config->get('defaultTemplateExtensions') as $extension) {
+                if (IOHelper::fileExists($templateFile . '.' . $extension)) {
+                    $template = craft()->path->getSiteTemplatesPath() . $form->notificationTemplate;
+                }
+            }
+        }
+
+        // Set Craft template path
+        craft()->path->setTemplatesPath($template);
+
+        // Get email body
+        $body = craft()->templates->render('email', array(
+            'tabs' => $form->getFieldLayout()->getTabs(),
+            'form' => $form,
+            'submission' => $submission
+        ));
+
+        // Reset templates path
+        craft()->path->setTemplatesPath(craft()->path->getCpTemplatesPath());
+
+        // Other email attributes
+        $subject = Craft::t($form->notificationSubject);
+        if ($form->notificationSubject) {
+            $subject = craft()->templates->renderObjectTemplate($form->notificationSubject, $submission);
+        }
+
+        if ($form->notificationReplyToEmail) {
+            $replyTo = craft()->templates->renderObjectTemplate($form->notificationReplyToEmail, $submission);
+            if (! filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
+                $replyTo = null;
+            }
+        }
+
+        // Start mailing!
+        $success = false;
+
+        // @TODO Mandrill
+        $email = new EmailModel();
+        $email->htmlBody = $body;
+        $email->fromEmail = $form->notificationSenderEmail;
+        $email->fromName = $form->notificationSenderName;
+        $email->subject = $subject;
+        if ($replyTo) {
+            $email->replyTo = $replyTo;
+        }
+
+        foreach ($recipients as $recipient) {
+            $email->toEmail = craft()->templates->renderObjectTemplate($recipient, $submission);
+
+            if (filter_var($email->toEmail, FILTER_VALIDATE_EMAIL)) {
+                // Add variable for email event
+                if (craft()->email->sendEmail($email, array('amFormsSubmission' => $submission))) {
+                    $success = true;
+                }
+            }
+        }
+
+        return $success;
     }
 }

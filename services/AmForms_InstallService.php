@@ -56,11 +56,6 @@ class AmForms_InstallService extends BaseApplicationComponent
                 'value' => false
             ),
             array(
-                'name' => 'Store submissions',
-                'handle' => 'storeSubmissions',
-                'value' => true
-            ),
-            array(
                 'name' => 'Use Mandrill for email',
                 'handle' => 'useMandrillForEmail',
                 'value' => false

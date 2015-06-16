@@ -23,15 +23,28 @@ class AmForms_FormModel extends BaseElementModel
      */
     protected function defineAttributes()
     {
+        // Craft email settings
+        $settings = craft()->email->getSettings();
+        $systemEmail = !empty($settings['emailAddress']) ? $settings['emailAddress'] : '';
+        $systemName =  !empty($settings['senderName']) ? $settings['senderName'] : '';
+
         return array_merge(parent::defineAttributes(), array(
-            'id'            => AttributeType::Number,
-            'fieldLayoutId' => AttributeType::Number,
-            'name'          => AttributeType::String,
-            'handle'        => AttributeType::String,
-            'titleFormat'   => array(AttributeType::String, 'default' => "{dateCreated|date('D, d M Y H:i:s')}"),
-            'redirectUri'   => AttributeType::String,
-            'submitAction'  => AttributeType::String,
-            'submitButton'  => AttributeType::String
+            'id'                       => AttributeType::Number,
+            'fieldLayoutId'            => AttributeType::Number,
+            'name'                     => AttributeType::String,
+            'handle'                   => AttributeType::String,
+            'titleFormat'              => array(AttributeType::String, 'default' => "{dateCreated|date('D, d M Y H:i:s')}"),
+            'redirectUri'              => AttributeType::String,
+            'submitAction'             => AttributeType::String,
+            'submitButton'             => AttributeType::String,
+            'submissionEnabled'        => array(AttributeType::Bool, 'default' => true),
+            'notificationEnabled'      => array(AttributeType::Bool, 'default' => true),
+            'notificationRecipients'   => array(AttributeType::String, 'default' => $systemEmail),
+            'notificationSubject'      => array(AttributeType::String, 'default' => Craft::t('{formName} form was submitted')),
+            'notificationSenderName'   => array(AttributeType::String, 'default' => $systemName),
+            'notificationSenderEmail'  => array(AttributeType::String, 'default' => $systemEmail),
+            'notificationReplyToEmail' => array(AttributeType::String, 'default' => $systemEmail),
+            'notificationTemplate'     => AttributeType::String
         ));
     }
 

@@ -108,6 +108,12 @@ class AmForms_SubmissionsController extends BaseController
 
         // Save submission
         if (craft()->amForms_submissions->saveSubmission($submission)) {
+            // Notification
+            if (! craft()->request->isCpRequest()) {
+                craft()->amForms_submissions->emailSubmission($submission);
+            }
+
+            // Redirect
             if (craft()->request->isAjaxRequest()) {
                 $this->returnJson(array('success' => true));
             }

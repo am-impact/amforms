@@ -21,12 +21,20 @@ class AmForms_FormRecord extends BaseRecord
     public function defineAttributes()
     {
         return array(
-            'name'         => array(AttributeType::String, 'required' => true),
-            'handle'       => array(AttributeType::String, 'required' => true),
-            'titleFormat'  => array(AttributeType::String, 'required' => true),
-            'redirectUri'  => AttributeType::String,
-            'submitAction' => AttributeType::String,
-            'submitButton' => AttributeType::String
+            'name'                     => array(AttributeType::String, 'required' => true),
+            'handle'                   => array(AttributeType::String, 'required' => true),
+            'titleFormat'              => array(AttributeType::String, 'required' => true),
+            'redirectUri'              => AttributeType::String,
+            'submitAction'             => AttributeType::String,
+            'submitButton'             => AttributeType::String,
+            'submissionEnabled'        => array(AttributeType::Bool, 'default' => true),
+            'notificationEnabled'      => array(AttributeType::Bool, 'default' => true),
+            'notificationRecipients'   => AttributeType::String,
+            'notificationSubject'      => AttributeType::String,
+            'notificationSenderName'   => AttributeType::String,
+            'notificationSenderEmail'  => AttributeType::String,
+            'notificationReplyToEmail' => AttributeType::String,
+            'notificationTemplate'     => AttributeType::String
         );
     }
 
