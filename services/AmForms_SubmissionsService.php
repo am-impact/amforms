@@ -202,22 +202,35 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         }
 
         // Email template
-        $template = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
+        $template = 'email';
+        $templatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
         if ($form->notificationTemplate) {
+            $pathParts = explode(DIRECTORY_SEPARATOR, $form->notificationTemplate);
             $templateFile = craft()->path->getSiteTemplatesPath() . $form->notificationTemplate;
+            if (count($pathParts) < 2) {
+                $templateFile .= DIRECTORY_SEPARATOR . $template;
+            }
 
             foreach (craft()->config->get('defaultTemplateExtensions') as $extension) {
                 if (IOHelper::fileExists($templateFile . '.' . $extension)) {
-                    $template = craft()->path->getSiteTemplatesPath() . $form->notificationTemplate;
+                    if (count($pathParts) > 1) {
+                        // We set a specific template
+                        $template = $pathParts[ (count($pathParts) - 1) ];
+                        $templatePath = craft()->path->getSiteTemplatesPath() . str_replace(DIRECTORY_SEPARATOR . $template, '', implode(DIRECTORY_SEPARATOR, $pathParts));
+                    }
+                    else {
+                        // Only a folder was given, so still the email template
+                        $templatePath = craft()->path->getSiteTemplatesPath() . $form->notificationTemplate;
+                    }
                 }
             }
         }
 
         // Set Craft template path
-        craft()->path->setTemplatesPath($template);
+        craft()->path->setTemplatesPath($templatePath);
 
         // Get email body
-        $body = craft()->templates->render('email', array(
+        $body = craft()->templates->render($template, array(
             'tabs' => $form->getFieldLayout()->getTabs(),
             'form' => $form,
             'submission' => $submission
