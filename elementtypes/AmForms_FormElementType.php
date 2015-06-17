@@ -163,7 +163,15 @@ class AmForms_FormElementType extends BaseElementType
                            forms.titleFormat,
                            forms.redirectUri,
                            forms.submitAction,
-                           forms.submitButton');
+                           forms.submitButton,
+                           forms.submissionEnabled,
+                           forms.notificationEnabled,
+                           forms.notificationRecipients,
+                           forms.notificationSubject,
+                           forms.notificationSenderName,
+                           forms.notificationSenderEmail,
+                           forms.notificationReplyToEmail,
+                           forms.notificationTemplate');
         $query->join('amforms_forms forms', 'forms.id = elements.id');
 
         if ($criteria->handle) {
