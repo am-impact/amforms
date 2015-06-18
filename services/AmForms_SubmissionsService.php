@@ -228,7 +228,12 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         if ($event->performAction) {
 
             // Get email body
-            $body = $this->_getEmailBody($submission, $form);
+            $variables = array(
+                'tabs' => $form->getFieldLayout()->getTabs(),
+                'form' => $form,
+                'submission' => $submission
+            );
+            $body = craft()->amForms->renderDisplayTemplate('email', $form->notificationTemplate, $variables);
 
             // Other email attributes
             $subject = Craft::t($form->notificationSubject);
@@ -317,56 +322,5 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
     public function onEmailSubmission(Event $event)
     {
         $this->raiseEvent('onEmailSubmission', $event);
-    }
-
-    /**
-     * Get email body for a submission.
-     *
-     * @param AmForms_SubmissionModel $submission
-     * @param AmForms_FormModel       $form
-     *
-     * @return string
-     */
-    private function _getEmailBody(AmForms_SubmissionModel $submission, AmForms_FormModel $form)
-    {
-        // Email template
-        $template = 'email';
-        $templatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
-        if ($form->notificationTemplate) {
-            $pathParts = explode(DIRECTORY_SEPARATOR, $form->notificationTemplate);
-            $templateFile = craft()->path->getSiteTemplatesPath() . $form->notificationTemplate;
-            if (count($pathParts) < 2) {
-                $templateFile .= DIRECTORY_SEPARATOR . $template;
-            }
-
-            foreach (craft()->config->get('defaultTemplateExtensions') as $extension) {
-                if (IOHelper::fileExists($templateFile . '.' . $extension)) {
-                    if (count($pathParts) > 1) {
-                        // We set a specific template
-                        $template = $pathParts[ (count($pathParts) - 1) ];
-                        $templatePath = craft()->path->getSiteTemplatesPath() . str_replace(DIRECTORY_SEPARATOR . $template, '', implode(DIRECTORY_SEPARATOR, $pathParts));
-                    }
-                    else {
-                        // Only a folder was given, so still the email template
-                        $templatePath = craft()->path->getSiteTemplatesPath() . $form->notificationTemplate;
-                    }
-                }
-            }
-        }
-
-        // Set Craft template path
-        craft()->path->setTemplatesPath($templatePath);
-
-        // Get email body
-        $body = craft()->templates->render($template, array(
-            'tabs' => $form->getFieldLayout()->getTabs(),
-            'form' => $form,
-            'submission' => $submission
-        ));
-
-        // Reset templates path
-        craft()->path->setTemplatesPath(craft()->path->getCpTemplatesPath());
-
-        return $body;
     }
 }
