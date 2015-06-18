@@ -54,7 +54,8 @@ class AmForms_SubmissionElementType extends BaseElementType
     {
         $sources = array(
             '*' => array(
-                'label' => Craft::t('All submissions'),
+                'label'       => Craft::t('All submissions'),
+                'defaultSort' => array('dateCreated', 'desc')
             )
         );
 
@@ -63,13 +64,34 @@ class AmForms_SubmissionElementType extends BaseElementType
             foreach ($forms as $form) {
                 $key = 'formId:'.$form->id;
                 $sources[$key] = array(
-                    'label'    => $form->name,
-                    'criteria' => array('formId' => $form->id)
+                    'label'       => $form->name,
+                    'criteria'    => array('formId' => $form->id),
+                    'defaultSort' => array('dateCreated', 'desc')
                 );
             }
         }
 
         return $sources;
+    }
+
+    /**
+     * Returns this element type's actions.
+     *
+     * @param string|null $source
+     *
+     * @return array|null
+     */
+    public function getAvailableActions($source = null)
+    {
+        // Get delete action
+        $deleteAction = craft()->elements->getAction('Delete');
+        $deleteAction->setParams(array(
+            'confirmationMessage' => Craft::t('Are you sure you want to delete the selected submissions?'),
+            'successMessage'      => Craft::t('Submissions deleted.'),
+        ));
+
+        // Set actions
+        return array($deleteAction);
     }
 
     /**
