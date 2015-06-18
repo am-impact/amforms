@@ -54,39 +54,6 @@ class AmForms_FormsService extends BaseApplicationComponent
     }
 
     /**
-     * Display a form.
-     *
-     * @param string $handle
-     *
-     * @throws Exception
-     * @return string
-     */
-    public function displayForm($handle)
-    {
-        // Get the form
-        $form = craft()->amForms_forms->getFormByHandle($handle);
-        if (! $form) {
-            craft()->amForms->handleError(Craft::t('No form exists with the handle “{handle}”.', array('handle' => $handle)));
-            return false;
-        }
-
-        // Change the templates path
-        craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/');
-
-        // Build our complete form
-        $formHtml = craft()->templates->render('form', array(
-            'form' => $form,
-            'element' => craft()->amForms_submissions->getActiveSubmission($form)
-        ));
-
-        // Reset templates path
-        craft()->path->setTemplatesPath(craft()->path->getSiteTemplatesPath());
-
-        // Parse form
-        return new \Twig_Markup($formHtml, craft()->templates->getTwig()->getCharset());
-    }
-
-    /**
      * Save a form.
      *
      * @param AmForms_FormModel $form
