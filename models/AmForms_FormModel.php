@@ -109,4 +109,17 @@ class AmForms_FormModel extends BaseElementModel
     {
         $this->_fields = $fields;
     }
+
+    /**
+     * Display the form.
+     *
+     * With this we can display the Form FieldType on a front-end template.
+     * @example {{ entry.fieldHandle.first().displayForm() }}
+     *
+     * @return string
+     */
+    public function displayForm()
+    {
+        return craft()->amForms_forms->displayForm($this);
+    }
 }

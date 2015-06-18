@@ -1,5 +1,6 @@
 <?php
 return array(
+    'Add a form' => 'Voeg een formulier toe',
     'All forms' => 'Alle formulieren',
     'All submissions' => 'Alle inzendingen',
     'Are you sure you want to delete the selected submissions?' => 'Weet u zeker dat u deze inzendingen wilt verwijderen?',

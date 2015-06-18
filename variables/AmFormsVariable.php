@@ -59,33 +59,11 @@ class AmFormsVariable
     public function displayForm($handle)
     {
         // Get the form
-        $form = craft()->amForms_forms->getFormByHandle($handle);
+        $form = $this->getFormByHandle($handle);
         if (! $form) {
             craft()->amForms->handleError(Craft::t('No form exists with the handle “{handle}”.', array('handle' => $handle)));
             return false;
         }
-
-        // Update redirectUri?
-        if ($form->redirectUri) {
-            $vars = array(
-                'siteUrl' => craft()->getSiteUrl()
-            );
-            $form->redirectUri = craft()->templates->renderObjectTemplate($form->redirectUri, $vars);
-        }
-
-        // Change the templates path
-        craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/');
-
-        // Build our complete form
-        $formHtml = craft()->templates->render('form', array(
-            'form' => $form,
-            'element' => craft()->amForms_submissions->getActiveSubmission($form)
-        ));
-
-        // Reset templates path
-        craft()->path->setTemplatesPath(craft()->path->getSiteTemplatesPath());
-
-        // Parse form
-        return new \Twig_Markup($formHtml, craft()->templates->getTwig()->getCharset());
+        return craft()->amForms_forms->displayForm($form);
     }
 }

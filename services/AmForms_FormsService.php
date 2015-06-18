@@ -176,4 +176,37 @@ class AmForms_FormsService extends BaseApplicationComponent
 
         return false;
     }
+
+    /**
+     * Display a form.
+     *
+     * @param AmForms_FormModel $form
+     *
+     * @return string
+     */
+    public function displayForm(AmForms_FormModel $form)
+    {
+        // Update redirectUri?
+        if ($form->redirectUri) {
+            $vars = array(
+                'siteUrl' => craft()->getSiteUrl()
+            );
+            $form->redirectUri = craft()->templates->renderObjectTemplate($form->redirectUri, $vars);
+        }
+
+        // Change the templates path
+        craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/');
+
+        // Build our complete form
+        $formHtml = craft()->templates->render('form', array(
+            'form' => $form,
+            'element' => craft()->amForms_submissions->getActiveSubmission($form)
+        ));
+
+        // Reset templates path
+        craft()->path->setTemplatesPath(craft()->path->getSiteTemplatesPath());
+
+        // Parse form
+        return new \Twig_Markup($formHtml, craft()->templates->getTwig()->getCharset());
+    }
 }
