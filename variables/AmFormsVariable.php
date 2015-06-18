@@ -65,6 +65,14 @@ class AmFormsVariable
             return false;
         }
 
+        // Update redirectUri?
+        if ($form->redirectUri) {
+            $vars = array(
+                'siteUrl' => craft()->getSiteUrl()
+            );
+            $form->redirectUri = craft()->templates->renderObjectTemplate($form->redirectUri, $vars);
+        }
+
         // Change the templates path
         craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/');
 
