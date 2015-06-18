@@ -48,11 +48,3 @@
     errors: form.getErrors('notificationReplyToEmail'),
     instructions: 'The reply to email address of your notification email.'|t
 }) }}
-{{ forms.textField({
-    label: 'Notification template'|t,
-    id: 'notificationTemplate',
-    name: 'notificationTemplate',
-    value: form.notificationTemplate,
-    errors: form.getErrors('notificationTemplate'),
-    instructions: 'Override default template with your own template. Enter the folder with template, e.g.: _amforms/email'|t
-}) }}

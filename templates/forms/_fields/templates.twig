@@ -1,0 +1,36 @@
+{{ forms.textField({
+    label: 'Form template'|t,
+    id: 'formTemplate',
+    name: 'formTemplate',
+    value: form.formTemplate,
+    errors: form.getErrors('formTemplate'),
+    placeholder: '_amforms/form',
+    instructions: 'Override default template with your own template. Enter the folder (with template), e.g.: {template}'|t({'template': '_amforms'})
+}) }}
+{{ forms.textField({
+    label: 'Tab template'|t,
+    id: 'tabTemplate',
+    name: 'tabTemplate',
+    value: form.tabTemplate,
+    errors: form.getErrors('tabTemplate'),
+    placeholder: '_amforms/tab',
+    instructions: 'Override default template with your own template. Enter the folder (with template), e.g.: {template}'|t({'template': '_amforms'})
+}) }}
+{{ forms.textField({
+    label: 'Field template'|t,
+    id: 'fieldTemplate',
+    name: 'fieldTemplate',
+    value: form.fieldTemplate,
+    errors: form.getErrors('fieldTemplate'),
+    placeholder: '_amforms/field',
+    instructions: 'Override default template with your own template. Enter the folder (with template), e.g.: {template}'|t({'template': '_amforms'})
+}) }}
+{{ forms.textField({
+    label: 'Notification template'|t,
+    id: 'notificationTemplate',
+    name: 'notificationTemplate',
+    value: form.notificationTemplate,
+    errors: form.getErrors('notificationTemplate'),
+    placeholder: '_amforms/email',
+    instructions: 'Override default template with your own template. Enter the folder (with template), e.g.: {template}'|t({'template': '_amforms'})
+}) }}

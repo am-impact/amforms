@@ -34,6 +34,9 @@ class AmForms_FormRecord extends BaseRecord
             'notificationSenderName'   => AttributeType::String,
             'notificationSenderEmail'  => AttributeType::String,
             'notificationReplyToEmail' => AttributeType::String,
+            'formTemplate'             => AttributeType::String,
+            'tabTemplate'              => AttributeType::String,
+            'fieldTemplate'            => AttributeType::String,
             'notificationTemplate'     => AttributeType::String
         );
     }

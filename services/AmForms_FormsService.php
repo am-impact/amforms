@@ -186,6 +186,9 @@ class AmForms_FormsService extends BaseApplicationComponent
      */
     public function displayForm(AmForms_FormModel $form)
     {
+        // Get submission model
+        $submission = craft()->amForms_submissions->getActiveSubmission($form);
+
         // Update redirectUri?
         if ($form->redirectUri) {
             $vars = array(
@@ -194,17 +197,58 @@ class AmForms_FormsService extends BaseApplicationComponent
             $form->redirectUri = craft()->templates->renderObjectTemplate($form->redirectUri, $vars);
         }
 
-        // Change the templates path
-        craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/');
+        // Plugin's default template path
+        $templatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
+
+        // Build field HTML
+        $tabs = array();
+        $fieldTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', $form->fieldTemplate);
+        foreach ($form->getFieldLayout()->getTabs() as $tab) {
+            // Tab information
+            $tabs[$tab->id] = array(
+                'info'   => $tab,
+                'fields' => array()
+            );
+
+            // Tab fields
+            $fields = $tab->getFields();
+            foreach ($fields as $layoutField) {
+                // Get actual field
+                $field = $layoutField->getField();
+
+                // Reset templates path for input and get field input
+                craft()->path->setTemplatesPath($templatePath);
+                $fieldInfo = craft()->fields->populateFieldType($field, $submission);
+                $input = $fieldInfo->getInputHtml($field->handle, $submission->getFieldValue($field->handle));
+
+                // Get field HTML
+                craft()->path->setTemplatesPath($fieldTemplateInfo['path']);
+                $tabs[$tab->id]['fields'][] = craft()->templates->render($fieldTemplateInfo['template'], array(
+                    'form'     => $form,
+                    'field'    => $field,
+                    'input'    => $input,
+                    'required' => $field->required,
+                    'element'  => $submission
+                ));
+            }
+        }
+
+        // Build tab HTML
+        $variables = array(
+            'form'    => $form,
+            'tabs'    => $tabs,
+            'element' => $submission
+        );
+        $bodyHtml = craft()->amForms->renderDisplayTemplate('tab', $form->tabTemplate, $variables);
 
         // Build our complete form
-        $formHtml = craft()->templates->render('form', array(
-            'form' => $form,
-            'element' => craft()->amForms_submissions->getActiveSubmission($form)
-        ));
+        $variables = array(
+            'form'    => $form,
+            'body'    => $bodyHtml,
+            'element' => $submission
+        );
 
-        // Reset templates path
-        craft()->path->setTemplatesPath(craft()->path->getSiteTemplatesPath());
+        $formHtml = craft()->amForms->renderDisplayTemplate('form', $form->formTemplate, $variables);
 
         // Parse form
         return new \Twig_Markup($formHtml, craft()->templates->getTwig()->getCharset());

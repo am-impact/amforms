@@ -44,6 +44,9 @@ class AmForms_FormModel extends BaseElementModel
             'notificationSenderName'   => array(AttributeType::String, 'default' => $systemName),
             'notificationSenderEmail'  => array(AttributeType::String, 'default' => $systemEmail),
             'notificationReplyToEmail' => array(AttributeType::String, 'default' => $systemEmail),
+            'formTemplate'             => AttributeType::String,
+            'tabTemplate'              => AttributeType::String,
+            'fieldTemplate'            => AttributeType::String,
             'notificationTemplate'     => AttributeType::String
         ));
     }

@@ -171,6 +171,9 @@ class AmForms_FormElementType extends BaseElementType
                            forms.notificationSenderName,
                            forms.notificationSenderEmail,
                            forms.notificationReplyToEmail,
+                           forms.formTemplate,
+                           forms.tabTemplate,
+                           forms.fieldTemplate,
                            forms.notificationTemplate');
         $query->join('amforms_forms forms', 'forms.id = elements.id');
 

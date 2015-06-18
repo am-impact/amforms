@@ -20,6 +20,14 @@
         url: '#notification'
     }
 } %}
+{% if currentUser.admin %}
+    {% set tabs = tabs|merge({
+        templates:  {
+            label: "Templates"|t,
+            url: '#templates'
+        }
+    }) %}
+{% endif %}
 
 {% block main %}
     <form method="post" accept-charset="UTF-8" data-saveshortcut="1" data-saveshortcut-redirect="amforms/forms/edit/{id}" data-confirm-unload>
@@ -40,6 +48,12 @@
                     <div id="notification" class="hidden">
                         {% include 'amforms/forms/_fields/notifications' %}
                     </div>
+
+                    {% if currentUser.admin -%}
+                        <div id="templates" class="hidden">
+                            {% include 'amforms/forms/_fields/templates' %}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="item" data-position="right" data-colspan="1">

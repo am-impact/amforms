@@ -17,9 +17,7 @@
     {% endif %}
 
     <div class="fields">
-        {% include 'tab' with {
-            tabs: form.getFieldLayout().getTabs()
-        } %}
+        {{ body|raw }}
     </div>
 
     <div class="submit">
