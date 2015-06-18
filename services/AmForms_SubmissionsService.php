@@ -106,34 +106,51 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         $submission->addErrors($submissionRecord->getErrors());
 
         if (! $submission->hasErrors()) {
-            $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
 
-            try {
-                // Submission title based on form's title format
-                $submission->getContent()->title = craft()->templates->renderObjectTemplate($submission->form->titleFormat, $submission);
+            // Fire an 'onBeforeSaveSubmission' event
+            $event = new Event($this, array(
+                'submission'      => $submission,
+                'isNewSubmission' => $isNewSubmission
+            ));
+            $this->onBeforeSaveSubmission($event);
 
-                // Save the element!
-                if (craft()->elements->saveElement($submission)) {
-                    // Now that we have an element ID, save it on the other stuff
-                    if ($isNewSubmission) {
-                        $submissionRecord->id = $submission->id;
+            // Is the event giving us the go-ahead?
+            if ($event->performAction) {
+                $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
+
+                try {
+                    // Submission title based on form's title format
+                    $submission->getContent()->title = craft()->templates->renderObjectTemplate($submission->form->titleFormat, $submission);
+
+                    // Save the element!
+                    if (craft()->elements->saveElement($submission)) {
+                        // Now that we have an element ID, save it on the other stuff
+                        if ($isNewSubmission) {
+                            $submissionRecord->id = $submission->id;
+                        }
+
+                        // Save the submission!
+                        $submissionRecord->save(false); // Skip validation now
+
+                        if ($transaction !== null) {
+                            $transaction->commit();
+                        }
+
+                        // Fire an 'onSaveSubmission' event
+                        $this->onSaveSubmission(new Event($this, array(
+                            'submission'      => $submission,
+                            'isNewSubmission' => $isNewSubmission
+                        )));
+
+                        return true;
                     }
-
-                    // Save the submission!
-                    $submissionRecord->save(false); // Skip validation now
-
+                } catch (\Exception $e) {
                     if ($transaction !== null) {
-                        $transaction->commit();
+                        $transaction->rollback();
                     }
 
-                    return true;
+                    throw $e;
                 }
-            } catch (\Exception $e) {
-                if ($transaction !== null) {
-                    $transaction->rollback();
-                }
-
-                throw $e;
             }
         }
 
@@ -201,6 +218,117 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
             return false;
         }
 
+        // Fire an 'onBeforeEmailSubmission' event
+        $event = new Event($this, array(
+            'submission' => $submission
+        ));
+        $this->onBeforeEmailSubmission($event);
+
+        // Is the event giving us the go-ahead?
+        if ($event->performAction) {
+
+            // Get email body
+            $body = $this->_getEmailBody($submission, $form);
+
+            // Other email attributes
+            $subject = Craft::t($form->notificationSubject);
+            if ($form->notificationSubject) {
+                $subject = craft()->templates->renderObjectTemplate($form->notificationSubject, $submission);
+            }
+
+            if ($form->notificationReplyToEmail) {
+                $replyTo = craft()->templates->renderObjectTemplate($form->notificationReplyToEmail, $submission);
+                if (! filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
+                    $replyTo = null;
+                }
+            }
+
+            // Start mailing!
+            $success = false;
+
+            // @TODO Mandrill
+            $email = new EmailModel();
+            $email->htmlBody = $body;
+            $email->fromEmail = $form->notificationSenderEmail;
+            $email->fromName = $form->notificationSenderName;
+            $email->subject = $subject;
+            if ($replyTo) {
+                $email->replyTo = $replyTo;
+            }
+
+            foreach ($recipients as $recipient) {
+                $email->toEmail = craft()->templates->renderObjectTemplate($recipient, $submission);
+
+                if (filter_var($email->toEmail, FILTER_VALIDATE_EMAIL)) {
+                    // Add variable for email event
+                    if (craft()->email->sendEmail($email, array('amFormsSubmission' => $submission))) {
+                        $success = true;
+                    }
+                }
+            }
+
+            // Fire an 'onEmailSubmission' event
+            $this->onEmailSubmission(new Event($this, array(
+                'success'    => $success,
+                'submission' => $submission
+            )));
+
+            return $success;
+        }
+
+        return false;
+    }
+
+    /**
+     * Fires an 'onBeforeSaveSubmission' event.
+     *
+     * @param Event $event
+     */
+    public function onBeforeSaveSubmission(Event $event)
+    {
+        $this->raiseEvent('onBeforeSaveSubmission', $event);
+    }
+
+    /**
+     * Fires an 'onSaveSubmission' event.
+     *
+     * @param Event $event
+     */
+    public function onSaveSubmission(Event $event)
+    {
+        $this->raiseEvent('onSaveSubmission', $event);
+    }
+
+    /**
+     * Fires an 'onBeforeEmailSubmission' event.
+     *
+     * @param Event $event
+     */
+    public function onBeforeEmailSubmission(Event $event)
+    {
+        $this->raiseEvent('onBeforeEmailSubmission', $event);
+    }
+
+    /**
+     * Fires an 'onEmailSubmission' event.
+     *
+     * @param Event $event
+     */
+    public function onEmailSubmission(Event $event)
+    {
+        $this->raiseEvent('onEmailSubmission', $event);
+    }
+
+    /**
+     * Get email body for a submission.
+     *
+     * @param AmForms_SubmissionModel $submission
+     * @param AmForms_FormModel       $form
+     *
+     * @return string
+     */
+    private function _getEmailBody(AmForms_SubmissionModel $submission, AmForms_FormModel $form)
+    {
         // Email template
         $template = 'email';
         $templatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
@@ -239,43 +367,6 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         // Reset templates path
         craft()->path->setTemplatesPath(craft()->path->getCpTemplatesPath());
 
-        // Other email attributes
-        $subject = Craft::t($form->notificationSubject);
-        if ($form->notificationSubject) {
-            $subject = craft()->templates->renderObjectTemplate($form->notificationSubject, $submission);
-        }
-
-        if ($form->notificationReplyToEmail) {
-            $replyTo = craft()->templates->renderObjectTemplate($form->notificationReplyToEmail, $submission);
-            if (! filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
-                $replyTo = null;
-            }
-        }
-
-        // Start mailing!
-        $success = false;
-
-        // @TODO Mandrill
-        $email = new EmailModel();
-        $email->htmlBody = $body;
-        $email->fromEmail = $form->notificationSenderEmail;
-        $email->fromName = $form->notificationSenderName;
-        $email->subject = $subject;
-        if ($replyTo) {
-            $email->replyTo = $replyTo;
-        }
-
-        foreach ($recipients as $recipient) {
-            $email->toEmail = craft()->templates->renderObjectTemplate($recipient, $submission);
-
-            if (filter_var($email->toEmail, FILTER_VALIDATE_EMAIL)) {
-                // Add variable for email event
-                if (craft()->email->sendEmail($email, array('amFormsSubmission' => $submission))) {
-                    $success = true;
-                }
-            }
-        }
-
-        return $success;
+        return $body;
     }
 }
