@@ -33,7 +33,7 @@ class AmForms_SubmissionRecord extends BaseRecord
     {
         return array(
             'element' => array(static::BELONGS_TO, 'ElementRecord', 'id', 'required' => true, 'onDelete' => static::CASCADE),
-            'form' => array(static::BELONGS_TO, 'AmForms_FormRecord', 'required' => true, 'onDelete' => static::CASCADE)
+            'form'    => array(static::BELONGS_TO, 'AmForms_FormRecord', 'required' => true, 'onDelete' => static::CASCADE)
         );
     }
 }
