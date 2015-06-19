@@ -1,0 +1,34 @@
+{% extends (elementType is defined ? '_layouts/elementindex' : '_layouts/cp') %}
+
+{% set title = craft.amForms.name %}
+
+{% set tabs = {
+    forms: {
+        label: 'Forms'|t,
+        url: url('amforms/forms')
+    },
+    submissions: {
+        label: 'Submissions'|t,
+        url: url('amforms/submissions')
+    }
+} %}
+{% if currentUser.admin %}
+    {% set tabs = tabs|merge({
+        fields: {
+            label: 'Fields'|t,
+            url: url('amforms/fields')
+        }
+    }) %}
+{% endif %}
+
+{% set activeCrumb = attribute(tabs, selectedTab) %}
+{% set crumbs = [
+    { label: title, url: url('amforms') },
+    { label: activeCrumb.label, url: activeCrumb.url }
+] %}
+
+{% if currentUser.can('editAmFormsSettings') %}
+    {% set extraPageHeaderHtml %}
+      <a class="btn settings icon" href="{{ url('amforms/settings') }}" title="{{ 'Settings'|t }}"></a>
+    {% endset %}
+{% endif %}
