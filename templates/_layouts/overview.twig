@@ -3,23 +3,19 @@
 {% set title = craft.amForms.name %}
 
 {% set tabs = {
+    submissions: {
+        label: 'Submissions'|t,
+        url: url('amforms/submissions')
+    },
     forms: {
         label: 'Forms'|t,
         url: url('amforms/forms')
     },
-    submissions: {
-        label: 'Submissions'|t,
-        url: url('amforms/submissions')
+    fields: {
+        label: 'Fields'|t,
+        url: url('amforms/fields')
     }
 } %}
-{% if currentUser.admin %}
-    {% set tabs = tabs|merge({
-        fields: {
-            label: 'Fields'|t,
-            url: url('amforms/fields')
-        }
-    }) %}
-{% endif %}
 
 {% set activeCrumb = attribute(tabs, selectedTab) %}
 {% set crumbs = [

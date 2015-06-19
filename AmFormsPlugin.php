@@ -51,6 +51,16 @@ class AmFormsPlugin extends BasePlugin
     public function registerCpRoutes()
     {
         return array(
+            'amforms/fields' => array(
+                'action' => 'amForms/fields/index'
+            ),
+            'amforms/fields/new' => array(
+                'action' => 'amForms/fields/editField'
+            ),
+            'amforms/fields/edit/(?P<fieldId>\d+)' => array(
+                'action' => 'amForms/fields/editField'
+            ),
+
             'amforms/forms' => array(
                 'action' => 'amForms/forms/index'
             ),
