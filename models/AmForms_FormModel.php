@@ -82,38 +82,6 @@ class AmForms_FormModel extends BaseElementModel
     }
 
     /**
-     * Returns the fields associated with this form.
-     *
-     * @return array
-     */
-    public function getFields()
-    {
-        if (! isset($this->_fields)) {
-            $this->_fields = array();
-
-            $fieldLayoutFields = $this->getFieldLayout()->getFields();
-
-            foreach ($fieldLayoutFields as $fieldLayoutField) {
-                $field = $fieldLayoutField->getField();
-                $field->required = $fieldLayoutField->required;
-                $this->_fields[] = $field;
-            }
-        }
-
-        return $this->_fields;
-    }
-
-    /**
-     * Sets the fields associated with this form.
-     *
-     * @param array $fields
-     */
-    public function setFields($fields)
-    {
-        $this->_fields = $fields;
-    }
-
-    /**
      * Display the form.
      *
      * With this we can display the Form FieldType on a front-end template.
