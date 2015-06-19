@@ -46,6 +46,7 @@ return array(
     'Override default template with your own template. Enter the folder (with template), e.g.: {template}' => 'Overschrijf de standaard template met uw eigen template. Voer de map (met de template) in, bijv.: {template}',
     'Plugin name' => 'Plugin naam',
     'Plugin name for the end user.' => 'Plugin naam voor de eind gebruiker.',
+    'reCAPTCHA was not verified.' => 'reCAPTCHA is niet geverifieerd.',
     'Redirect page' => 'Redirect pagina',
     'Reply to email address' => 'Reageer e-mailadres',
     'Secret key' => 'Geheime sleutel',
