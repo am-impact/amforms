@@ -40,7 +40,7 @@ class AmForms_FormsController extends BaseController
         }
 
         // Get available fields with our context
-        $variables['fields'] = craft()->fields->getAllFields('id');
+        $variables['fields'] = craft()->fields->getAllFields('id', AmFormsModel::FieldContext);
 
         $this->renderTemplate('amforms/forms/_edit', $variables);
     }

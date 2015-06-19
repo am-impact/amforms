@@ -76,4 +76,14 @@ class AmForms_SubmissionModel extends BaseElementModel
     {
         return UrlHelper::getCpUrl('amforms/submissions/edit/' . $this->id);
     }
+
+    /**
+     * Returns the field context this element's content uses.
+     *
+     * @return string
+     */
+    public function getFieldContext()
+    {
+        return AmFormsModel::FieldContext;
+    }
 }

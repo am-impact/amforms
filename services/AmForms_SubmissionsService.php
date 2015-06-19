@@ -127,8 +127,15 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
                     // Submission title based on form's title format
                     $submission->getContent()->title = craft()->templates->renderObjectTemplate($submission->form->titleFormat, $submission);
 
+                    // Set field context
+                    $oldFieldContext = craft()->content->fieldContext;
+                    craft()->content->fieldContext = $submission->getFieldContext();
+
                     // Save the element!
                     if (craft()->elements->saveElement($submission)) {
+                        // Reset field context
+                        craft()->content->fieldContext = $oldFieldContext;
+
                         // Now that we have an element ID, save it on the other stuff
                         if ($isNewSubmission) {
                             $submissionRecord->id = $submission->id;
@@ -149,6 +156,9 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
 
                         return true;
                     }
+
+                    // Reset field context
+                    craft()->content->fieldContext = $oldFieldContext;
                 } catch (\Exception $e) {
                     if ($transaction !== null) {
                         $transaction->rollback();

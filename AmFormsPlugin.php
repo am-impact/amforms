@@ -109,6 +109,21 @@ class AmFormsPlugin extends BasePlugin
         craft()->amForms_install->install();
     }
 
+    /**
+     * Uninstall information that is no longer required.
+     */
+    public function onBeforeUninstall()
+    {
+        // Delete our own context fields
+        $fields = craft()->fields->getAllFields('id', AmFormsModel::FieldContext);
+        foreach ($fields as $field) {
+            craft()->fields->deleteField($field);
+        }
+    }
+
+    /**
+     * Get settings HTML.
+     */
     public function getSettingsHtml()
     {
         return craft()->templates->render('amForms/settings', array(

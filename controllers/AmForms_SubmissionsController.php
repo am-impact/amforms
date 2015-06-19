@@ -38,29 +38,37 @@ class AmForms_SubmissionsController extends BaseController
             if (! $submission) {
                 throw new Exception(Craft::t('No submission exists with the ID “{id}”.', array('id' => $variables['submissionId'])));
             }
-
-            // Get form if available
-            $form = craft()->amForms_forms->getFormById($submission->formId);
-            if (! $form) {
-                throw new Exception(Craft::t('No form exists with the ID “{id}”.', array('id' => $submission->formId)));
-            }
-
-            // Get tabs
-            $tabs = array();
-            $layoutTabs = $submission->getFieldLayout()->getTabs();
-            foreach ($layoutTabs as $tab) {
-                $tabs[$tab->id] = array(
-                    'label' => $tab->name,
-                    'url' => '#tab' . $tab->sortOrder
-                );
-            }
-
-            // Set variables
-            $variables['submission'] = $submission;
-            $variables['form'] = $form;
-            $variables['tabs'] = $tabs;
-            $variables['layoutTabs'] = $layoutTabs;
         }
+        else {
+            $submission = $variables['submission'];
+        }
+
+        // Get form if available
+        $form = craft()->amForms_forms->getFormById($submission->formId);
+        if (! $form) {
+            throw new Exception(Craft::t('No form exists with the ID “{id}”.', array('id' => $submission->formId)));
+        }
+
+        // @TODO Ask brandon wtf is going on here
+        // For some reason we don't have the proper content without this
+        $submission->setContent(craft()->content->getContent($submission))
+
+        // Get tabs
+        $tabs = array();
+        $layoutTabs = $submission->getFieldLayout()->getTabs();
+        foreach ($layoutTabs as $tab) {
+            $tabs[$tab->id] = array(
+                'label' => $tab->name,
+                'url' => '#tab' . $tab->sortOrder
+            );
+        }
+
+        // Set variables
+        $variables['submission'] = $submission;
+        $variables['form'] = $form;
+        $variables['tabs'] = $tabs;
+        $variables['layoutTabs'] = $layoutTabs;
+
         $this->renderTemplate('amforms/submissions/_edit', $variables);
     }
 
