@@ -11,11 +11,11 @@
 ] %}
 
 {% set tabs = {
-    formfields:  {
+    formfields: {
         label: "Fields"|t,
         url: '#designer'
     },
-    notifications:  {
+    notifications: {
         label: "Notifications"|t,
         url: '#notification',
         class: (form.getErrors('notificationEnabled')|length ? 'error' : null)
@@ -23,7 +23,7 @@
 } %}
 {% if currentUser.admin %}
     {% set tabs = tabs|merge({
-        templates:  {
+        templates: {
             label: "Templates"|t,
             url: '#templates'
         }
@@ -43,7 +43,7 @@
                     {% include "_includes/tabs" %}
 
                     <div id="designer">
-                        {% include 'amforms/forms/_tabs/designer' %}
+                        {% include 'amforms/forms/_fields/designer' %}
                     </div>
 
                     <div id="notification" class="hidden">
