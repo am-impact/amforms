@@ -12,6 +12,7 @@ class AmForms_InstallService extends BaseApplicationComponent
     public function install()
     {
         $this->_installGeneral();
+        $this->_installRecaptcha();
     }
 
     /**
@@ -62,5 +63,30 @@ class AmForms_InstallService extends BaseApplicationComponent
             )
         );
         $this->installSettings($settings, AmFormsModel::SettingGeneral);
+    }
+
+    /**
+     * Install reCAPTCHA settings.
+     */
+    private function _installRecaptcha()
+    {
+        $settings = array(
+            array(
+                'name' => 'Use reCAPTCHA',
+                'handle' => 'useRecaptcha',
+                'value' => false
+            ),
+            array(
+                'name' => 'Site key',
+                'handle' => 'siteKey',
+                'value' => ''
+            ),
+            array(
+                'name' => 'Secret key',
+                'handle' => 'secretKey',
+                'value' => ''
+            )
+        );
+        $this->installSettings($settings, AmFormsModel::SettingRecaptcha);
     }
 }

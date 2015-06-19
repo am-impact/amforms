@@ -95,6 +95,12 @@ class AmForms_SubmissionsController extends BaseController
             $submission = new AmForms_SubmissionModel();
         }
 
+        // Front-end submission, trigger reCAPTCHA?
+        if (! craft()->request->isCpRequest() && craft()->amForms_settings->isSettingValueEnabled('useRecaptcha', AmFormsModel::SettingRecaptcha)) {
+            $captcha = craft()->request->getPost('g-recaptcha-response');
+            $submission->spamFree = craft()->amForms_recaptcha->verify($captcha);
+        }
+
         // Add the form to the submission
         $submission->form = $form;
         $submission->formId = $form->id;

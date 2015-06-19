@@ -20,6 +20,19 @@
         {{ body|raw }}
     </div>
 
+    {% if recaptcha -%}
+        <div class="recaptcha">
+            {{ recaptcha }}
+            {% if element.getErrors('spamFree')|length -%}
+                <ul class="errors">
+                    {% for error in element.getErrors('spamFree') -%}
+                        <li>{{ error }}</li>
+                    {% endfor -%}
+                </ul>
+            {% endif -%}
+        </div>
+    {% endif -%}
+
     <div class="submit">
         <input type="submit" value="{{ submitValue }}">
     </div>

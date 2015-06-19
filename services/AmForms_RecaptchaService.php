@@ -1,0 +1,80 @@
+<?php
+namespace Craft;
+
+/**
+ * AmForms - reCAPTCHA service
+ */
+class AmForms_RecaptchaService extends BaseApplicationComponent
+{
+    /**
+     * Render a reCAPTCHA widget.
+     *
+     * @param bool $renderTwig
+     *
+     * @return bool|string
+     */
+    public function render()
+    {
+        // Get reCAPTCHA settings
+        $recaptchaSettings = craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingRecaptcha);
+
+        // Is reCAPTCHA enabled?
+        if ($recaptchaSettings && $recaptchaSettings['useRecaptcha']->value) {
+            // Plugin's default template path
+            $templatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
+
+            // Build reCAPTCHA HTML
+            craft()->path->setTemplatesPath($templatePath);
+            $html = craft()->templates->render('recaptcha', array(
+                'siteKey' => $recaptchaSettings['siteKey']->value
+            ));
+
+            // Include Google's reCAPTCHA API
+            craft()->templates->includeJsFile('https://www.google.com/recaptcha/api.js');
+
+            // Parse widget
+            return new \Twig_Markup($html, craft()->templates->getTwig()->getCharset());
+        }
+
+        return false;
+    }
+
+    /**
+     * Verify a reCAPTCHA submission.
+     *
+     * @param string $data
+     *
+     * @return bool
+     */
+    public function verify($data)
+    {
+        // Get reCAPTCHA secret key
+        $secretKey = craft()->amForms_settings->getSettingsByHandleAndType('secretKey', AmFormsModel::SettingRecaptcha);
+        if (! $secretKey) {
+            return false;
+        }
+
+        // Google API parameters
+        $params = array(
+            'secret'   => $secretKey->value,
+            'response' => $data
+        );
+
+        // Set request
+        $client = new \Guzzle\Http\Client();
+        $request = $client->post('https://www.google.com/recaptcha/api/siteverify');
+        $request->addPostFields($params);
+        $result = $client->send($request);
+
+        // Handle response
+        if($result->getStatusCode() == 200) {
+            $json = $result->json();
+
+            if($json['success']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}

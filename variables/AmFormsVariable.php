@@ -66,4 +66,12 @@ class AmFormsVariable
         }
         return craft()->amForms_forms->displayForm($form);
     }
+
+    /**
+     * Display a reCAPTCHA widget.
+     */
+    public function displayRecaptcha()
+    {
+        return craft()->amForms_recaptcha->render();
+    }
 }

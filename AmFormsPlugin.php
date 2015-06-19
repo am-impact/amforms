@@ -70,6 +70,9 @@ class AmFormsPlugin extends BasePlugin
 
             'amforms/settings' => array(
                 'action' => 'amForms/settings/index'
+            ),
+            'amforms/settings/recaptcha' => array(
+                'action' => 'amForms/settings/recaptcha'
             )
         );
     }

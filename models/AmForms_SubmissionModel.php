@@ -17,7 +17,8 @@ class AmForms_SubmissionModel extends BaseElementModel
                 'formId'    => AttributeType::Number,
                 'formName'  => AttributeType::String,
                 'ipAddress' => AttributeType::String,
-                'userAgent' => AttributeType::Mixed
+                'userAgent' => AttributeType::Mixed,
+                'spamFree'  => array(AttributeType::Bool, 'default' => true)
             )
         );
     }

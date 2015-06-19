@@ -12,10 +12,22 @@ class AmForms_SettingsController extends BaseController
     public function actionIndex()
     {
         $variables = array(
-            'type' => AmFormsModel::SettingGeneral,
+            'type'    => AmFormsModel::SettingGeneral,
             'general' => craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingGeneral)
         );
         $this->renderTemplate('amForms/settings/index', $variables);
+    }
+
+    /**
+     * Show reCAPTCHA settings.
+     */
+    public function actionRecaptcha()
+    {
+        $variables = array(
+            'type'      => AmFormsModel::SettingRecaptcha,
+            'recaptcha' => craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingRecaptcha)
+        );
+        $this->renderTemplate('amForms/settings/recaptcha', $variables);
     }
 
     /**

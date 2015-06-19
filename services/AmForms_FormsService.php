@@ -247,11 +247,15 @@ class AmForms_FormsService extends BaseApplicationComponent
         );
         $bodyHtml = craft()->amForms->renderDisplayTemplate('tab', $form->tabTemplate, $variables);
 
+        // Use reCAPTCHA?
+        $recaptchaHtml = craft()->amForms_recaptcha->render();
+
         // Build our complete form
         $variables = array(
-            'form'    => $form,
-            'body'    => $bodyHtml,
-            'element' => $submission
+            'form'      => $form,
+            'body'      => $bodyHtml,
+            'recaptcha' => $recaptchaHtml,
+            'element'   => $submission
         );
 
         $formHtml = craft()->amForms->renderDisplayTemplate('form', $form->formTemplate, $variables);

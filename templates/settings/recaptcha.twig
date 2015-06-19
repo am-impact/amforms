@@ -1,0 +1,28 @@
+{% extends 'amforms/_layouts/settings' %}
+
+{% set title = 'reCAPTCHA'|t %}
+{% set selectedTab = 'recaptcha' %}
+
+{% block fields %}
+    {{ forms.lightswitchField({
+        label: recaptcha.useRecaptcha.name|t,
+        id: recaptcha.useRecaptcha.handle,
+        name: recaptcha.useRecaptcha.handle,
+        on: recaptcha.useRecaptcha.value,
+        instructions: 'This will use Google reCAPTCHA.'|t
+    }) }}
+    {{ forms.textField({
+        label: recaptcha.siteKey.name|t,
+        id: recaptcha.siteKey.handle,
+        name: recaptcha.siteKey.handle,
+        value: recaptcha.siteKey.value,
+        instructions: 'Go to Google reCAPTCHA and register the site. Use the site key that is given.'|t
+    }) }}
+    {{ forms.textField({
+        label: recaptcha.secretKey.name|t,
+        id: recaptcha.secretKey.handle,
+        name: recaptcha.secretKey.handle,
+        value: recaptcha.secretKey.value,
+        instructions: 'Go to Google reCAPTCHA and register the site. Use the secret key that is given.'|t
+    }) }}
+{% endblock %}
