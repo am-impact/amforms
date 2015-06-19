@@ -86,6 +86,12 @@ class AmForms_FormsService extends BaseApplicationComponent
         $formRecord->validate();
         $form->addErrors($formRecord->getErrors());
 
+        // Is submissions or notifications enabled?
+        if (! $form->submissionEnabled && ! $form->notificationEnabled) {
+            $form->addError('submissionEnabled', Craft::t('Submissions or notifications must be enabled.'));
+            $form->addError('notificationEnabled', Craft::t('Notifications or submissions must be enabled.'));
+        }
+
         if (! $form->hasErrors()) {
             $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
 

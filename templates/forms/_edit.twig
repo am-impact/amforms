@@ -17,7 +17,8 @@
     },
     notifications:  {
         label: "Notifications"|t,
-        url: '#notification'
+        url: '#notification',
+        class: (form.getErrors('notificationEnabled')|length ? 'error' : null)
     }
 } %}
 {% if currentUser.admin %}

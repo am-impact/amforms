@@ -6,6 +6,7 @@
     first: true,
     onLabel: 'Enable'|t,
     offLabel: 'Disable'|t,
+    errors: form.getErrors('notificationEnabled'),
     instructions: 'Whether to email form submissions.'|t
 }) }}
 {{ forms.textField({
