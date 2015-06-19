@@ -164,6 +164,14 @@ class AmForms_FormsService extends BaseApplicationComponent
             // Delete the field layout
             craft()->fields->deleteLayoutById($form->fieldLayoutId);
 
+            // Delete submission elements
+            $submissionIds = craft()->db->createCommand()
+                ->select('id')
+                ->from('amforms_submissions')
+                ->where(array('formId' => $form->id))
+                ->queryColumn();
+            craft()->elements->deleteElementById($submissionIds);
+
             // Delete the element and form
             craft()->elements->deleteElementById($form->id);
 
