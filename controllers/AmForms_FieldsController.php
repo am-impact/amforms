@@ -95,7 +95,7 @@ class AmForms_FieldsController extends BaseController
         }
 
         // Set field context
-        craft()->content->fieldContext = AmForms_FormModel::getFieldContext();
+        craft()->content->fieldContext = AmFormsModel::FieldContext;
 
         // Save field
         if (craft()->fields->saveField($field)) {
