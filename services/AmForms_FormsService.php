@@ -88,8 +88,8 @@ class AmForms_FormsService extends BaseApplicationComponent
 
         // Is submissions or notifications enabled?
         if (! $form->submissionEnabled && ! $form->notificationEnabled) {
-            $form->addError('submissionEnabled', Craft::t('Submissions or notifications must be enabled.'));
-            $form->addError('notificationEnabled', Craft::t('Notifications or submissions must be enabled.'));
+            $form->addError('submissionEnabled', Craft::t('Submissions or notifications must be enabled, otherwise you will lose the submission.'));
+            $form->addError('notificationEnabled', Craft::t('Notifications or submissions must be enabled, otherwise you will lose the submission.'));
         }
 
         if (! $form->hasErrors()) {
