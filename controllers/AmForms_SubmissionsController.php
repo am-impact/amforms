@@ -51,7 +51,7 @@ class AmForms_SubmissionsController extends BaseController
 
         // @TODO Ask brandon wtf is going on here
         // For some reason we don't have the proper content without this
-        $submission->setContent(craft()->content->getContent($submission))
+        $submission->setContent(craft()->content->getContent($submission));
 
         // Get tabs
         $tabs = array();
