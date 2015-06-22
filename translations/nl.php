@@ -1,5 +1,17 @@
 <?php
 return array(
+    // Fields that'll be created
+    'Comment' => 'Opmerking',
+    'Email address' => 'E-mailadres',
+    'First name' => 'Voornaam',
+    'Name' => 'Naam',
+    'Last name' => 'Achternaam',
+    'Mobile number' => 'Mobiele nummer',
+    'Reaction' => 'Reactie',
+    'Telephone number' => 'Telefoonnummer',
+    'Website' => 'Website',
+
+    // Plugin translations
     '{formName} form was submitted' => '{formName} formulier is ingevuld',
     'Add a form' => 'Voeg een formulier toe',
     'All forms' => 'Alle formulieren',

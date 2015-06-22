@@ -13,6 +13,7 @@ class AmForms_InstallService extends BaseApplicationComponent
     {
         $this->_installGeneral();
         $this->_installRecaptcha();
+        $this->_installFields();
     }
 
     /**
@@ -88,5 +89,78 @@ class AmForms_InstallService extends BaseApplicationComponent
             )
         );
         $this->installSettings($settings, AmFormsModel::SettingRecaptcha);
+    }
+
+    /**
+     * Install Craft fields.
+     */
+    private function _installFields()
+    {
+        // Fields to install
+        $fields = array(
+            array(
+                'name' => Craft::t('Name'),
+                'type' => 'PlainText'
+            ),
+            array(
+                'name' => Craft::t('First name'),
+                'type' => 'PlainText'
+            ),
+            array(
+                'name' => Craft::t('Last name'),
+                'type' => 'PlainText'
+            ),
+            array(
+                'name' => Craft::t('Website'),
+                'type' => 'PlainText'
+            ),
+            array(
+                'name' => Craft::t('Email address'),
+                'type' => 'PlainText'
+            ),
+            array(
+                'name' => Craft::t('Telephone number'),
+                'type' => 'PlainText'
+            ),
+            array(
+                'name' => Craft::t('Mobile number'),
+                'type' => 'PlainText'
+            ),
+            array(
+                'name' => Craft::t('Comment'),
+                'type' => 'PlainText',
+                'settings' => array(
+                    'multiline'   => 1,
+                    'initialRows' => 4
+                )
+            ),
+            array(
+                'name' => Craft::t('Reaction'),
+                'type' => 'PlainText',
+                'settings' => array(
+                    'multiline'   => 1,
+                    'initialRows' => 4
+                )
+            )
+        );
+
+        // Set field context
+        craft()->content->fieldContext = AmFormsModel::FieldContext;
+
+        // Create fields
+        foreach ($fields as $field) {
+            $newField = new FieldModel();
+            $newField->name         = $field['name'];
+            $newField->handle       = str_replace(' ', '', lcfirst(ucwords(strtolower($field['name']))));
+            $newField->translatable = isset($field['translatable']) ? $field['translatable'] : true;
+            $newField->type         = $field['type'];
+            if (isset($field['instructions'])) {
+                $newField->instructions = $field['instructions'];
+            }
+            if (isset($field['settings'])) {
+                $newField->settings = $field['settings'];
+            }
+            craft()->fields->saveField($newField);
+        }
     }
 }
