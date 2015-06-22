@@ -96,6 +96,9 @@ class AmForms_FormsService extends BaseApplicationComponent
             $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
 
             try {
+                // Set field context otherwise the layout could fail
+                craft()->content->fieldContext = AmFormsModel::FieldContext;
+
                 // Do we need to delete an old field layout?
                 if (! $isNewForm) {
                     $oldLayout = $oldForm->getFieldLayout();
