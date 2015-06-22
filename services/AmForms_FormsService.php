@@ -216,6 +216,7 @@ class AmForms_FormsService extends BaseApplicationComponent
 
         // Build field HTML
         $tabs = array();
+        $supportedFields = craft()->amForms_fields->getSupportedFieldTypes();
         $fieldTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', $form->fieldTemplate);
         foreach ($form->getFieldLayout()->getTabs() as $tab) {
             // Tab information
@@ -229,6 +230,10 @@ class AmForms_FormsService extends BaseApplicationComponent
             foreach ($fields as $layoutField) {
                 // Get actual field
                 $field = $layoutField->getField();
+                if (! in_array($field->type, $supportedFields)) {
+                    // We don't display unsupported fields
+                    continue;
+                }
 
                 // Reset templates path for input and get field input
                 craft()->path->setTemplatesPath($templatePath);
