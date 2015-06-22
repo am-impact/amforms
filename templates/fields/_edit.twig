@@ -17,6 +17,9 @@
     {% set isFieldTypeMissing = false %}
 {% endif %}
 
+{% set fieldTypes = craft.fields.getAllFieldTypes() %}
+{% set fieldTypeGroups = craft.amForms.getProperFieldTypes(fieldTypes) %}
+
 {% if fieldType is not defined or isFieldTypeMissing %}
     {% set fieldType = craft.fields.getFieldType('PlainText') %}
 {% endif %}
@@ -80,7 +83,7 @@
             warning: (fieldId is defined ? "Changing this may result in data loss."|t),
             id: 'type',
             name: 'type',
-            options: fieldTypes,
+            options: fieldTypeGroups,
             value: fieldType.getClassHandle(),
             toggle: true
         }) }}

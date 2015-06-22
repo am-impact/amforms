@@ -14,11 +14,13 @@ return array(
     // Plugin translations
     '{formName} form was submitted' => '{formName} formulier is ingevuld',
     'Add a form' => 'Voeg een formulier toe',
+    'Advanced fields' => 'Geavanceerde velden',
     'All forms' => 'Alle formulieren',
     'All submissions' => 'Alle inzendingen',
     'Are you sure you want to delete the selected submissions?' => 'Weet u zeker dat u deze inzendingen wilt verwijderen?',
     "Are you sure you want to delete this form and all of it's data?" => "Weet u zeker dat u dit formulier wilt verwijderen? U zult alle bijbehorende gegevens kwijtraken.",
     "Are you sure you want to delete this submission and all of it's data?" => "Weet u zeker dat u deze inzending wilt verwijderen? U zult alle bijbehorende gegevens kwijtraken.",
+    'Basic fields' => 'Basis velden',
     'Couldn’t find settings type.' => 'Kon de instelling type niet vinden.',
     'Couldn’t save form.' => 'Kon het formulier niet opslaan.',
     'Couldn’t save settings.' => 'Kon de instellingen niet opslaan.',

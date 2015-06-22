@@ -16,6 +16,18 @@ class AmFormsVariable
     }
 
     /**
+     * Get proper field types.
+     *
+     * @param array $fieldTypes All Craft's fieldtypes.
+     *
+     * @return array
+     */
+    public function getProperFieldTypes($fieldTypes)
+    {
+        return craft()->amForms_fields->getProperFieldTypes($fieldTypes);
+    }
+
+    /**
      * Get a form by its ID.
      *
      * @param int $id

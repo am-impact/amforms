@@ -39,26 +39,6 @@ class AmForms_FieldsController extends BaseController
             }
         }
 
-        // Get all field types
-        $allFieldTypes = craft()->fields->getAllFieldTypes();
-
-        // Supported field types
-        $fieldTypes = array();
-        $supported = array(
-            'Checkboxes',
-            'Dropdown',
-            'MultiSelect',
-            'Number',
-            'PlainText',
-            'RadioButtons'
-        );
-        foreach ($allFieldTypes as $key => $fieldType) {
-            if (in_array($fieldType->getClassHandle(), $supported)) {
-                $fieldTypes[$key] = $fieldType;
-            }
-        }
-        $variables['fieldTypes'] = FieldTypeVariable::populateVariables($fieldTypes);
-
         $this->renderTemplate('amforms/fields/_edit', $variables);
     }
 
