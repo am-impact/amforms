@@ -10,6 +10,10 @@
                 <td width="25%">{{ 'Date'|t }}:</td>
                 <td>{{ 'now'|date('d-m-Y  H:i:s') }}</td>
             </tr>
+            <tr>
+                <td>{{ 'Submitted from'|t }}</td>
+                <td>{{ craft.request.getUrlReferrer() }}</td>
+            </tr>
         </table>
         <br>
         <table border="1" cellpadding="10" width="100%" style="border-collapse: collapse;">
