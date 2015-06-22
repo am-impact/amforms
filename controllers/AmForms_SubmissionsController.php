@@ -157,7 +157,13 @@ class AmForms_SubmissionsController extends BaseController
                 ));
             }
             else {
+                // Remember active submissions
                 craft()->amForms_submissions->setActiveSubmission($submission);
+
+                // Return the submission by the form's handle, for custom HTML possibilities
+                craft()->urlManager->setRouteVariables(array(
+                    $form->handle => $submission
+                ));
             }
         }
     }
