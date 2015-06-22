@@ -13,6 +13,7 @@ return array(
 
     // Plugin translations
     '{formName} form was submitted' => '{formName} formulier is ingevuld',
+    '<strong>Note: Basic fields are supported in the displayForm() tag.</strong>' => '<strong>Let op: Basis velden worden ondersteund in de displayForm() tag.</strong>',
     'Add a form' => 'Voeg een formulier toe',
     'Advanced fields' => 'Geavanceerde velden',
     'All forms' => 'Alle formulieren',

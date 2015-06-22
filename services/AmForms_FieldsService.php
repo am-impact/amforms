@@ -54,6 +54,7 @@ class AmForms_FieldsService extends BaseApplicationComponent
     public function getSupportedFieldTypes()
     {
         return array(
+            'Assets',
             'Checkboxes',
             'Dropdown',
             'MultiSelect',
@@ -71,7 +72,6 @@ class AmForms_FieldsService extends BaseApplicationComponent
     public function getUnsupportedFieldTypes()
     {
         return array(
-            'Assets',
             'Matrix'
         );
     }
