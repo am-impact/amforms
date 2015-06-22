@@ -50,6 +50,24 @@ class AmFormsVariable
     }
 
     /**
+     * Get a form by its handle.
+     *
+     * @param string $handle
+     *
+     * @return AmForms_FormModel|null
+     */
+    public function getForm($handle)
+    {
+        // Get the form
+        $form = $this->getFormByHandle($handle);
+        if (! $form) {
+            craft()->amForms->handleError(Craft::t('No form exists with the handle “{handle}”.', array('handle' => $handle)));
+            return false;
+        }
+        return $form;
+    }
+
+    /**
      * Display a form.
      *
      * @param string $handle
