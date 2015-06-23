@@ -263,6 +263,9 @@ class AmForms_FormsService extends BaseApplicationComponent
         );
         $bodyHtml = craft()->amForms->renderDisplayTemplate('tab', $form->tabTemplate, $variables);
 
+        // Use AntiSpam?
+        $antispamHtml = craft()->amForms_antispam->render();
+
         // Use reCAPTCHA?
         $recaptchaHtml = craft()->amForms_recaptcha->render();
 
@@ -270,6 +273,7 @@ class AmForms_FormsService extends BaseApplicationComponent
         $variables = array(
             'form'      => $form,
             'body'      => $bodyHtml,
+            'antispam'  => $antispamHtml,
             'recaptcha' => $recaptchaHtml,
             'element'   => $submission
         );

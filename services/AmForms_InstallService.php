@@ -85,7 +85,11 @@ class AmForms_InstallService extends BaseApplicationComponent
             ),
             array(
                 'name' => 'Minimum time in seconds',
-                'value' => 5
+                'value' => 3
+            ),
+            array(
+                'name' => 'Duplicate check enabled',
+                'value' => true
             ),
             array(
                 'name' => 'Origin check enabled',

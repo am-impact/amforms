@@ -35,6 +35,14 @@
     }) }}
     <hr>
     {{ forms.lightswitchField({
+        label: antispam.duplicateCheckEnabled.name|t,
+        id: antispam.duplicateCheckEnabled.handle,
+        name: antispam.duplicateCheckEnabled.handle,
+        on: antispam.duplicateCheckEnabled.value,
+        instructions: 'Check for duplications on submission.'|t
+    }) }}
+    <hr>
+    {{ forms.lightswitchField({
         label: antispam.originCheckEnabled.name|t,
         id: antispam.originCheckEnabled.handle,
         name: antispam.originCheckEnabled.handle,

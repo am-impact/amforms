@@ -98,7 +98,19 @@ class AmFormsVariable
     }
 
     /**
+     * Display AntiSpam widget.
+     *
+     * @return bool|string
+     */
+    public function displayAntispam()
+    {
+        return craft()->amForms_antispam->render();
+    }
+
+    /**
      * Display a reCAPTCHA widget.
+     *
+     * @return bool|string
      */
     public function displayRecaptcha()
     {

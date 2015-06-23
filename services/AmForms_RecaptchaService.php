@@ -29,6 +29,9 @@ class AmForms_RecaptchaService extends BaseApplicationComponent
                 'siteKey' => $recaptchaSettings['siteKey']->value
             ));
 
+            // Reset templates path
+            craft()->path->setTemplatesPath(craft()->path->getSiteTemplatesPath());
+
             // Include Google's reCAPTCHA API
             craft()->templates->includeJsFile('https://www.google.com/recaptcha/api.js');
 
@@ -42,12 +45,13 @@ class AmForms_RecaptchaService extends BaseApplicationComponent
     /**
      * Verify a reCAPTCHA submission.
      *
-     * @param string $data
-     *
      * @return bool
      */
-    public function verify($data)
+    public function verify()
     {
+        // Get reCAPTCHA value
+        $captcha = craft()->request->getPost('g-recaptcha-response');
+
         // Get reCAPTCHA secret key
         $secretKey = craft()->amForms_settings->getSettingsByHandleAndType('secretKey', AmFormsModel::SettingRecaptcha);
         if (! $secretKey) {
@@ -57,7 +61,7 @@ class AmForms_RecaptchaService extends BaseApplicationComponent
         // Google API parameters
         $params = array(
             'secret'   => $secretKey->value,
-            'response' => $data
+            'response' => $captcha
         );
 
         // Set request
