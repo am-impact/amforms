@@ -12,6 +12,7 @@ class AmForms_InstallService extends BaseApplicationComponent
     public function install()
     {
         $this->_installGeneral();
+        $this->_installAntiSpam();
         $this->_installRecaptcha();
         $this->_installFields();
     }
@@ -32,7 +33,7 @@ class AmForms_InstallService extends BaseApplicationComponent
         // Add settings
         foreach ($settings as $setting) {
             // Only install if we have proper keys
-            if (! isset($setting['name']) || ! isset($setting['handle']) || ! isset($setting['value'])) {
+            if (! isset($setting['name']) || ! isset($setting['value'])) {
                 continue;
             }
 
@@ -40,7 +41,7 @@ class AmForms_InstallService extends BaseApplicationComponent
             $settingRecord = new AmForms_SettingRecord();
             $settingRecord->type = $settingType;
             $settingRecord->name = $setting['name'];
-            $settingRecord->handle = $setting['handle'];
+            $settingRecord->handle = str_replace(' ', '', lcfirst(ucwords(strtolower($setting['name']))));
             $settingRecord->value = $setting['value'];
             $settingRecord->save();
         }
@@ -54,16 +55,44 @@ class AmForms_InstallService extends BaseApplicationComponent
         $settings = array(
             array(
                 'name' => 'Quiet errors',
-                'handle' => 'quietErrors',
                 'value' => false
             ),
             array(
                 'name' => 'Use Mandrill for email',
-                'handle' => 'useMandrillForEmail',
                 'value' => false
             )
         );
         $this->installSettings($settings, AmFormsModel::SettingGeneral);
+    }
+
+    /**
+     * Install AntiSpam settings.
+     */
+    private function _installAntiSpam()
+    {
+        $settings = array(
+            array(
+                'name' => 'Honeypot enabled',
+                'value' => true
+            ),
+            array(
+                'name' => 'Honeypot name',
+                'value' => 'beesknees'
+            ),
+            array(
+                'name' => 'Time check enabled',
+                'value' => true
+            ),
+            array(
+                'name' => 'Minimum time in seconds',
+                'value' => 5
+            ),
+            array(
+                'name' => 'Origin check enabled',
+                'value' => true
+            )
+        );
+        $this->installSettings($settings, AmFormsModel::SettingAntispam);
     }
 
     /**
@@ -73,18 +102,15 @@ class AmForms_InstallService extends BaseApplicationComponent
     {
         $settings = array(
             array(
-                'name' => 'Use reCAPTCHA',
-                'handle' => 'useRecaptcha',
+                'name' => 'Google reCAPTCHA enabled',
                 'value' => false
             ),
             array(
                 'name' => 'Site key',
-                'handle' => 'siteKey',
                 'value' => ''
             ),
             array(
                 'name' => 'Secret key',
-                'handle' => 'secretKey',
                 'value' => ''
             )
         );

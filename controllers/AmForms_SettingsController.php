@@ -19,6 +19,18 @@ class AmForms_SettingsController extends BaseController
     }
 
     /**
+     * Show AntiSpam settings.
+     */
+    public function actionAntispam()
+    {
+        $variables = array(
+            'type'     => AmFormsModel::SettingAntispam,
+            'antispam' => craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingAntispam)
+        );
+        $this->renderTemplate('amForms/settings/antispam', $variables);
+    }
+
+    /**
      * Show reCAPTCHA settings.
      */
     public function actionRecaptcha()

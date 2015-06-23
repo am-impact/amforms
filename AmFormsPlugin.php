@@ -81,6 +81,9 @@ class AmFormsPlugin extends BasePlugin
             'amforms/settings' => array(
                 'action' => 'amForms/settings/index'
             ),
+            'amforms/settings/antispam' => array(
+                'action' => 'amForms/settings/antispam'
+            ),
             'amforms/settings/recaptcha' => array(
                 'action' => 'amForms/settings/recaptcha'
             )

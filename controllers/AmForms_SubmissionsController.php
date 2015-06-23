@@ -115,7 +115,7 @@ class AmForms_SubmissionsController extends BaseController
         $submission->setContentPostLocation($fieldsLocation);
 
         // Front-end submission, trigger reCAPTCHA?
-        if (! craft()->request->isCpRequest() && craft()->amForms_settings->isSettingValueEnabled('useRecaptcha', AmFormsModel::SettingRecaptcha)) {
+        if (! craft()->request->isCpRequest() && craft()->amForms_settings->isSettingValueEnabled('googleRecaptchaEnabled', AmFormsModel::SettingRecaptcha)) {
             $captcha = craft()->request->getPost('g-recaptcha-response');
             $submission->spamFree = craft()->amForms_recaptcha->verify($captcha);
         }

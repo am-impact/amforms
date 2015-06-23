@@ -12,5 +12,6 @@ class AmFormsModel extends BaseModel
 
     // Setting types
     const SettingGeneral = 'general';
+    const SettingAntispam = 'antispam';
     const SettingRecaptcha = 'recaptcha';
 }

@@ -19,7 +19,7 @@ class AmForms_RecaptchaService extends BaseApplicationComponent
         $recaptchaSettings = craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingRecaptcha);
 
         // Is reCAPTCHA enabled?
-        if ($recaptchaSettings && $recaptchaSettings['useRecaptcha']->value) {
+        if ($recaptchaSettings && $recaptchaSettings['googleRecaptchaEnabled']->value) {
             // Plugin's default template path
             $templatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
 

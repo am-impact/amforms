@@ -5,11 +5,11 @@
 
 {% block fields %}
     {{ forms.lightswitchField({
-        label: recaptcha.useRecaptcha.name|t,
-        id: recaptcha.useRecaptcha.handle,
-        name: recaptcha.useRecaptcha.handle,
-        on: recaptcha.useRecaptcha.value,
-        instructions: 'This will use Google reCAPTCHA.'|t
+        label: recaptcha.googleRecaptchaEnabled.name|t,
+        id: recaptcha.googleRecaptchaEnabled.handle,
+        name: recaptcha.googleRecaptchaEnabled.handle,
+        on: recaptcha.googleRecaptchaEnabled.value,
+        instructions: 'Use Google reCAPTCHA in forms.'|t
     }) }}
     {{ forms.textField({
         label: recaptcha.siteKey.name|t,
