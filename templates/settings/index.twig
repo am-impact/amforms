@@ -4,6 +4,13 @@
 {% set selectedTab = 'general' %}
 
 {% block fields %}
+    {{ forms.textField({
+        label: general.pluginName.name|t,
+        id: general.pluginName.handle,
+        name: general.pluginName.handle,
+        value: general.pluginName.value,
+        instructions: 'Plugin name for the end user.'|t
+    }) }}
     {{ forms.lightswitchField({
         label: general.quietErrors.name|t,
         id: general.quietErrors.handle,

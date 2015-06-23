@@ -54,6 +54,10 @@ class AmForms_InstallService extends BaseApplicationComponent
     {
         $settings = array(
             array(
+                'name' => 'Plugin name',
+                'value' => ''
+            ),
+            array(
                 'name' => 'Quiet errors',
                 'value' => false
             ),

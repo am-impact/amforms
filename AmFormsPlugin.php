@@ -11,9 +11,11 @@ class AmFormsPlugin extends BasePlugin
 {
     public function getName()
     {
-        $settings = $this->getSettings();
-        if ($settings->pluginName) {
-            return $settings->pluginName;
+        if (craft()->plugins->getPlugin('amforms')) {
+            $pluginName = craft()->amForms_settings->getSettingsByHandleAndType('pluginName', AmFormsModel::SettingGeneral);
+            if ($pluginName && $pluginName->value) {
+                return $pluginName->value;
+            }
         }
         return Craft::t('a&m forms');
     }
@@ -122,27 +124,5 @@ class AmFormsPlugin extends BasePlugin
         foreach ($fields as $field) {
             craft()->fields->deleteField($field);
         }
-    }
-
-    /**
-     * Get settings HTML.
-     */
-    public function getSettingsHtml()
-    {
-        return craft()->templates->render('amForms/settings', array(
-            'settings' => $this->getSettings()
-        ));
-    }
-
-    /**
-     * Plugin settings.
-     *
-     * @return array
-     */
-    protected function defineSettings()
-    {
-        return array(
-            'pluginName' => array(AttributeType::String)
-        );
     }
 }
