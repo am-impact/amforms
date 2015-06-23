@@ -39,8 +39,23 @@ class AmForms_FormsController extends BaseController
             }
         }
 
+        // Fields per set setting
+        $fieldsPerSet = craft()->amForms_settings->getSettingsByHandleAndType('fieldsPerSet', AmFormsModel::SettingGeneral);
+        $fieldsPerSet = ($fieldsPerSet && is_numeric($fieldsPerSet->value)) ? (int) $fieldsPerSet->value : 8;
+
         // Get available fields with our context
-        $variables['fields'] = craft()->fields->getAllFields('id', AmFormsModel::FieldContext);
+        $groupId = 1;
+        $counter = 1;
+        $variables['groups'] = array();
+        $fields = craft()->fields->getAllFields('id', AmFormsModel::FieldContext);
+        foreach ($fields as $field) {
+            if ($counter % $fieldsPerSet == 1) {
+                $groupId ++;
+                $counter = 1;
+            }
+            $variables['groups'][$groupId]['fields'][] = $field;
+            $counter ++;
+        }
 
         $this->renderTemplate('amforms/forms/_edit', $variables);
     }

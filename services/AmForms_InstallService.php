@@ -58,6 +58,10 @@ class AmForms_InstallService extends BaseApplicationComponent
                 'value' => false
             ),
             array(
+                'name' => 'Fields per set',
+                'value' => 8
+            ),
+            array(
                 'name' => 'Use Mandrill for email',
                 'value' => false
             )
