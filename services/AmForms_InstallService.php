@@ -171,6 +171,30 @@ class AmForms_InstallService extends BaseApplicationComponent
                     'multiline'   => 1,
                     'initialRows' => 4
                 )
+            ),
+            array(
+                'name' => Craft::t('Image'),
+                'type' => 'Assets',
+                'translatable' => false,
+                'settings' => array(
+                    'restrictFiles' => 1,
+                    'allowedKinds' => array('image'),
+                    'sources' => array('folder:1'),
+                    'singleUploadLocationSource' => '1',
+                    'defaultUploadLocationSource' => '1',
+                    'limit' => 1
+                )
+            ),
+            array(
+                'name' => Craft::t('File'),
+                'type' => 'Assets',
+                'translatable' => false,
+                'settings' => array(
+                    'sources' => array('folder:1'),
+                    'singleUploadLocationSource' => '1',
+                    'defaultUploadLocationSource' => '1',
+                    'limit' => 1
+                )
             )
         );
 

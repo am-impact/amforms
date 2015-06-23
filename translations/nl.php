@@ -3,7 +3,9 @@ return array(
     // Fields that'll be created
     'Comment' => 'Opmerking',
     'Email address' => 'E-mailadres',
+    'File' => 'Bestand',
     'First name' => 'Voornaam',
+    'Image' => 'Afbeelding',
     'Name' => 'Naam',
     'Last name' => 'Achternaam',
     'Mobile number' => 'Mobiele nummer',
