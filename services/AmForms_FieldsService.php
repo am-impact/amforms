@@ -72,6 +72,7 @@ class AmForms_FieldsService extends BaseApplicationComponent
     public function getUnsupportedFieldTypes()
     {
         return array(
+            'Date',
             'Entries',
             'Matrix'
         );
