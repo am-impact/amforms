@@ -222,7 +222,7 @@ class AmForms_InstallService extends BaseApplicationComponent
             if (isset($field['settings'])) {
                 $newField->settings = $field['settings'];
             }
-            craft()->fields->saveField($newField);
+            craft()->fields->saveField($newField, false); // Don't validate
         }
     }
 }
