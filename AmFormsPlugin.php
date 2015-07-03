@@ -53,16 +53,6 @@ class AmFormsPlugin extends BasePlugin
     public function registerCpRoutes()
     {
         return array(
-            'amforms/fields' => array(
-                'action' => 'amForms/fields/index'
-            ),
-            'amforms/fields/new' => array(
-                'action' => 'amForms/fields/editField'
-            ),
-            'amforms/fields/edit/(?P<fieldId>\d+)' => array(
-                'action' => 'amForms/fields/editField'
-            ),
-
             'amforms/forms' => array(
                 'action' => 'amForms/forms/index'
             ),
@@ -78,6 +68,26 @@ class AmFormsPlugin extends BasePlugin
             ),
             'amforms/submissions/edit/(?P<submissionId>\d+)' => array(
                 'action' => 'amForms/submissions/editSubmission'
+            ),
+
+            'amforms/fields' => array(
+                'action' => 'amForms/fields/index'
+            ),
+            'amforms/fields/new' => array(
+                'action' => 'amForms/fields/editField'
+            ),
+            'amforms/fields/edit/(?P<fieldId>\d+)' => array(
+                'action' => 'amForms/fields/editField'
+            ),
+
+            'amforms/exports' => array(
+                'action' => 'amForms/exports/index'
+            ),
+            'amforms/exports/new' => array(
+                'action' => 'amForms/exports/editExport'
+            ),
+            'amforms/exports/edit/(?P<exportId>\d+)' => array(
+                'action' => 'amForms/exports/editExport'
             ),
 
             'amforms/settings' => array(

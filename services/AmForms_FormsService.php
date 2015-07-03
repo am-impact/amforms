@@ -164,6 +164,9 @@ class AmForms_FormsService extends BaseApplicationComponent
         $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
 
         try {
+            // Delete export files
+            craft()->amForms_exports->deleteExportFilesForForm($form);
+
             // Delete the field layout
             craft()->fields->deleteLayoutById($form->fieldLayoutId);
 

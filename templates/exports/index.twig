@@ -1,0 +1,57 @@
+{% extends 'amforms/_layouts/overview' %}
+
+{% set selectedTab = 'exports' %}
+
+{% set sidebar %}
+    <div class="buttons">
+        <a class="btn submit add icon" href="{{ url('amforms/exports/new') }}">{{ 'New export'|t }}</a>
+    </div>
+{% endset %}
+
+{% set content %}
+    <p id="noexports"{% if exports %} class="hidden"{% endif %}>
+        {{ "No exports exist yet."|t }}
+    </p>
+
+    {% if exports %}
+        <table id="formExports" class="data fullwidth collapsible">
+            <thead>
+                <th scope="col">{{ 'Form'|t }}</th>
+                <th scope="col">{{ 'Total submissions'|t }}</th>
+                <th scope="col">{{ 'Status'|t }}</th>
+                <td class="thin"></td>
+            </thead>
+            <tbody>
+                {% for export in exports %}
+                    {% set form = craft.amForms.getFormById(export.formId) %}
+
+                    <tr data-id="{{ export.id }}" data-name="{{ '{form} export'|t({'form': form.name}) }}">
+                        <th scope="row" data-title="{{ 'Form'|t }}">
+                            <a href="{{ url('amforms/exports/edit/' ~ export.id) }}">{{ form.name|t }}</a>
+                        </th>
+                        <td data-title="{{ 'Total submissions'|t }}">{{ export.total }}</td>
+                        <td data-title="{{ 'Status'|t }}">
+                            {% if export.finished %}
+                                {{ 'Finished'|t }}
+                            {% else %}
+                                {{ 'Unfinished'|t }}
+                            {% endif %}
+                        </td>
+                        <td class="thin">
+                            <a class="delete icon" title="{{ 'Delete'|t }}" role="button"></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endset %}
+
+{% set js %}
+    new Craft.AdminTable({
+        tableSelector: '#formExports',
+        noObjectsSelector: '#noexports',
+        deleteAction: 'amForms/exports/deleteExport'
+    });
+{% endset %}
+{% includeJs js %}

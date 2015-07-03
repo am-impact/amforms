@@ -1,0 +1,87 @@
+{% extends '_layouts/cp' %}
+
+{% import '_includes/forms' as forms %}
+
+{% set title = (exportId is defined ? 'Edit export'|t : 'New export'|t) %}
+
+{% set crumbs = [
+    { label: craft.amForms.name, url: url('amforms') },
+    { label: 'Exports'|t, url: url('amforms/exports') },
+    { label: title, url: '#' }
+] %}
+
+{% set content %}
+    {% if not availableForms|length %}
+        <p>{{ 'No forms exist yet.'|t }}</p>
+    {% else %}
+        {% set formOptions = [] %}
+        {% for form in availableForms %}
+            {% set formOptions = formOptions|merge([{ label: form.name, value: form.id }]) %}
+        {% endfor %}
+
+        <form method="post" accept-charset="UTF-8" data-saveshortcut="1" data-saveshortcut-redirect="amforms/exports">
+            {{ getCsrfInput() }}
+            <input type="hidden" name="action" value="amForms/exports/saveExport">
+            <input type="hidden" name="redirect" value="amforms/exports">
+            {% if exportId is defined -%}<input type="hidden" name="exportId" value="{{ exportId }}">{% endif %}
+
+            {{ forms.selectField({
+                label: 'Form'|t,
+                id: 'formId',
+                name: 'formId',
+                value: export.formId,
+                options: formOptions,
+                errors: export.getErrors('formId'),
+                first: true,
+                toggle: true,
+                instructions: 'Which form do you want to export?'|t
+            }) }}
+            <hr>
+            <h3>{{ 'Which fields do you want to export?'|t }}</h3>
+            {% for form in availableForms %}
+                {% set fieldLayout = form.getFieldLayout() -%}
+                {% set isCurrent = (export.formId ? export.formId == form.id : loop.first) -%}
+
+                <div id="{{ form.id }}"{% if not isCurrent %} class="hidden"{% endif %}
+                >
+                    <table id="fields" class="data fullwidth collapsible">
+                        <thead>
+                            <th scope="col">{{ 'Field'|t }}</th>
+                            <th scope="col">{{ 'Export as'|t }}</th>
+                            <th scope="col">{{ 'Include in export'|t }}</th>
+                        </thead>
+                        <tbody>
+                            {% for tab in fieldLayout.getTabs() %}
+                                {% set fields = tab.getFields() %}
+                                {% for field in fields %}
+                                    {% set fieldInfo = field.getField() %}
+                                    <tr>
+                                        <td>{{ fieldInfo.name }}</td>
+                                        <td>
+                                            {{ forms.textField({
+                                                id: form.id ~ '[fields][' ~ fieldInfo.handle ~ ']',
+                                                name: form.id ~ '[fields][' ~ fieldInfo.handle ~ ']',
+                                                value: (isCurrent and export.map|length ? attribute(export.map.fields, fieldInfo.handle) : fieldInfo.name)
+                                            }) }}
+                                        </td>
+                                        <td>
+                                            {{ forms.lightswitchField({
+                                                id: form.id ~ '[included][' ~ fieldInfo.handle ~ ']',
+                                                name: form.id ~ '[included][' ~ fieldInfo.handle ~ ']',
+                                                on: (isCurrent and export.map|length ? attribute(export.map.included, fieldInfo.handle) : true)
+                                            }) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+            <hr>
+            <div class="buttons">
+                <input type="submit" class="btn submit" value="{{ 'Save'|t }}">
+            </div>
+        </form>
+    {% endif %}
+{% endset %}
