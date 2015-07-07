@@ -7,6 +7,8 @@ namespace Craft;
 class AmForms_ExportsService extends BaseApplicationComponent
 {
     private $_exportFiles = array();
+    private $_exportFields = array();
+    private $_exportColumns = array();
 
     /**
      * Get all exports.
@@ -148,6 +150,49 @@ class AmForms_ExportsService extends BaseApplicationComponent
     }
 
     /**
+     * Restart an export.
+     *
+     * @param AmForms_ExportModel $export
+     */
+    public function restartExport(AmForms_ExportModel $export)
+    {
+        // Get the form
+        $form = craft()->amForms_forms->getFormById($export->formId);
+        if (! $form) {
+            throw new Exception(Craft::t('No form exists with the ID “{id}”.', array('id' => $export->formId)));
+        }
+
+        // Delete old export
+        if (IOHelper::fileExists($export->file)) {
+            IOHelper::deleteFile($export->file);
+        }
+
+        // Reset finished
+        $export->finished = false;
+        // Set total records to export
+        $export->total = craft()->db->createCommand()
+                        ->select('COUNT(*)')
+                        ->from('amforms_submissions')
+                        ->where('formId=:formId', array(':formId' => $export->formId))
+                        ->queryScalar();
+        // Create a new export file
+        $export->file = $this->_createExportFile($export, $form);
+
+        // Save export and start export!
+        if ($this->saveExport($export)) {
+            // Start task
+            $params = array(
+                'exportId'  => $export->id,
+                'batchSize' => 100
+            );
+            craft()->tasks->createTask('AmForms_Export', Craft::t('{form} export', array('form' => $form->name)), $params);
+
+            // Notify user
+            craft()->userSession->setNotice(Craft::t('Export started.'));
+        }
+    }
+
+    /**
      * Run an export.
      *
      * @param AmForms_ExportModel $export
@@ -175,7 +220,57 @@ class AmForms_ExportsService extends BaseApplicationComponent
         // Add submissions to export file
         if ($submissions && count($submissions) > 0) {
             // Get the export file
-            $this->_exportData($export, $submissions);
+            $this->_exportFiles[$export->id] = fopen($export->file, 'a');
+
+            // Get field types
+            $fields = array();
+            $columnCounter = 0;
+            $fieldLayout = $submissions[0]->getFieldLayout(); // We just need a model
+            foreach ($fieldLayout->getFields() as $fieldLayoutField) {
+                $field = $fieldLayoutField->getField();
+
+                // Add field type
+                $fields[$field->handle] = $field;
+
+                // Remember column counter
+                switch ($field->type) {
+                    case 'Matrix':
+                        $blockTypes = $field->getFieldType()->getSettings()->getBlockTypes();
+                        foreach ($blockTypes as $blockType) {
+                            $blockTypeFields = $blockType->getFields();
+
+                            $this->_exportColumns[$field->handle . ':' . $blockType->handle] = $columnCounter;
+
+                            $columnCounter += count($blockTypeFields);
+                        }
+                        break;
+
+                    default:
+                        $this->_exportColumns[$field->handle] = $columnCounter;
+                        break;
+                }
+
+                $columnCounter ++;
+            }
+
+            // Get field handles that should be included
+            $this->_exportFields[$export->id] = array();
+            foreach ($export->map['fields'] as $fieldHandle => $columnName) {
+                if ($export->map['included'][$fieldHandle] && isset($fields[$fieldHandle])) {
+                    $this->_exportFields[$export->id][$fieldHandle] = $fields[$fieldHandle];
+                }
+            }
+
+            // Export submission model
+            foreach ($submissions as $submission) {
+                 // @TODO Ask brandon wtf is going on here
+                 // For some reason we don't have the proper content without this
+                 $submission->setContent(craft()->content->getContent($submission));
+                 $this->_exportSubmission($export, $submission);
+            }
+
+            // Close export file
+            fclose($this->_exportFiles[$export->id]);
         }
 
         return true;
@@ -255,149 +350,113 @@ class AmForms_ExportsService extends BaseApplicationComponent
     }
 
     /**
-     * Export data.
+     * Export submission.
      *
-     * @param AmForms_ExportModel $export
-     * @param array               $submissions
+     * @param AmForm_ExportModel     $export
+     * @param AmForm_SubmissionModel $submission
+     * @param bool                   $returnData
      */
-    private function _exportData(AmForms_ExportModel $export, $submissions)
+    private function _exportSubmission(AmForms_ExportModel $export, $submission, $returnData = false)
     {
-        $this->_exportFiles[$export->id] = fopen($export->file, 'a');
+        // Row data
+        $data = array();
+        $columnCounter = 0;
 
-        $rowCounter = 0;
-        $exportData = array();
+        // Multiple rows data
+        $hasMoreRows = false;
+        $moreRowsData = array();
 
-        // Get field handles that should be included
-        $includedFields = array();
-        foreach ($export->map['fields'] as $fieldHandle => $columnName) {
-            if ($export->map['included'][$fieldHandle]) {
-                $includedFields[] = $fieldHandle;
+        if ($returnData) {
+            $fields = array();
+            $fieldLayout = $submission->getFieldLayout();
+            foreach ($fieldLayout->getFields() as $fieldLayoutField) {
+                $field = $fieldLayoutField->getField();
+                $fields[$field->handle] = $field;
             }
         }
-
-        // Get submission's data
-        foreach ($submissions as $submission) {
-            // @TODO Ask brandon wtf is going on here
-            // For some reason we don't have the proper content without this
-            $submission->setContent(craft()->content->getContent($submission));
-            $attributes = $this->_getAttributesForModel($submission);
-
-            // Multiple rows data
-            $hasMoreRows = false;
-            $moreRowsData = array();
-
-            // This row's data
-            $data = array();
-            foreach ($includedFields as $columnCounter => $fieldHandle) {
-                // Get the attribute value
-                $attribute = isset($attributes[$fieldHandle]) ? $attributes[$fieldHandle] : false;
-
-                // Do we have one?
-                if ($attribute) {
-                    // Multiple values?
-                    if (is_array($attribute)) {
-                        // More than one?
-                        if (count($attribute) > 1) {
-                            $hasMoreRows = true;
-                            $moreRowsData[$columnCounter] = array_slice($attribute, 1);
-                            // Add the first row and add the others later
-                            foreach ($attribute[0] as $key => $attributeValue) {
-                                $data[] = $attributeValue;
-                            }
-                        }
-                        // Or just one additional row?
-                        elseif (count($attribute) == 1) {
-                            foreach ($attribute[0] as $key => $attributeValue) {
-                                $data[] = $attributeValue;
-                            }
-                        }
-                    }
-                    else {
-                        $data[] = $attribute;
-                    }
-                }
-            }
-
-            // Add row to CSV
-            $exportData[$rowCounter] = $data;
-            fputcsv($this->_exportFiles[$export->id], $data);
-
-            // Add more rows?
-            if ($hasMoreRows) {
-                foreach ($moreRowsData as $columnCounter => $rows) {
-                    foreach ($rows as $row) {
-                        // This row's data
-                        $data = array();
-
-                        // Add old data for other fields and new for the multiple rows
-                        for ($i = 0; $i < count($includedFields); $i++) {
-                            if ($i == $columnCounter) {
-                                foreach ($row as $rowValue) {
-                                    $data[] = $rowValue;
-                                }
-                            }
-                            else {
-                                $data[] = $exportData[$rowCounter][$i];
-                            }
-                        }
-
-                        // Add row to CSV
-                        fputcsv($this->_exportFiles[$export->id], $data);
-                    }
-                }
-            }
-
-            $rowCounter ++;
+        else {
+            $fields = $this->_exportFields[$export->id];
         }
 
-        fclose($this->_exportFiles[$export->id]);
-    }
-
-    /**
-     * Get attributes for a model.
-     *
-     * @param AmForm_SubmissionModel/MatrixBlockModel $model
-     *
-     * @return array
-     */
-    private function _getAttributesForModel($model)
-    {
-        $attributes  = array();
-        $content     = $model->getContent()->getAttributes();
-        $fieldLayout = $model->getFieldLayout();
-        foreach ($fieldLayout->getFields() as $fieldLayoutField) {
-            $field = $fieldLayoutField->getField();
-
+        foreach ($fields as $fieldHandle => $field) {
             switch ($field->type) {
                 case 'Assets':
                 case 'Entries':
-                    $attributes[$field->handle] = array();
-                    foreach ($model->{$field->handle}->find() as $fieldData) {
-                        $attributes[$field->handle][] = $fieldData->getContent()->title;
+                    $fieldExportData = array();
+                    foreach ($submission->$fieldHandle->find() as $fieldData) {
+                        $fieldExportData[] = $fieldData->getContent()->title;
                     }
-                    $attributes[$field->handle] = implode(', ', $attributes[$field->handle]);
+                    $data[] = implode(', ', $fieldExportData);
                     break;
 
                 case 'Lightswitch':
-                    if (isset($content[$field->handle])) {
-                        $attributes[$field->handle] = $content[$field->handle] ? Craft::t('Yes') : Craft::t('No');
-                    }
+                    $data[] = $submission->$fieldHandle ? Craft::t('Yes') : Craft::t('No');
                     break;
 
                 case 'Matrix':
-                    $attributes[$field->handle] = array();
-                    foreach ($model->{$field->handle}->find() as $matrixBlock) {
-                        $attributes[$field->handle][] = $this->_getAttributesForModel($matrixBlock);
+                    $blockCounter = 0;
+                    $matrixBlocks = $submission->$fieldHandle->find();
+                    foreach ($matrixBlocks as $matrixBlock) {
+                        $matrixBlockType = $matrixBlock->getType();
+                        $blockData = $this->_exportSubmission($export, $matrixBlock, true);
+
+                        // Column counter
+                        $startFrom = $this->_exportColumns[$fieldHandle . ':' . $matrixBlockType->handle];
+
+                        // Multiple blocks?
+                        if (count($matrixBlocks) > 1 && $blockCounter > 0) {
+                            $hasMoreRows = true;
+                            $moreRowsData[$startFrom][] = $blockData;
+                        }
+                        else {
+                            // Empty cells till we've reached the block type
+                            for ($i = 0; $i < ($startFrom - $columnCounter); $i++) {
+                                $data[] = '';
+                            }
+                            // We just have one block or we are adding the first block
+                            foreach ($blockData as $blockValue) {
+                                $data[] = $blockValue;
+                            }
+                        }
+
+                        $blockCounter ++;
                     }
                     break;
 
                 default:
-                    if (isset($content[$field->handle])) {
-                        $attributes[$field->handle] = $content[$field->handle];
-                    }
+                    $data[] = $submission->$fieldHandle;
                     break;
             }
+
+            $columnCounter ++;
         }
-        return $attributes;
+
+        // Either return the data or add to CSV
+        if ($returnData) {
+            return $data;
+        }
+        fputcsv($this->_exportFiles[$export->id], $data);
+
+        // Add more rows?
+        if ($hasMoreRows) {
+            foreach ($moreRowsData as $columnCounter => $rows) {
+                foreach ($rows as $row) {
+                    // This row's data
+                    $data = array();
+
+                    // Empty cells till we've reached the data
+                    for ($i = 0; $i < $columnCounter; $i++) {
+                        $data[] = '';
+                    }
+                    // Add row data
+                    foreach ($row as $rowData) {
+                        $data[] = $rowData;
+                    }
+
+                    // Add row to CSV
+                    fputcsv($this->_exportFiles[$export->id], $data);
+                }
+            }
+        }
     }
 }

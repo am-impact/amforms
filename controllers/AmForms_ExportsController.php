@@ -99,4 +99,62 @@ class AmForms_ExportsController extends BaseController
         $result = craft()->amForms_exports->deleteExportById($id);
         $this->returnJson(array('success' => $result));
     }
+
+    /**
+     * Restart an export.
+     */
+    public function actionRestartExport()
+    {
+        // Find export ID
+        $exportId = craft()->request->getParam('id');
+        if (! $exportId) {
+            $this->redirect('amforms/exports');
+        }
+
+        // Get the export
+        $export = craft()->amForms_exports->getExportById($exportId);
+        if (! $export) {
+            throw new Exception(Craft::t('No export exists with the ID “{id}”.', array('id' => $exportId)));
+        }
+
+        // Restart export
+        craft()->amForms_exports->restartExport($export);
+
+        // Redirect
+        $this->redirect('amforms/exports');
+    }
+
+    /**
+     * Download an export.
+     */
+    public function actionDownloadExport()
+    {
+        // Find export ID
+        $exportId = craft()->request->getParam('id');
+        if (! $exportId) {
+            $this->redirect('amforms/exports');
+        }
+
+        // Get the export
+        $export = craft()->amForms_exports->getExportById($exportId);
+        if (! $export) {
+            throw new Exception(Craft::t('No export exists with the ID “{id}”.', array('id' => $exportId)));
+        }
+
+        // Is the export finished and do we have a file?
+        if (! $export->finished || ! IOHelper::fileExists($export->file)) {
+            $this->redirect('amforms/exports');
+        }
+
+        // Download file!
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . basename($export->file));
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($export->file));
+        readfile($export->file);
+        die();
+    }
 }
