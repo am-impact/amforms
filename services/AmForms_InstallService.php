@@ -68,6 +68,10 @@ class AmForms_InstallService extends BaseApplicationComponent
             array(
                 'name' => 'Use Mandrill for email',
                 'value' => false
+            ),
+            array(
+                'name' => 'Export rows per set',
+                'value' => 100
             )
         );
         $this->installSettings($settings, AmFormsModel::SettingGeneral);

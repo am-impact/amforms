@@ -36,8 +36,8 @@ class AmForms_SettingsService extends BaseApplicationComponent
     /**
      * Get a setting by their handle and type.
      *
-     * @param string $type
      * @param string $handle
+     * @param string $type
      *
      * @return AmForms_SettingModel
      */
@@ -54,6 +54,24 @@ class AmForms_SettingsService extends BaseApplicationComponent
             return AmForms_SettingModel::populateModel($settingRecord);
         }
         return null;
+    }
+
+    /**
+     * Get a setting value by their handle and type.
+     *
+     * @param string $handle
+     * @param string $type
+     * @param mixed  $defaultValue
+     *
+     * @return mixed
+     */
+    public function getSettingsValueByHandleAndType($handle, $type, $defaultValue)
+    {
+        $setting = $this->getSettingsByHandleAndType($handle, $type);
+        if ($setting) {
+            return $setting->value;
+        }
+        return $defaultValue;
     }
 
     /**

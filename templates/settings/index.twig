@@ -32,4 +32,11 @@
         on: general.useMandrillForEmail.value,
         instructions: 'Switching this on will require a&m mailer in order to work.'|t
     }) }}
+    {{ forms.textField({
+        label: general.exportRowsPerSet.name|t,
+        id: general.exportRowsPerSet.handle,
+        name: general.exportRowsPerSet.handle,
+        value: general.exportRowsPerSet.value,
+        instructions: 'The amount of rows per set when running the export task.'|t
+    }) }}
 {% endblock %}
