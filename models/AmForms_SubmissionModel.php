@@ -78,6 +78,16 @@ class AmForms_SubmissionModel extends BaseElementModel
     }
 
     /**
+     * Returns the name of the table this element's content is stored in.
+     *
+     * @return string
+     */
+    public function getContentTable()
+    {
+        return AmFormsModel::FieldContent;
+    }
+
+    /**
      * Returns the field context this element's content uses.
      *
      * @return string

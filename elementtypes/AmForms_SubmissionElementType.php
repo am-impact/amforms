@@ -75,6 +75,31 @@ class AmForms_SubmissionElementType extends BaseElementType
     }
 
     /**
+     * Returns the content table name that should be joined in for an elements query.
+     *
+     * @param ElementCriteriaModel
+     *
+     * @throws Exception
+     * @return string
+     */
+    public function getContentTableForElementsQuery(ElementCriteriaModel $criteria)
+    {
+        return AmFormsModel::FieldContent;
+    }
+
+    /**
+     * Returns the fields that should be available for the elements query.
+     *
+     * @param ElementCriteriaModel $criteria
+     *
+     * @return FieldModel[]
+     */
+    public function getFieldsForElementsQuery(ElementCriteriaModel $criteria)
+    {
+        return craft()->fields->getAllFields(null, AmFormsModel::FieldContext);
+    }
+
+    /**
      * Returns this element type's actions.
      *
      * @param string|null $source

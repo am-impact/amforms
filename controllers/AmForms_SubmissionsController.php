@@ -49,10 +49,6 @@ class AmForms_SubmissionsController extends BaseController
             throw new Exception(Craft::t('No form exists with the ID “{id}”.', array('id' => $submission->formId)));
         }
 
-        // @TODO Ask brandon wtf is going on here
-        // For some reason we don't have the proper content without this
-        $submission->setContent(craft()->content->getContent($submission));
-
         // Get tabs
         $tabs = array();
         $layoutTabs = $submission->getFieldLayout()->getTabs();

@@ -10,6 +10,9 @@ class AmFormsModel extends BaseModel
     // Field context
     const FieldContext = 'amForms';
 
+    //Field content
+    const FieldContent = 'amforms_content';
+
     // Setting types
     const SettingGeneral = 'general';
     const SettingAntispam = 'antispam';

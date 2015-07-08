@@ -98,6 +98,7 @@ class AmForms_FormsService extends BaseApplicationComponent
             try {
                 // Set field context otherwise the layout could fail
                 craft()->content->fieldContext = AmFormsModel::FieldContext;
+                craft()->content->contentTable = AmFormsModel::FieldContent;
 
                 // Do we need to delete an old field layout?
                 if (! $isNewForm) {

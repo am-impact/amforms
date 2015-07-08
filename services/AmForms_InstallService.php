@@ -11,10 +11,27 @@ class AmForms_InstallService extends BaseApplicationComponent
      */
     public function install()
     {
+        $this->_createContentTable();
         $this->_installGeneral();
         $this->_installAntiSpam();
         $this->_installRecaptcha();
         $this->_installFields();
+    }
+
+    /**
+     * Create content table.
+     */
+    public function _createContentTable()
+    {
+        craft()->db->createCommand()->createTable('amforms_content', array(
+            'elementId' => array('column' => ColumnType::Int, 'null' => false),
+            'locale'    => array('column' => ColumnType::Locale, 'null' => false),
+            'title'     => array('column' => ColumnType::Varchar),
+        ));
+        craft()->db->createCommand()->createIndex('amforms_content', 'elementId,locale', true);
+        craft()->db->createCommand()->createIndex('amforms_content', 'title');
+        craft()->db->createCommand()->addForeignKey('amforms_content', 'elementId', 'elements', 'id', 'CASCADE', null);
+        craft()->db->createCommand()->addForeignKey('amforms_content', 'locale', 'locales', 'locale', 'CASCADE', 'CASCADE');
     }
 
     /**
@@ -41,7 +58,7 @@ class AmForms_InstallService extends BaseApplicationComponent
             $settingRecord = new AmForms_SettingRecord();
             $settingRecord->type = $settingType;
             $settingRecord->name = $setting['name'];
-            $settingRecord->handle = str_replace(' ', '', lcfirst(ucwords(strtolower($setting['name']))));
+            $settingRecord->handle = $this->_camelCase($setting['name']);
             $settingRecord->value = $setting['value'];
             $settingRecord->save();
         }
@@ -210,14 +227,15 @@ class AmForms_InstallService extends BaseApplicationComponent
             )
         );
 
-        // Set field context
+        // Set field context and content
         craft()->content->fieldContext = AmFormsModel::FieldContext;
+        craft()->content->contentTable = AmFormsModel::FieldContent;
 
         // Create fields
         foreach ($fields as $field) {
             $newField = new FieldModel();
             $newField->name         = $field['name'];
-            $newField->handle       = str_replace(' ', '', lcfirst(ucwords(strtolower($field['name']))));
+            $newField->handle       = $this->_camelCase($field['name']);
             $newField->translatable = isset($field['translatable']) ? $field['translatable'] : true;
             $newField->type         = $field['type'];
             if (isset($field['instructions'])) {
@@ -228,5 +246,21 @@ class AmForms_InstallService extends BaseApplicationComponent
             }
             craft()->fields->saveField($newField, false); // Don't validate
         }
+    }
+
+    /**
+     * Camel case a string.
+     *
+     * @param string $str
+     *
+     * @return string
+     */
+    private function _camelCase($str)
+    {
+        // Non-alpha and non-numeric characters become spaces
+        $str = preg_replace('/[^a-z0-9]+/i', ' ', $str);
+
+        // Camel case!
+        return str_replace(' ', '', lcfirst(ucwords(strtolower(trim($str)))));
     }
 }

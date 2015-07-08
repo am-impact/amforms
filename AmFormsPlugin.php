@@ -129,10 +129,17 @@ class AmFormsPlugin extends BasePlugin
      */
     public function onBeforeUninstall()
     {
+        // Override Craft's default context and content
+        craft()->content->fieldContext = AmFormsModel::FieldContext;
+        craft()->content->contentTable = AmFormsModel::FieldContent;
+
         // Delete our own context fields
         $fields = craft()->fields->getAllFields('id', AmFormsModel::FieldContext);
         foreach ($fields as $field) {
             craft()->fields->deleteField($field);
         }
+
+        // Delete content table
+        craft()->db->createCommand()->dropTable('amforms_content');
     }
 }

@@ -263,9 +263,6 @@ class AmForms_ExportsService extends BaseApplicationComponent
 
             // Export submission model
             foreach ($submissions as $submission) {
-                 // @TODO Ask brandon wtf is going on here
-                 // For some reason we don't have the proper content without this
-                 $submission->setContent(craft()->content->getContent($submission));
                  $this->_exportSubmission($export, $submission);
             }
 
