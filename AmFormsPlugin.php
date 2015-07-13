@@ -70,6 +70,10 @@ class AmFormsPlugin extends BasePlugin
                 'action' => 'amForms/submissions/editSubmission'
             ),
 
+            'amforms/submissions/edit/(?P<submissionId>\d+)/notes' => array(
+                'action' => 'amForms/notes/displayNotes'
+            ),
+
             'amforms/fields' => array(
                 'action' => 'amForms/fields/index'
             ),

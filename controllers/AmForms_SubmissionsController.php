@@ -59,6 +59,12 @@ class AmForms_SubmissionsController extends BaseController
             );
         }
 
+        // Add notes to tabs
+        $tabs['notes'] = array(
+            'label' => Craft::t('Notes'),
+            'url'   => $submission->getCpEditUrl() . '/notes'
+        );
+
         // Set variables
         $variables['submission'] = $submission;
         $variables['form'] = $form;
