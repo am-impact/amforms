@@ -1,0 +1,18 @@
+{% if submissions|length %}
+    <table class="data fullwidth collapsible">
+        <thead>
+            <th scope="col">{{ 'Submission'|t }}</th>
+            {% if settings.showDate -%}<th scope="col">{{ 'Date'|t }}</th>{% endif %}
+        </thead>
+        <tbody>
+            {% for submission in submissions %}
+                <tr>
+                    <td data-title="{{ 'Submission'|t }}"><a href="{{ submission.getCpEditUrl() }}" title="{{ 'Edit submission'|t }}">{{ submission.title }}</a></td>
+                    {% if settings.showDate -%}<td data-title="{{ 'Date'|t }}">{{ submission.dateCreated }}</td>{% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>{{ 'No recent submissions available.'|t }}</p>
+{% endif %}
