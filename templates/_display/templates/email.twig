@@ -29,7 +29,15 @@
                         <td width="25%">{{ field.name }}:</td>
                         <td>
                             {% if value is not iterable and value is not empty -%}
-                                {{ value }}
+                                {% if field.type == 'Lightswitch' %}
+                                    {% if value == '1' %}
+                                        {{ 'Yes'|t }}
+                                    {% else %}
+                                        {{ 'No'|t }}
+                                    {% endif %}
+                                {% else %}
+                                    {{ value }}
+                                {% endif %}
                             {% else -%}
                                 <ul style="margin-left:0;">
                                     {% for item in value %}

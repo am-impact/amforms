@@ -95,21 +95,21 @@ class AmForms_FieldsController extends BaseController
     }
 
     /**
-	 * Delete a field.
-	 */
-	public function actionDeleteField()
-	{
-		$this->requirePostRequest();
-		$this->requireAjaxRequest();
+     * Delete a field.
+     */
+    public function actionDeleteField()
+    {
+        $this->requirePostRequest();
+        $this->requireAjaxRequest();
 
         // Override Craft's default context and content
         craft()->content->fieldContext = AmFormsModel::FieldContext;
         craft()->content->contentTable = AmFormsModel::FieldContent;
 
         // Delete field
-		$fieldId = craft()->request->getRequiredPost('id');
-		$success = craft()->fields->deleteFieldById($fieldId);
+        $fieldId = craft()->request->getRequiredPost('id');
+        $success = craft()->fields->deleteFieldById($fieldId);
 
-		$this->returnJson(array('success' => $success));
-	}
+        $this->returnJson(array('success' => $success));
+    }
 }
