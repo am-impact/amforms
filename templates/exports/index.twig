@@ -32,16 +32,15 @@
                         <td data-title="{{ 'Total submissions'|t }}">{{ export.total }}</td>
                         <td data-title="{{ 'Status'|t }}">
                             {% if export.finished %}
-                                {{ 'Finished'|t }}
+                                <a href="{{ actionUrl('amForms/exports/downloadExport', { id: export.id }) }}" title="{{ 'Download'|t }}">{{ 'Done'|t }}</a>
                                 <a class="menubtn" title="{{ 'Options'|t }}"></a>
                                 <div class="menu">
                                     <ul>
-                                        <li><a href="{{ actionUrl('amForms/exports/downloadExport', { id: export.id }) }}">{{ 'Download'|t }}</a></li>
                                         <li><a href="{{ actionUrl('amForms/exports/restartExport', { id: export.id }) }}">{{ 'Restart'|t }}</a></li>
                                     </ul>
                                 </div>
                             {% else %}
-                                {{ 'Unfinished'|t }}
+                                {{ 'Busy'|t }}
                             {% endif %}
                         </td>
                         <td class="thin">
