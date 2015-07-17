@@ -69,7 +69,7 @@
                         label: 'Name'|t,
                         id: 'name',
                         name: 'name',
-                        value: note.name,
+                        value: (note.name|length ? note.name : user.firstName),
                         errors: note.getErrors('name'),
                         first: true,
                         required: true,
