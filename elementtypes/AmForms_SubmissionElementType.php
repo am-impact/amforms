@@ -132,8 +132,39 @@ class AmForms_SubmissionElementType extends BaseElementType
             'title'       => Craft::t('Title'),
             'formName'    => Craft::t('Form name'),
             'dateCreated' => Craft::t('Date created'),
-            'dateUpdated' => Craft::t('Date updated')
+            'dateUpdated' => Craft::t('Date updated'),
+            'notes'       => Craft::t('Notes')
         );
+    }
+
+    /**
+     * @inheritDoc IElementType::getTableAttributeHtml()
+     *
+     * @param BaseElementModel $element
+     * @param string           $attribute
+     *
+     * @return string
+     */
+    public function getTableAttributeHtml(BaseElementModel $element, $attribute)
+    {
+        switch ($attribute) {
+            case 'notes':
+                $notes = craft()->db->createCommand()
+                        ->select('COUNT(*)')
+                        ->from('amforms_notes')
+                        ->where('submissionId=:submissionId', array(':submissionId' => $element->id))
+                        ->queryScalar();
+
+                return sprintf('<a href="%s">%d</a>',
+                    $element->getCpEditUrl() . '/notes',
+                    $notes
+                );
+                break;
+
+            default:
+                return parent::getTableAttributeHtml($element, $attribute);
+                break;
+        }
     }
 
     /**
