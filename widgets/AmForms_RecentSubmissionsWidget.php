@@ -19,6 +19,15 @@ class AmForms_RecentSubmissionsWidget extends BaseWidget
         return $name;
     }
 
+    public function getColspan()
+    {
+        // Bigger widget, if no form was chosen
+        if ($this->getSettings()->form == 0) {
+            return 2;
+        }
+        return 1;
+    }
+
     public function getBodyHtml()
     {
         // Widget settings
@@ -60,7 +69,8 @@ class AmForms_RecentSubmissionsWidget extends BaseWidget
         return array(
            'form'  => array(AttributeType::Number, 'required' => true),
            'limit' => array(AttributeType::Number, 'min' => 0, 'default' => 10),
-           'showDate' => array(AttributeType::Bool, 'default' => true)
+           'showDate' => array(AttributeType::Bool, 'default' => true),
+           'showTime' => array(AttributeType::Bool, 'default' => true)
         );
     }
 }

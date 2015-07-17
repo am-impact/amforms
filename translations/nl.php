@@ -113,6 +113,7 @@ return array(
     'Sender name' => 'Afzender naam',
     'Settings saved.' => 'Instellingen opgeslagen.',
     'Show date' => 'Datum weergeven',
+    'Show time' => 'Tijd weergeven',
     'Site key' => 'Website sleutel',
     'Store submissions' => 'Inzendingen opslaan',
     'Submission saved.' => 'Inzending opgeslagen.',
