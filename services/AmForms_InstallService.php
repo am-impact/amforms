@@ -106,7 +106,7 @@ class AmForms_InstallService extends BaseApplicationComponent
             ),
             array(
                 'name' => 'Honeypot name',
-                'value' => 'beesknees'
+                'value' => 'yourssince1615'
             ),
             array(
                 'name' => 'Time check enabled',
