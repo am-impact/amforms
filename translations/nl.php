@@ -45,7 +45,6 @@ return array(
     'Date updated' => 'Wijzigingsdatum',
     'Design your form' => 'Stel uw formulier samen',
     'Don’t show' => 'Niet weergeven',
-    'Done' => 'Klaar',
     'Download' => 'Download',
     'Duplicate check enabled' => 'Duplicatie controle inschakelen',
     'Edit export' => 'Export bewerken',
