@@ -19,18 +19,11 @@
     errors: settings.getErrors('limit')
 }) }}
 
-{{ forms.lightswitchField({
-    label: 'Show date'|t,
+{{ forms.selectField({
+    label: 'Date'|t,
     id: 'showDate',
     name: 'showDate',
-    on: settings.showDate,
+    options: { '': 'Don’t show'|t, 'date': 'Show date'|t, 'dateTime': 'Show date and time'|t },
+    value: settings.showDate,
     errors: settings.getErrors('showDate')
-}) }}
-
-{{ forms.lightswitchField({
-    label: 'Show time'|t,
-    id: 'showTime',
-    name: 'showTime',
-    on: settings.showTime,
-    errors: settings.getErrors('showTime')
 }) }}

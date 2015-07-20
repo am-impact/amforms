@@ -3,14 +3,21 @@
         <thead>
             {% if settings.form == 0 -%}<th scope="col">{{ 'Form'|t }}</th>{% endif %}
             <th scope="col">{{ 'Submission'|t }}</th>
-            {% if settings.showDate -%}<th scope="col">{{ 'Date'|t }}</th>{% endif %}
+            {% if settings.showDate|length -%}<th scope="col">{{ 'Date'|t }}</th>{% endif %}
         </thead>
         <tbody>
             {% for submission in submissions %}
                 <tr>
                     {% if settings.form == 0 -%}<td data-title="{{ 'Form'|t }}">{{ submission.formName }}</td>{% endif %}
                     <td data-title="{{ 'Submission'|t }}"><a href="{{ submission.getCpEditUrl() }}" title="{{ 'Edit submission'|t }}">{{ submission.title }}</a></td>
-                    {% if settings.showDate -%}<td data-title="{{ 'Date'|t }}">{{ submission.dateCreated|date('d-m-Y') }}{% if settings.showTime %} <span class="light">{{ submission.dateCreated|date('H:i') }}</span>{% endif %}</td>{% endif %}
+                    {% if settings.showDate|length -%}
+                        <td data-title="{{ 'Date'|t }}">
+                            {{ submission.dateCreated|date('d-m-Y') }}
+                            {% if settings.showDate == 'dateTime' -%}
+                                <span class="light">{{ submission.dateCreated|date('H:i') }}</span>
+                            {% endif %}
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>

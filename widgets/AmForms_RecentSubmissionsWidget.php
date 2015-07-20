@@ -67,10 +67,9 @@ class AmForms_RecentSubmissionsWidget extends BaseWidget
     protected function defineSettings()
     {
         return array(
-           'form'  => array(AttributeType::Number, 'required' => true),
-           'limit' => array(AttributeType::Number, 'min' => 0, 'default' => 10),
-           'showDate' => array(AttributeType::Bool, 'default' => true),
-           'showTime' => array(AttributeType::Bool, 'default' => true)
+           'form'     => array(AttributeType::Number, 'required' => true),
+           'limit'    => array(AttributeType::Number, 'min' => 0, 'default' => 10),
+           'showDate' => array(AttributeType::String)
         );
     }
 }
