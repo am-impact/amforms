@@ -100,12 +100,12 @@ class AmForms_SubmissionModel extends BaseElementModel
     /**
      * Email this submission.
      *
-     * @param array $recipients [Optional] Override recipients from form settings.
+     * @param mixed $overrideRecipients [Optional] Override recipients from form settings.
      *
      * @return bool
      */
-    public function sendEmail($recipients = array())
+    public function sendEmail($overrideRecipients = false)
     {
-        return craft()->amForms_submissions->emailSubmission($this, $recipients);
+        return craft()->amForms_submissions->emailSubmission($this, $overrideRecipients);
     }
 }

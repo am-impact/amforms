@@ -212,11 +212,11 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
      * Email a submission.
      *
      * @param AmForms_SubmissionModel $submission
-     * @param array                   $overrideRecipients [Optional] Override recipients from form settings.
+     * @param mixed                   $overrideRecipients [Optional] Override recipients from form settings.
      *
      * @return bool
      */
-    public function emailSubmission(AmForms_SubmissionModel $submission, $overrideRecipients = array())
+    public function emailSubmission(AmForms_SubmissionModel $submission, $overrideRecipients = false)
     {
         // Do we even have a form ID?
         if (! $submission->formId) {
@@ -233,8 +233,13 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
 
         // Get our recipients
         $recipients = ArrayHelper::stringToArray($form->notificationRecipients);
-        if (is_array($overrideRecipients) && count($overrideRecipients)) {
-            $recipients = $overrideRecipients;
+        if ($overrideRecipients !== false) {
+            if (is_array($overrideRecipients) && count($overrideRecipients)) {
+                $recipients = $overrideRecipients;
+            }
+            elseif (is_string($overrideRecipients)) {
+                $recipients = ArrayHelper::stringToArray($overrideRecipients);
+            }
         }
         $recipients = array_unique($recipients);
         if (! count($recipients)) {
