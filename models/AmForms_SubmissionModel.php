@@ -96,4 +96,16 @@ class AmForms_SubmissionModel extends BaseElementModel
     {
         return AmFormsModel::FieldContext;
     }
+
+    /**
+     * Email this submission.
+     *
+     * @param array $recipients [Optional] Override recipients from form settings.
+     *
+     * @return bool
+     */
+    public function sendEmail($recipients = array())
+    {
+        return craft()->amForms_submissions->emailSubmission($this, $recipients);
+    }
 }
