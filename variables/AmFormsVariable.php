@@ -28,6 +28,30 @@ class AmFormsVariable
     }
 
     /**
+     * Returns a criteria model for AmForms_Submission elements.
+     *
+     * @param array $attributes
+     *
+     * @return ElementCriteriaModel
+     */
+    public function submissions($attributes = array())
+    {
+        return craft()->amForms_submissions->getCriteria($attributes);
+    }
+
+    /**
+     * Get a submission by its ID.
+     *
+     * @param int $id
+     *
+     * @return AmForms_SubmissionModel|null
+     */
+    public function getSubmissionById($id)
+    {
+        return craft()->amForms_submissions->getSubmissionById($id);
+    }
+
+    /**
      * Get a form by its ID.
      *
      * @param int $id
