@@ -9,7 +9,13 @@
             {% for submission in submissions %}
                 <tr>
                     {% if settings.form == 0 -%}<td data-title="{{ 'Form'|t }}">{{ submission.formName }}</td>{% endif %}
-                    <td data-title="{{ 'Submission'|t }}"><a href="{{ submission.getCpEditUrl() }}" title="{{ 'Edit submission'|t }}">{{ submission.title }}</a></td>
+                    <td data-title="{{ 'Submission'|t }}">
+                        {% if currentUser.can('accessPlugin-AmForms') -%}
+                            <a href="{{ submission.getCpEditUrl() }}" title="{{ 'Edit submission'|t }}">{{ submission.title }}</a>
+                        {% else -%}
+                            {{ submission.title }}
+                        {% endif %}
+                    </td>
                     {% if settings.showDate|length -%}
                         <td data-title="{{ 'Date'|t }}">
                             {{ submission.dateCreated|date('d-m-Y') }}
