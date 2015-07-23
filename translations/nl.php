@@ -135,6 +135,7 @@ return array(
     'The name of the sender of your notification email.' => 'De naam van de afzender, van uw notificatie e-mail.',
     'The reply to email address of your notification email.' => 'Het reageer e-mailadres van uw notificatie e-mail.',
     'The subject of your notification email.' => 'Het onderwerp van uw notificatie e-mail.',
+    'This action may only be performed by users with the proper permissions.' => 'Deze actie mag alleen uitgevoerd worden door gebruikers met de juiste rechten.',
     'Time check enabled' => 'Tijd controle inschakelen',
     'Title format' => 'Titel format',
     'Total submissions' => 'Aantal inzendingen',
