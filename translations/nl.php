@@ -110,6 +110,7 @@ return array(
     'Restart' => 'Herstarten',
     'Save submissions' => 'Inzendingen opslaan',
     'Secret key' => 'Geheime sleutel',
+    'Select a page' => 'Selecteer een pagina',
     'Send notifications' => 'Notificaties versturen',
     'Sender email address' => 'Afzender e-mailadres',
     'Sender name' => 'Afzender naam',

@@ -10,16 +10,15 @@
         {{ getCsrfInput() }}
         <input type="hidden" name="action" value="{{ submitAction }}">
         <input type="hidden" name="handle" value="{{ form.handle }}">
+        {% if form.redirectEntryId -%}
+            <input type="hidden" name="redirect" value="{{ form.getRedirectUrl() }}">
+        {% endif -%}
 
         {%- if antispam -%}
             {{ antispam }}
         {% endif -%}
 
     {% endif -%}
-
-    {% if form.redirectUri -%}
-        <input type="hidden" name="redirect" value="{{ form.redirectUri }}">
-    {% endif %}
 
     <div class="fields">
         {{ body|raw }}

@@ -57,6 +57,9 @@ class AmForms_FormsController extends BaseController
             $counter ++;
         }
 
+        // Get redirectEntryId elementType
+        $variables['entryElementType'] = craft()->elements->getElementType(ElementType::Entry);
+
         $this->renderTemplate('amforms/forms/_edit', $variables);
     }
 
@@ -85,11 +88,14 @@ class AmForms_FormsController extends BaseController
         $fieldLayout->type = AmFormsModel::ElementTypeForm;
         $form->setFieldLayout($fieldLayout);
 
+        // Get redirectEntryId
+        $redirectEntryId = craft()->request->getPost('redirectEntryId');
+
         // Form attributes
+        $form->redirectEntryId          = $redirectEntryId && is_array($redirectEntryId) && count($redirectEntryId) ? $redirectEntryId[0] : null;
         $form->name                     = craft()->request->getPost('name');
         $form->handle                   = craft()->request->getPost('handle');
         $form->titleFormat              = craft()->request->getPost('titleFormat');
-        $form->redirectUri              = craft()->request->getPost('redirectUri');
         $form->submitAction             = craft()->request->getPost('submitAction');
         $form->submitButton             = craft()->request->getPost('submitButton');
         $form->submissionEnabled        = craft()->request->getPost('submissionEnabled');

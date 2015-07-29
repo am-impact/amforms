@@ -31,10 +31,10 @@ class AmForms_FormModel extends BaseElementModel
         return array_merge(parent::defineAttributes(), array(
             'id'                       => AttributeType::Number,
             'fieldLayoutId'            => AttributeType::Number,
+            'redirectEntryId'          => AttributeType::Number,
             'name'                     => AttributeType::String,
             'handle'                   => AttributeType::String,
             'titleFormat'              => array(AttributeType::String, 'default' => "{dateCreated|date('D, d M Y H:i:s')}"),
-            'redirectUri'              => AttributeType::String,
             'submitAction'             => AttributeType::String,
             'submitButton'             => AttributeType::String,
             'submissionEnabled'        => array(AttributeType::Bool, 'default' => true),
@@ -98,6 +98,33 @@ class AmForms_FormModel extends BaseElementModel
         }
 
         return $this->_fields;
+    }
+
+    /**
+     * Return the form's redirect Entry.
+     *
+     * @return null|EntryModel
+     */
+    public function getRedirectEntry()
+    {
+        if ($this->redirectEntryId) {
+            return craft()->entries->getEntryById($this->redirectEntryId);
+        }
+        return null;
+    }
+
+    /**
+     * Return the form's redirect URL.
+     *
+     * @return null|string
+     */
+    public function getRedirectUrl()
+    {
+        $entry = $this->getRedirectEntry();
+        if ($entry) {
+            return $entry->url;
+        }
+        return null;
     }
 
     /**

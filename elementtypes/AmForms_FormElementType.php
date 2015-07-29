@@ -158,10 +158,10 @@ class AmForms_FormElementType extends BaseElementType
     {
         $query->addSelect('forms.id,
                            forms.fieldLayoutId,
+                           forms.redirectEntryId,
                            forms.name,
                            forms.handle,
                            forms.titleFormat,
-                           forms.redirectUri,
                            forms.submitAction,
                            forms.submitButton,
                            forms.submissionEnabled,

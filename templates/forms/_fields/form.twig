@@ -50,14 +50,16 @@
     </div>
 {% endif %}
 <hr>
-{{ forms.textField({
+{{ forms.elementSelectField({
     label: 'Redirect page'|t,
-    id: 'redirectUri',
-    name: 'redirectUri',
-    value: form.redirectUri,
-    errors: form.getErrors('redirectUri'),
-    instructions: 'Where to redirect to upon form submission.'|t,
-    placeholder: siteUrl
+    id: 'redirectEntryId',
+    name: 'redirectEntryId',
+    elementType: entryElementType,
+    elements: [form.getRedirectEntry()],
+    limit: 1,
+    addButtonLabel: 'Select a page'|t,
+    errors: form.getErrors('redirectEntryId'),
+    instructions: 'Where to redirect to upon form submission.'|t
 }) }}
 <hr>
 {{ forms.lightswitchField({

@@ -210,14 +210,6 @@ class AmForms_FormsService extends BaseApplicationComponent
         // Get submission model
         $submission = craft()->amForms_submissions->getActiveSubmission($form);
 
-        // Update redirectUri?
-        if ($form->redirectUri) {
-            $vars = array(
-                'siteUrl' => craft()->getSiteUrl()
-            );
-            $form->redirectUri = craft()->templates->renderObjectTemplate($form->redirectUri, $vars);
-        }
-
         // Plugin's default template path
         $templatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
 
