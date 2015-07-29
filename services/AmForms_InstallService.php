@@ -19,28 +19,12 @@ class AmForms_InstallService extends BaseApplicationComponent
     }
 
     /**
-     * Create content table.
-     */
-    public function _createContentTable()
-    {
-        craft()->db->createCommand()->createTable('amforms_content', array(
-            'elementId' => array('column' => ColumnType::Int, 'null' => false),
-            'locale'    => array('column' => ColumnType::Locale, 'null' => false),
-            'title'     => array('column' => ColumnType::Varchar),
-        ));
-        craft()->db->createCommand()->createIndex('amforms_content', 'elementId,locale', true);
-        craft()->db->createCommand()->createIndex('amforms_content', 'title');
-        craft()->db->createCommand()->addForeignKey('amforms_content', 'elementId', 'elements', 'id', 'CASCADE', null);
-        craft()->db->createCommand()->addForeignKey('amforms_content', 'locale', 'locales', 'locale', 'CASCADE', 'CASCADE');
-    }
-
-    /**
      * Create a set of settings.
      *
      * @param array  $settings
      * @param string $settingType
      */
-    private function installSettings(array $settings, $settingType)
+    public function installSettings(array $settings, $settingType)
     {
         // Make sure we have proper settings
         if (! is_array($settings)) {
@@ -62,6 +46,22 @@ class AmForms_InstallService extends BaseApplicationComponent
             $settingRecord->value = $setting['value'];
             $settingRecord->save();
         }
+    }
+
+    /**
+     * Create content table.
+     */
+    private function _createContentTable()
+    {
+        craft()->db->createCommand()->createTable('amforms_content', array(
+            'elementId' => array('column' => ColumnType::Int, 'null' => false),
+            'locale'    => array('column' => ColumnType::Locale, 'null' => false),
+            'title'     => array('column' => ColumnType::Varchar),
+        ));
+        craft()->db->createCommand()->createIndex('amforms_content', 'elementId,locale', true);
+        craft()->db->createCommand()->createIndex('amforms_content', 'title');
+        craft()->db->createCommand()->addForeignKey('amforms_content', 'elementId', 'elements', 'id', 'CASCADE', null);
+        craft()->db->createCommand()->addForeignKey('amforms_content', 'locale', 'locales', 'locale', 'CASCADE', 'CASCADE');
     }
 
     /**
