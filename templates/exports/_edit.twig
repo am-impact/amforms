@@ -46,10 +46,10 @@
                 >
                     <table id="formFields" class="data fullwidth collapsible">
                         <thead>
+                            <td class="thin"></td>
                             <th scope="col">{{ 'Field'|t }}</th>
                             <th scope="col">{{ 'Export as'|t }}</th>
                             <th scope="col">{{ 'Include in export'|t }}</th>
-                            <td class="thin"></td>
                         </thead>
                         <tbody>
                             {% for tab in fieldLayout.getTabs() %}
@@ -75,6 +75,7 @@
                                 {% for field in fields %}
                                     {% set fieldInfo = field.getField() %}
                                     <tr>
+                                        <td class="thin"><a class="move icon" title="{{ 'Reorder'|t }}" role="button"></a></td>
                                         <td>{{ fieldInfo.name }}</td>
                                         <td>
                                             {{ forms.textField({
@@ -90,7 +91,6 @@
                                                 on: (isCurrent and export.map|length ? attribute(export.map.included, fieldInfo.handle) : true)
                                             }) }}
                                         </td>
-                                        <td class="thin"><a class="move icon" title="{{ 'Reorder'|t }}" role="button"></a></td>
                                     </tr>
                                 {% endfor %}
                             {% endfor %}
