@@ -44,15 +44,34 @@
 
                 <div id="{{ form.id }}"{% if not isCurrent %} class="hidden"{% endif %}
                 >
-                    <table id="fields" class="data fullwidth collapsible">
+                    <table id="formFields" class="data fullwidth collapsible">
                         <thead>
                             <th scope="col">{{ 'Field'|t }}</th>
                             <th scope="col">{{ 'Export as'|t }}</th>
                             <th scope="col">{{ 'Include in export'|t }}</th>
+                            <td class="thin"></td>
                         </thead>
                         <tbody>
                             {% for tab in fieldLayout.getTabs() %}
                                 {% set fields = tab.getFields() %}
+
+                                {# Override fields order if we saved this export #}
+                                {% if export.formId and export.map|length and export.formId == form.id %}
+                                    {% set newFields = [] %}
+
+                                    {% for mapField, mapValue in export.map.fields %}
+                                        {% for field in fields %}
+                                            {% set fieldInfo = field.getField() %}
+
+                                            {% if mapField == fieldInfo.handle %}
+                                                {% set newFields = newFields|merge([field]) %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+
+                                    {% set fields = newFields %}
+                                {% endif %}
+
                                 {% for field in fields %}
                                     {% set fieldInfo = field.getField() %}
                                     <tr>
@@ -71,6 +90,7 @@
                                                 on: (isCurrent and export.map|length ? attribute(export.map.included, fieldInfo.handle) : true)
                                             }) }}
                                         </td>
+                                        <td class="thin"><a class="move icon" title="{{ 'Reorder'|t }}" role="button"></a></td>
                                     </tr>
                                 {% endfor %}
                             {% endfor %}
@@ -85,3 +105,12 @@
         </form>
     {% endif %}
 {% endset %}
+
+{% includeJsResource 'amforms/js/ExportTable.js' %}
+{% set js %}
+    new Craft.AmFormsExportTable({
+        tableSelector: '#formFields',
+        sortable: true
+    });
+{% endset %}
+{% includeJs js %}
