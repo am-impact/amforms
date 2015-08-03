@@ -58,7 +58,7 @@
                                 {% set fields = tab.getFields() %}
 
                                 {# Override fields order if we saved this export #}
-                                {% if export.formId and export.map|length and export.formId == form.id %}
+                                {% if export.formId and export.map|length and export.formId == form.id and export.map.fields|length == fieldLayout.getFields()|length %}
                                     {% set newFields = [] %}
 
                                     {% for mapField, mapValue in export.map.fields %}
@@ -85,14 +85,14 @@
                                             {{ forms.lightswitchField({
                                                 id: form.id ~ '[included][' ~ fieldInfo.handle ~ ']',
                                                 name: form.id ~ '[included][' ~ fieldInfo.handle ~ ']',
-                                                on: (isCurrent and export.map|length ? attribute(export.map.included, fieldInfo.handle) : true)
+                                                on: (isCurrent and export.map|length and attribute(export.map.included, fieldInfo.handle) is defined ? attribute(export.map.included, fieldInfo.handle) : true)
                                             }) }}
                                         </td>
                                         <td>
                                             {{ forms.textField({
                                                 id: form.id ~ '[fields][' ~ fieldInfo.handle ~ ']',
                                                 name: form.id ~ '[fields][' ~ fieldInfo.handle ~ ']',
-                                                value: (isCurrent and export.map|length ? attribute(export.map.fields, fieldInfo.handle) : fieldInfo.name)
+                                                value: (isCurrent and export.map|length and attribute(export.map.fields, fieldInfo.handle) is defined ? attribute(export.map.fields, fieldInfo.handle) : fieldInfo.name)
                                             }) }}
                                         </td>
                                     </tr>
