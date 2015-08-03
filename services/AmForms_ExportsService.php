@@ -215,6 +215,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
             'offset' => $offset
         );
         $criteria = craft()->amForms_submissions->getCriteria($params);
+        $this->_addExportCriteria($export, $criteria);
         $submissions = $criteria->find();
 
         // Add submissions to export file
@@ -344,6 +345,69 @@ class AmForms_ExportsService extends BaseApplicationComponent
             }
         }
         return $columns;
+    }
+
+    /**
+     * Add export criteria.
+     *
+     * @param AmForms_ExportModel  $export
+     * @param ElementCriteriaModel &$criteria
+     *
+     * @return bool
+     */
+    private function _addExportCriteria(AmForms_ExportModel $export, &$criteria)
+    {
+        // Do we even have criteria?
+        if (! $export->criteria) {
+            return false;
+        }
+
+        // Get form
+        $form = craft()->amForms_forms->getFormById($export->formId);
+        if (! $form) {
+            return false;
+        }
+
+        // Gather related criteria
+        $relatedTo = array('or');
+
+        // Get fieldlayout
+        $fieldLayout = $form->getFieldLayout();
+        foreach ($fieldLayout->getFields() as $fieldLayoutField) {
+            $field = $fieldLayoutField->getField();
+
+            // Is field set in criteria?
+            if (! isset($export->criteria[ $field->id ])) {
+                continue;
+            }
+
+            // Add criteria based on field type
+            switch ($field->type) {
+                case 'Assets':
+                case 'Entries':
+                    foreach ($export->criteria[ $field->id ] as $criteriaValue) {
+                        if (! empty($criteriaValue) && is_array($criteriaValue) && count($criteriaValue)) {
+                            $relatedTo[] = $criteriaValue[0];
+                        }
+                    }
+                    break;
+
+                case 'PlainText':
+                    $setCriteria = array('or');
+                    foreach ($export->criteria[ $field->id ] as $criteriaValue) {
+                        if (! empty($criteriaValue)) {
+                            $setCriteria[] = $criteriaValue;
+                        }
+                    }
+                    $criteria->{$field->handle} = $setCriteria;
+                    break;
+            }
+        }
+
+        // Set relations criteria
+        if (count($relatedTo) > 1) {
+            $criteria->relatedTo = $relatedTo;
+        }
     }
 
     /**

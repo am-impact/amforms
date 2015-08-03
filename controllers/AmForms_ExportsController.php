@@ -66,9 +66,46 @@ class AmForms_ExportsController extends BaseController
             $export = new AmForms_ExportModel();
         }
 
-        // Export attributes
+        // Get the chosen form
         $export->formId = craft()->request->getPost('formId');
-        $export->map = craft()->request->getPost($export->formId);
+
+        // Get proper POST attributes
+        $mapping = craft()->request->getPost($export->formId);
+        $criteria = isset($mapping['criteria']) ? $mapping['criteria'] : null;
+        if ($criteria) {
+            // Remove criteria from mapping
+            unset($mapping['criteria']);
+
+            // Get criteria field IDs
+            foreach ($criteria['fields'] as $key => $field) {
+                $splittedField = explode('-', $field);
+                $criteria['fields'][$key] = $splittedField[ (count($splittedField) - 1) ];
+            }
+
+            // Fix relationship fields
+            foreach ($criteria['fields'] as $key => $field) {
+                if (! isset($criteria[$field][$key])) {
+                    foreach ($criteria[$field] as $subKey => $subValues) {
+                        if ($subKey > $key) {
+                            $criteria[$field][$key] = $criteria[$field][$subKey];
+                            unset($criteria[$field][$subKey]);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Remove unnecessary criteria
+            foreach ($criteria as $fieldId => $values) {
+                if (is_numeric($fieldId) && ! in_array($fieldId, $criteria['fields'])) {
+                    unset($criteria[$fieldId]);
+                }
+            }
+        }
+
+        // Export attributes
+        $export->map = $mapping;
+        $export->criteria = $criteria;
 
         // Save export
         if (craft()->amForms_exports->saveExport($export)) {
@@ -156,5 +193,53 @@ class AmForms_ExportsController extends BaseController
         header('Content-Length: ' . filesize($export->file));
         readfile($export->file);
         die();
+    }
+
+    /**
+     * Get a criteria row.
+     */
+    public function actionGetCriteria()
+    {
+        $this->requirePostRequest();
+        $this->requireAjaxRequest();
+
+        $return = array(
+            'success' => false
+        );
+
+        // Get required POST data
+        $formId = craft()->request->getRequiredPost('formId');
+        $counter = craft()->request->getRequiredPost('counter');
+
+        // Get the form
+        $form = craft()->amForms_forms->getFormById($formId);
+
+        if ($form) {
+            $fields = array();
+
+            // Get form fields
+            foreach ($form->getFieldLayout()->getTabs() as $tab) {
+                foreach ($tab->getFields() as $layoutField) {
+                    $fields[] = $layoutField->getField();
+                }
+            }
+
+            // Get HTML
+            $variables = array(
+                'form' => $form,
+                'fields' => $fields,
+                'criteriaCounter' => $counter
+            );
+            $html = craft()->templates->render('amForms/exports/_fields/template', $variables, true);
+
+            $return = array(
+                'success' => true,
+                'row' => $html,
+                'headHtml' => craft()->templates->getHeadHtml(),
+                'footHtml' => craft()->templates->getFootHtml()
+            );
+        }
+
+        $this->returnJson($return);
     }
 }

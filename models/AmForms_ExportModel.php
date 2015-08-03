@@ -11,7 +11,8 @@ class AmForms_ExportModel extends BaseModel
             'total'    => AttributeType::Number,
             'finished' => AttributeType::Bool,
             'file'     => AttributeType::String,
-            'map'      => AttributeType::Mixed
+            'map'      => AttributeType::Mixed,
+            'criteria' => AttributeType::Mixed
         );
     }
 }

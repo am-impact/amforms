@@ -33,7 +33,7 @@ class AmForms_RecentSubmissionsWidget extends BaseWidget
         // Widget settings
         $settings = $this->getSettings();
 
-        // Set submissions critera
+        // Set submissions criteria
         $criteria = craft()->amForms_submissions->getCriteria();
         if ($settings->form != 0) {
             $criteria->formId = $settings->form;

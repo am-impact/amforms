@@ -1,0 +1,59 @@
+{% import '_includes/forms' as forms %}
+
+{% set fieldOptions = [] %}
+{% for field in fields %}
+    {% set fieldOptions = fieldOptions|merge([{ label: field.name, value: form.id ~ 'criteria-' ~ criteriaCounter ~ '-' ~ field.id }]) %}
+{% endfor %}
+
+<tr data-name="{{ 'Criteria'|t }}">
+    <td class="criteriaSwitcher">
+        {{ forms.select({
+            id: form.id ~ 'criteria-' ~ criteriaCounter ~ '-select',
+            name: form.id ~ '[criteria][fields][]',
+            options: fieldOptions,
+            value: (givenField is defined ? form.id ~ 'criteria-' ~ criteriaCounter ~ '-' ~ givenField : null)
+        }) }}
+    </td>
+    <td>
+        {% for field in fields %}
+            {%- set fieldValue = null -%}
+            {%- if givenValue is defined and givenField == field.id -%}
+                {%- set fieldValue = givenValue -%}
+            {%- endif -%}
+            {%- set active = (givenField is defined and givenField == field.id ? true : (givenField is defined ? false : loop.first)) -%}
+
+            <div id="{{ form.id }}criteria-{{ criteriaCounter }}-{{ field.id }}"{% if not active %} class="hidden"{% endif %}>
+                {% switch field.type %}
+                    {% case 'Entries' %}
+                        {% set elements = [] %}
+                        {% if fieldValue|length %}
+                            {% for elementId in fieldValue %}
+                                {% set elements = elements|merge([craft.entries.id(elementId).first()]) %}
+                            {% endfor %}
+                        {% endif %}
+
+                        {{ forms.elementSelect({
+                            id: form.id ~ criteriaCounter ~ field.handle,
+                            name: form.id ~ '[criteria][' ~ field.id ~ '][' ~ criteriaCounter ~ ']',
+                            elementType: craft.elements.getElementType('Entry'),
+                            elements: elements,
+                            limit: null,
+                            addButtonLabel: field.settings.selectionLabel|t
+                        }) }}
+
+                    {% case 'PlainText' %}
+                        {{ forms.text({
+                            id: form.id ~ criteriaCounter ~ field.handle,
+                            name: form.id ~ '[criteria][' ~ field.id ~ '][]',
+                            value: fieldValue
+                        }) }}
+
+                    {% default %}
+                        {{ 'Not supported'|t }}
+
+                {% endswitch %}
+            </div>
+        {% endfor %}
+    </td>
+    <td class="thin"><a class="delete icon" title="{{ 'Delete'|t }}" role="button"></a></td>
+</tr>
