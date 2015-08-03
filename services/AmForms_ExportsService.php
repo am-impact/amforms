@@ -413,9 +413,9 @@ class AmForms_ExportsService extends BaseApplicationComponent
     /**
      * Export submission.
      *
-     * @param AmForm_ExportModel     $export
-     * @param AmForm_SubmissionModel $submission
-     * @param bool                   $returnData
+     * @param AmForms_ExportModel     $export
+     * @param AmForms_SubmissionModel $submission
+     * @param bool                    $returnData
      */
     private function _exportSubmission(AmForms_ExportModel $export, $submission, $returnData = false)
     {
