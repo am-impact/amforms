@@ -88,7 +88,7 @@ class AmForms_InstallService extends BaseApplicationComponent
             ),
             array(
                 'name' => 'Export rows per set',
-                'value' => 100
+                'value' => 50
             )
         );
         $this->installSettings($settings, AmFormsModel::SettingGeneral);
