@@ -315,15 +315,22 @@ class AmForms_ExportsService extends BaseApplicationComponent
      */
     private function _getExportColumns(AmForms_ExportModel $export, AmForms_FormModel $form)
     {
+        $fields = array();
         $columns = array();
+
+        // Get field layout
         $fieldLayout = $form->getFieldLayout();
         foreach ($fieldLayout->getFields() as $fieldLayoutField) {
             $field = $fieldLayoutField->getField();
+            $fields[$field->handle] = $field;
+        }
 
+        // Get column names
+        foreach ($export->map['fields'] as $fieldHandle => $columnName) {
             // Should the field be included?
-            if ($export->map['included'][$field->handle]) {
-                // Dynamic column name
-                $columnName = $export->map['fields'][$field->handle];
+            if ($export->map['included'][$fieldHandle] && isset($fields[$fieldHandle])) {
+                // Actual field
+                $field = $fields[$fieldHandle];
 
                 // Add column based on the field type
                 switch ($field->type) {
