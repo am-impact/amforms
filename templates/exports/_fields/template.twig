@@ -41,6 +41,13 @@
                             addButtonLabel: field.settings.selectionLabel|t
                         }) }}
 
+                    {% case 'Lightswitch' %}
+                        {{ forms.lightswitch({
+                            id: form.id ~ criteriaCounter ~ field.handle,
+                            name: form.id ~ '[criteria][' ~ field.id ~ '][]',
+                            on: fieldValue
+                        }) }}
+
                     {% case 'PlainText' %}
                         {{ forms.text({
                             id: form.id ~ criteriaCounter ~ field.handle,

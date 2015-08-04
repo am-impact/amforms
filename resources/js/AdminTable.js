@@ -51,9 +51,11 @@ Craft.AmFormsAdminTable = Craft.AdminTable.extend(
 
         var $row = $(row).appendTo(this.$tbody),
             $deleteBtn = $row.find('.delete'),
-            $switcher = $row.find('.criteriaSwitcher select');
+            $switcher = $row.find('.criteriaSwitcher select'),
+            $lightSwitches = $row.find('.lightswitch');
 
         $switcher.fieldtoggle();
+        $lightSwitches.lightswitch();
 
         if (this.settings.sortable)
         {

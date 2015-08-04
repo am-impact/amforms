@@ -411,6 +411,19 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     }
                     break;
 
+                case 'Lightswitch':
+                    $valueFound = false;
+                    foreach ($export->criteria[ $field->id ] as $criteriaValue) {
+                        if (! empty($criteriaValue)) {
+                            $valueFound = true;
+                            $criteria->{$field->handle} = $criteriaValue;
+                        }
+                    }
+                    if (! $valueFound) {
+                        $criteria->{$field->handle} = 'not 1';
+                    }
+                    break;
+
                 case 'PlainText':
                     $setCriteria = array('or');
                     foreach ($export->criteria[ $field->id ] as $criteriaValue) {
