@@ -253,7 +253,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                             foreach ($blockTypes as $blockType) {
                                 $blockTypeFields = $blockType->getFields();
 
-                                $this->_exportColumns[$field->handle . ':' . $blockType->handle] = $columnCounter;
+                                $this->_exportColumns[$export->id][$field->handle . ':' . $blockType->handle] = $columnCounter;
 
                                 $columnCounter += count($blockTypeFields);
 
@@ -262,7 +262,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                             break;
 
                         default:
-                            $this->_exportColumns[$field->handle] = $columnCounter;
+                            $this->_exportColumns[$export->id][$field->handle] = $columnCounter;
 
                             $spaceCounter ++;
                             break;
@@ -270,7 +270,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
 
                     $columnCounter ++;
 
-                    $this->_exportSpaceCounter[$field->handle] = $spaceCounter;
+                    $this->_exportSpaceCounter[$export->id][$field->handle] = $spaceCounter;
                 }
             }
 
@@ -478,7 +478,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     $matrixBlocks = $submission->$fieldHandle->find();
                     if (! $matrixBlocks) {
                         // No matrix data, so we have to add empty cells!
-                        for ($i = 1; $i <= $this->_exportSpaceCounter[$fieldHandle]; $i++) {
+                        for ($i = 1; $i <= $this->_exportSpaceCounter[$export->id][$fieldHandle]; $i++) {
                             $data[] = '';
                         }
                     }
@@ -488,7 +488,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                             $blockData = $this->_exportSubmission($export, $matrixBlock, true);
 
                             // Column counter
-                            $startFrom = $this->_exportColumns[$fieldHandle . ':' . $matrixBlockType->handle];
+                            $startFrom = $this->_exportColumns[$export->id][$fieldHandle . ':' . $matrixBlockType->handle];
 
                             // Multiple blocks?
                             if (count($matrixBlocks) > 1 && $blockCounter > 0) {
@@ -508,7 +508,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                                 }
                                 // Empty cells till we've reached the next field, if necessary
                                 if ($startFrom == $columnCounter) {
-                                    for ($i = 0; $i < ($this->_exportSpaceCounter[$fieldHandle] - $spaceCounter); $i++) {
+                                    for ($i = 0; $i < ($this->_exportSpaceCounter[$export->id][$fieldHandle] - $spaceCounter); $i++) {
                                         $data[] = '';
                                     }
                                 }
