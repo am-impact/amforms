@@ -82,7 +82,8 @@ class AmForms_ExportsController extends BaseController
                 $criteria['fields'][$key] = $splittedField[ (count($splittedField) - 1) ];
             }
 
-            // Fix relationship fields
+            // Fix fields that work by the criteriaCounter
+            // We might've deleted a criteria row, so we have to make sure the rows are corrected
             foreach ($criteria['fields'] as $key => $field) {
                 if (! isset($criteria[$field][$key])) {
                     foreach ($criteria[$field] as $subKey => $subValues) {
