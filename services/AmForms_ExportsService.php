@@ -483,6 +483,19 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     $data[] = implode(', ', $fieldExportData);
                     break;
 
+                case 'Checkboxes':
+                    if (isset($submission->$fieldHandle) && count($submission->$fieldHandle)) {
+                        $fieldExportData = array();
+                        foreach ($submission->$fieldHandle as $fieldData) {
+                            $fieldExportData[] = $fieldData->value;
+                        }
+                        $data[] = implode(', ', $fieldExportData);
+                    }
+                    else {
+                        $data[] = '';
+                    }
+                    break;
+
                 case 'Lightswitch':
                     $data[] = $submission->$fieldHandle ? Craft::t('Yes') : Craft::t('No');
                     break;
