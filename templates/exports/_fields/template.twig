@@ -25,6 +25,28 @@
 
             <div id="{{ form.id }}criteria-{{ criteriaCounter }}-{{ field.id }}"{% if not active %} class="hidden"{% endif %}>
                 {% switch field.type %}
+                    {% case 'Assets' %}
+                        {% set elements = [] %}
+                        {% if fieldValue|length %}
+                            {% for elementId in fieldValue %}
+                                {% set elements = elements|merge([craft.assets.id(elementId).first()]) %}
+                            {% endfor %}
+                        {% endif %}
+
+                        {{ forms.elementSelect({
+                            id: form.id ~ criteriaCounter ~ field.handle,
+                            name: form.id ~ '[criteria][' ~ field.id ~ '][' ~ criteriaCounter ~ ']',
+                            elementType: craft.elements.getElementType('Asset'),
+                            elements: elements,
+                            limit: null,
+                            addButtonLabel: (field.settings.selectionLabel is defined ? field.settings.selectionLabel|t : 'Add an asset'|t),
+                            jsClass: 'Craft.AssetSelectInput',
+                            sources: field.settings.sources,
+                            criteria: {
+                                kind: (field.settings.allowedKinds is defined ? field.settings.allowedKinds : [])
+                            }
+                        }) }}
+
                     {% case 'Checkboxes' %}
                         {{ forms.checkboxGroup({
                             id: form.id ~ criteriaCounter ~ field.handle,
@@ -55,7 +77,8 @@
                             elementType: craft.elements.getElementType('Entry'),
                             elements: elements,
                             limit: null,
-                            addButtonLabel: field.settings.selectionLabel|t
+                            addButtonLabel: (field.settings.selectionLabel is defined ? field.settings.selectionLabel|t : 'Add an entry'|t),
+                            sources: field.settings.sources
                         }) }}
 
                     {% case 'Lightswitch' %}
