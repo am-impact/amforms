@@ -56,6 +56,14 @@
                             value: fieldValue
                         }) }}
 
+                    {% case 'RadioButtons' %}
+                        {{ forms.radioGroup({
+                            id: form.id ~ criteriaCounter ~ field.handle,
+                            name: form.id ~ '[criteria][' ~ field.id ~ '][' ~ criteriaCounter ~ ']',
+                            options: field.settings.options,
+                            value: fieldValue
+                        }) }}
+
                     {% default %}
                         {{ 'Not supported yet'|t }}
 

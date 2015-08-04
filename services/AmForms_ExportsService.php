@@ -425,6 +425,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     break;
 
                 case 'PlainText':
+                case 'RadioButtons':
                     $setCriteria = array('or');
                     foreach ($export->criteria[ $field->id ] as $criteriaValue) {
                         if (! empty($criteriaValue)) {
