@@ -11,7 +11,8 @@
             id: form.id ~ 'criteria-' ~ criteriaCounter ~ '-select',
             name: form.id ~ '[criteria][fields][]',
             options: fieldOptions,
-            value: (givenField is defined ? form.id ~ 'criteria-' ~ criteriaCounter ~ '-' ~ givenField : null)
+            value: (givenField is defined ? form.id ~ 'criteria-' ~ criteriaCounter ~ '-' ~ givenField : null),
+            toggle: (givenField is defined)
         }) }}
     </td>
     <td>
