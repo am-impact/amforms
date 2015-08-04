@@ -424,6 +424,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     }
                     break;
 
+                case 'Dropdown':
                 case 'PlainText':
                 case 'RadioButtons':
                     $setCriteria = array('or');
