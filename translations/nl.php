@@ -93,7 +93,7 @@ return array(
     'No notes exist yet.' => 'Er zijn nog geen notities aanwezig.',
     'No recent submissions available.' => 'Er zijn geen laatste inzendingen beschikbaar.',
     'No submission exists with the ID “{id}”.' => 'Er bestaat geen inzending met het ID “{id}”.',
-    'Not supported' => 'Wordt niet ondersteund',
+    'Not supported yet' => 'Wordt nog niet ondersteund',
     'Note' => 'Notitie',
     'Note of {date}' => 'Notitie van {date}',
     'Note saved.' => 'Notitie opgeslagen.',
