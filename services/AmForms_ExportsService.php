@@ -9,6 +9,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
     private $_exportFiles = array();
     private $_exportFields = array();
     private $_exportColumns = array();
+    private $_exportSpaceCounter = array();
 
     /**
      * Get all exports.
@@ -242,6 +243,9 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     $field = $fields[$fieldHandle];
                     $this->_exportFields[$export->id][$fieldHandle] = $field;
 
+                    // Remember how much space this field is taking
+                    $spaceCounter = 0;
+
                     // Add column so we know where to place the data later
                     switch ($field->type) {
                         case 'Matrix':
@@ -252,15 +256,21 @@ class AmForms_ExportsService extends BaseApplicationComponent
                                 $this->_exportColumns[$field->handle . ':' . $blockType->handle] = $columnCounter;
 
                                 $columnCounter += count($blockTypeFields);
+
+                                $spaceCounter += count($blockTypeFields);
                             }
                             break;
 
                         default:
                             $this->_exportColumns[$field->handle] = $columnCounter;
+
+                            $spaceCounter ++;
                             break;
                     }
 
                     $columnCounter ++;
+
+                    $this->_exportSpaceCounter[$field->handle] = $spaceCounter;
                 }
             }
 
@@ -466,30 +476,46 @@ class AmForms_ExportsService extends BaseApplicationComponent
                 case 'Matrix':
                     $blockCounter = 0;
                     $matrixBlocks = $submission->$fieldHandle->find();
-                    foreach ($matrixBlocks as $matrixBlock) {
-                        $matrixBlockType = $matrixBlock->getType();
-                        $blockData = $this->_exportSubmission($export, $matrixBlock, true);
-
-                        // Column counter
-                        $startFrom = $this->_exportColumns[$fieldHandle . ':' . $matrixBlockType->handle];
-
-                        // Multiple blocks?
-                        if (count($matrixBlocks) > 1 && $blockCounter > 0) {
-                            $hasMoreRows = true;
-                            $moreRowsData[$startFrom][] = $blockData;
+                    if (! $matrixBlocks) {
+                        // No matrix data, so we have to add empty cells!
+                        for ($i = 1; $i <= $this->_exportSpaceCounter[$fieldHandle]; $i++) {
+                            $data[] = '';
                         }
-                        else {
-                            // Empty cells till we've reached the block type
-                            for ($i = 0; $i < ($startFrom - $columnCounter); $i++) {
-                                $data[] = '';
-                            }
-                            // We just have one block or we are adding the first block
-                            foreach ($blockData as $blockValue) {
-                                $data[] = $blockValue;
-                            }
-                        }
+                    }
+                    else {
+                        foreach ($matrixBlocks as $matrixBlock) {
+                            $matrixBlockType = $matrixBlock->getType();
+                            $blockData = $this->_exportSubmission($export, $matrixBlock, true);
 
-                        $blockCounter ++;
+                            // Column counter
+                            $startFrom = $this->_exportColumns[$fieldHandle . ':' . $matrixBlockType->handle];
+
+                            // Multiple blocks?
+                            if (count($matrixBlocks) > 1 && $blockCounter > 0) {
+                                $hasMoreRows = true;
+                                $moreRowsData[$startFrom][] = $blockData;
+                            }
+                            else {
+                                // Empty cells till we've reached the block type
+                                for ($i = 0; $i < ($startFrom - $columnCounter); $i++) {
+                                    $data[] = '';
+                                }
+                                // We just have one block or we are adding the first block
+                                $spaceCounter = 0;
+                                foreach ($blockData as $blockValue) {
+                                    $data[] = $blockValue;
+                                    $spaceCounter ++;
+                                }
+                                // Empty cells till we've reached the next field, if necessary
+                                if ($startFrom == $columnCounter) {
+                                    for ($i = 0; $i < ($this->_exportSpaceCounter[$fieldHandle] - $spaceCounter); $i++) {
+                                        $data[] = '';
+                                    }
+                                }
+                            }
+
+                            $blockCounter ++;
+                        }
                     }
                     break;
 
