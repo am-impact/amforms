@@ -21,11 +21,13 @@ class AmForms_ExportRecord extends BaseRecord
     public function defineAttributes()
     {
         return array(
-            'total'    => array(AttributeType::Number, 'required' => true),
-            'finished' => array(AttributeType::Bool, 'default' => false),
-            'file'     => AttributeType::String,
-            'map'      => AttributeType::Mixed,
-            'criteria' => AttributeType::Mixed
+            'name'          => AttributeType::String,
+            'total'         => array(AttributeType::Number, 'required' => true),
+            'totalCriteria' => AttributeType::Number,
+            'finished'      => array(AttributeType::Bool, 'default' => false),
+            'file'          => AttributeType::String,
+            'map'           => AttributeType::Mixed,
+            'criteria'      => AttributeType::Mixed
         );
     }
 

@@ -17,8 +17,11 @@
         <table id="formExports" class="data fullwidth collapsible">
             <thead>
                 <th scope="col">{{ 'Form'|t }}</th>
+                <th scope="col">{{ 'Name'|t }}</th>
                 <th scope="col">{{ 'Total submissions'|t }}</th>
+                <th scope="col">{{ 'Total submissions that met the criteria'|t }}</th>
                 <th scope="col">{{ 'Status'|t }}</th>
+                <th scope="col">{{ 'Date updated'|t }}</th>
                 <td class="thin"></td>
             </thead>
             <tbody>
@@ -29,7 +32,15 @@
                         <th scope="row" data-title="{{ 'Form'|t }}">
                             <a href="{{ url('amforms/exports/edit/' ~ export.id) }}">{{ form.name|t }}</a>
                         </th>
+                        <td data-title="{{ 'Name'|t }}">{{ export.name }}</td>
                         <td data-title="{{ 'Total submissions'|t }}">{{ export.total }}</td>
+                        <td data-title="{{ 'Total submissions that met the criteria'|t }}">
+                            {% if export.totalCriteria %}
+                                {{ export.totalCriteria }}
+                            {% else %}
+                                <a href="{{ actionUrl('amForms/exports/getTotalByCriteria', { id: export.id }) }}">{{ 'Calculate'|t }}</a>
+                            {% endif %}
+                        </td>
                         <td data-title="{{ 'Status'|t }}">
                             {% if export.finished %}
                                 <a href="{{ actionUrl('amForms/exports/downloadExport', { id: export.id }) }}">{{ 'Download'|t }}</a>
@@ -43,6 +54,7 @@
                                 {{ 'Busy'|t }}
                             {% endif %}
                         </td>
+                        <td data-title="{{ 'Date updated'|t }}">{{ export.dateUpdated.uiTimestamp() }}</td>
                         <td class="thin">
                             <a class="delete icon" title="{{ 'Delete'|t }}" role="button"></a>
                         </td>

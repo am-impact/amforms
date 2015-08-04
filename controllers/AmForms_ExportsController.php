@@ -105,6 +105,8 @@ class AmForms_ExportsController extends BaseController
         }
 
         // Export attributes
+        $export->name = craft()->request->getPost('name');
+        $export->totalCriteria = null; // Reset total that met the current criteria
         $export->map = $mapping;
         $export->criteria = $criteria;
 
@@ -242,5 +244,29 @@ class AmForms_ExportsController extends BaseController
         }
 
         $this->returnJson($return);
+    }
+
+    /**
+     * Get total submissions to export that meet the saved criteria.
+     */
+    public function actionGetTotalByCriteria()
+    {
+        // Find export ID
+        $exportId = craft()->request->getParam('id');
+        if (! $exportId) {
+            $this->redirect('amforms/exports');
+        }
+
+        // Get the export
+        $export = craft()->amForms_exports->getExportById($exportId);
+        if (! $export) {
+            throw new Exception(Craft::t('No export exists with the ID “{id}”.', array('id' => $exportId)));
+        }
+
+        // Get total submissions by criteria
+        craft()->amForms_exports->saveTotalByCriteria($export);
+
+        // Redirect to exports!
+        $this->redirect('amforms/exports');
     }
 }

@@ -194,6 +194,30 @@ class AmForms_ExportsService extends BaseApplicationComponent
     }
 
     /**
+     * Save total submissions that meet the saved criteria.
+     *
+     * @param AmForms_ExportModel $export
+     */
+    public function saveTotalByCriteria(AmForms_ExportModel $export)
+    {
+        // Set submissions criteria
+        $params = array(
+            'limit' => null,
+            'formId' => $export->formId
+        );
+        $criteria = craft()->amForms_submissions->getCriteria($params);
+
+        // Add export criteria
+        $this->_addExportCriteria($export, $criteria);
+
+        // Get total!
+        $export->totalCriteria = $criteria->total();
+
+        // Save export!
+        $this->saveExport($export);
+    }
+
+    /**
      * Run an export.
      *
      * @param AmForms_ExportModel $export

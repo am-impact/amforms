@@ -38,6 +38,14 @@
                 toggle: true,
                 instructions: 'Which form do you want to export?'|t
             }) }}
+            {{ forms.textField({
+                label: 'Name'|t,
+                id: 'name',
+                name: 'name',
+                value: export.name,
+                errors: export.getErrors('name'),
+                instructions: 'Optional name for your export.'|t
+            }) }}
             <hr>
             <h3>{{ 'Which fields do you want to export?'|t }}</h3>
             {% for form in availableForms %}
