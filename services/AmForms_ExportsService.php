@@ -225,40 +225,42 @@ class AmForms_ExportsService extends BaseApplicationComponent
 
             // Get field types
             $fields = array();
-            $columnCounter = 0;
             $fieldLayout = $submissions[0]->getFieldLayout(); // We just need a model
             foreach ($fieldLayout->getFields() as $fieldLayoutField) {
                 $field = $fieldLayoutField->getField();
 
                 // Add field type
                 $fields[$field->handle] = $field;
-
-                // Remember column counter
-                switch ($field->type) {
-                    case 'Matrix':
-                        $blockTypes = $field->getFieldType()->getSettings()->getBlockTypes();
-                        foreach ($blockTypes as $blockType) {
-                            $blockTypeFields = $blockType->getFields();
-
-                            $this->_exportColumns[$field->handle . ':' . $blockType->handle] = $columnCounter;
-
-                            $columnCounter += count($blockTypeFields);
-                        }
-                        break;
-
-                    default:
-                        $this->_exportColumns[$field->handle] = $columnCounter;
-                        break;
-                }
-
-                $columnCounter ++;
             }
 
-            // Get field handles that should be included
+            // Get field handles and columns that should be included
+            $columnCounter = 0;
             $this->_exportFields[$export->id] = array();
             foreach ($export->map['fields'] as $fieldHandle => $columnName) {
                 if ($export->map['included'][$fieldHandle] && isset($fields[$fieldHandle])) {
-                    $this->_exportFields[$export->id][$fieldHandle] = $fields[$fieldHandle];
+                    // Add field to export fields
+                    $field = $fields[$fieldHandle];
+                    $this->_exportFields[$export->id][$fieldHandle] = $field;
+
+                    // Add column so we know where to place the data later
+                    switch ($field->type) {
+                        case 'Matrix':
+                            $blockTypes = $field->getFieldType()->getSettings()->getBlockTypes();
+                            foreach ($blockTypes as $blockType) {
+                                $blockTypeFields = $blockType->getFields();
+
+                                $this->_exportColumns[$field->handle . ':' . $blockType->handle] = $columnCounter;
+
+                                $columnCounter += count($blockTypeFields);
+                            }
+                            break;
+
+                        default:
+                            $this->_exportColumns[$field->handle] = $columnCounter;
+                            break;
+                    }
+
+                    $columnCounter ++;
                 }
             }
 
