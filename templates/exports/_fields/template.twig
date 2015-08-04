@@ -25,6 +25,14 @@
 
             <div id="{{ form.id }}criteria-{{ criteriaCounter }}-{{ field.id }}"{% if not active %} class="hidden"{% endif %}>
                 {% switch field.type %}
+                    {% case 'Checkboxes' %}
+                        {{ forms.checkboxGroup({
+                            id: form.id ~ criteriaCounter ~ field.handle,
+                            name: form.id ~ '[criteria][' ~ field.id ~ '][' ~ criteriaCounter ~ ']',
+                            options: field.settings.options,
+                            values: fieldValue
+                        }) }}
+
                     {% case 'Dropdown' %}
                         {{ forms.select({
                             id: form.id ~ criteriaCounter ~ field.handle,

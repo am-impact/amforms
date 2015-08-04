@@ -411,6 +411,18 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     }
                     break;
 
+                case 'Checkboxes':
+                    $setCriteria = array('or');
+                    foreach ($export->criteria[ $field->id ] as $criteriaValue) {
+                        if (! empty($criteriaValue)) {
+                            foreach ($criteriaValue as $subCriteriaValue) {
+                                $setCriteria[] = '*"' . $subCriteriaValue . '"*';
+                            }
+                        }
+                    }
+                    $criteria->{$field->handle} = $setCriteria;
+                    break;
+
                 case 'Lightswitch':
                     $valueFound = false;
                     foreach ($export->criteria[ $field->id ] as $criteriaValue) {
