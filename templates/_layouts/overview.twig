@@ -6,20 +6,27 @@
     submissions: {
         label: 'Submissions'|t,
         url: url('amforms/submissions')
-    },
-    forms: {
-        label: 'Forms'|t,
-        url: url('amforms/forms')
-    },
-    fields: {
-        label: 'Fields'|t,
-        url: url('amforms/fields')
-    },
-    exports: {
-        label: 'Exports'|t,
-        url: url('amforms/exports')
     }
 } %}
+
+{% if currentUser.can('accessAmFormsForms') %}
+    {% set tabs = tabs|merge({ forms: {
+        label: 'Forms'|t,
+        url: url('amforms/forms')
+    } }) %}
+{% endif %}
+{% if currentUser.can('accessAmFormsFields') %}
+    {% set tabs = tabs|merge({ fields: {
+        label: 'Fields'|t,
+        url: url('amforms/fields')
+    } }) %}
+{% endif %}
+{% if currentUser.can('accessAmFormsExports') %}
+    {% set tabs = tabs|merge({ exports: {
+        label: 'Exports'|t,
+        url: url('amforms/exports')
+    } }) %}
+{% endif %}
 
 {% set activeCrumb = attribute(tabs, selectedTab) %}
 {% set crumbs = [
@@ -27,7 +34,7 @@
     { label: activeCrumb.label, url: activeCrumb.url }
 ] %}
 
-{% if currentUser.can('editAmFormsSettings') %}
+{% if currentUser.can('accessAmFormsSettings') %}
     {% set extraPageHeaderHtml %}
       <a class="btn settings icon" href="{{ url('amforms/settings') }}" title="{{ 'Settings'|t }}"></a>
     {% endset %}

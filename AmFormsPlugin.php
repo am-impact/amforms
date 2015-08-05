@@ -22,7 +22,7 @@ class AmFormsPlugin extends BasePlugin
 
     public function getVersion()
     {
-        return '1.0.3';
+        return '1.0.4';
     }
 
     public function getDeveloper()
@@ -114,8 +114,17 @@ class AmFormsPlugin extends BasePlugin
     public function registerUserPermissions()
     {
         return array(
-            'editAmFormsSettings'   => array(
-                'label' => Craft::t('Edit settings')
+            'accessAmFormsExports'   => array(
+                'label' => Craft::t('Access to exports')
+            ),
+            'accessAmFormsFields' => array(
+                'label' => Craft::t('Access to fields')
+            ),
+            'accessAmFormsForms' => array(
+                'label' => Craft::t('Access to forms')
+            ),
+            'accessAmFormsSettings' => array(
+                'label' => Craft::t('Access to settings')
             )
         );
     }

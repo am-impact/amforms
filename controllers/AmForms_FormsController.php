@@ -7,6 +7,17 @@ namespace Craft;
 class AmForms_FormsController extends BaseController
 {
     /**
+     * Make sure the current has access.
+     */
+    public function __construct()
+    {
+        $user = craft()->userSession->getUser();
+        if (! $user->can('accessAmFormsForms')) {
+            throw new HttpException(403, Craft::t('This action may only be performed by users with the proper permissions.'));
+        }
+    }
+
+    /**
      * Show forms.
      */
     public function actionIndex()

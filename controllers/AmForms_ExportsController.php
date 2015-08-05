@@ -7,6 +7,17 @@ namespace Craft;
 class AmForms_ExportsController extends BaseController
 {
     /**
+     * Make sure the current has access.
+     */
+    public function __construct()
+    {
+        $user = craft()->userSession->getUser();
+        if (! $user->can('accessAmFormsExports')) {
+            throw new HttpException(403, Craft::t('This action may only be performed by users with the proper permissions.'));
+        }
+    }
+
+    /**
      * Show exports.
      */
     public function actionIndex()

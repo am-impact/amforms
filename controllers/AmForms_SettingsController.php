@@ -7,12 +7,12 @@ namespace Craft;
 class AmForms_SettingsController extends BaseController
 {
     /**
-     * Make sure the current user can edit settings.
+     * Make sure the current has access.
      */
     public function __construct()
     {
         $user = craft()->userSession->getUser();
-        if (! $user->can('editAmFormsSettings')) {
+        if (! $user->can('accessAmFormsSettings')) {
             throw new HttpException(403, Craft::t('This action may only be performed by users with the proper permissions.'));
         }
     }
