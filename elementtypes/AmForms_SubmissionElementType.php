@@ -128,6 +128,16 @@ class AmForms_SubmissionElementType extends BaseElementType
      */
     public function defineTableAttributes($source = null)
     {
+        // Don't display the form's name, since the source already indicates that!
+        if ($source && $source !== '*') {
+            return array(
+                'title'       => Craft::t('Title'),
+                'dateCreated' => Craft::t('Date created'),
+                'dateUpdated' => Craft::t('Date updated'),
+                'notes'       => Craft::t('Notes')
+            );
+        }
+
         return array(
             'title'       => Craft::t('Title'),
             'formName'    => Craft::t('Form name'),
