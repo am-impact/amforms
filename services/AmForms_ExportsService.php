@@ -98,7 +98,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                 // Start task
                 $params = array(
                     'exportId'  => $exportRecord->id,
-                    'batchSize' => craft()->amForms_settings->getSettingsValueByHandleAndType('exportRowsPerSet', AmFormsModel::SettingGeneral, 100)
+                    'batchSize' => craft()->amForms_settings->getSettingsValueByHandleAndType('exportRowsPerSet', AmFormsModel::SettingExport, 100)
                 );
                 craft()->tasks->createTask('AmForms_Export', Craft::t('{form} export', array('form' => $form->name)), $params);
 
@@ -184,7 +184,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
             // Start task
             $params = array(
                 'exportId'  => $export->id,
-                'batchSize' => craft()->amForms_settings->getSettingsValueByHandleAndType('exportRowsPerSet', AmFormsModel::SettingGeneral, 100)
+                'batchSize' => craft()->amForms_settings->getSettingsValueByHandleAndType('exportRowsPerSet', AmFormsModel::SettingExport, 100)
             );
             craft()->tasks->createTask('AmForms_Export', Craft::t('{form} export', array('form' => $form->name)), $params);
 

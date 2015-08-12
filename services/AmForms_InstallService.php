@@ -13,6 +13,7 @@ class AmForms_InstallService extends BaseApplicationComponent
     {
         $this->_createContentTable();
         $this->_installGeneral();
+        $this->_installExport();
         $this->_installAntiSpam();
         $this->_installRecaptcha();
         $this->_installFields();
@@ -45,6 +46,28 @@ class AmForms_InstallService extends BaseApplicationComponent
             $settingRecord->handle = $this->_camelCase($setting['name']);
             $settingRecord->value = $setting['value'];
             $settingRecord->save();
+        }
+    }
+
+    /**
+     * Remove a set of settings.
+     *
+     * @param array  $settings
+     * @param string $settingType
+     */
+    public function removeSettings(array $settings, $settingType)
+    {
+        // Make sure we have proper settings
+        if (! is_array($settings)) {
+            return false;
+        }
+
+        // Remove settings
+        foreach ($settings as $settingName) {
+            $setting = craft()->amForms_settings->getSettingsByHandleAndType($this->_camelCase($settingName), $settingType);
+            if ($setting) {
+                craft()->amForms_settings->deleteSettingById($setting->id);
+            }
         }
     }
 
@@ -87,11 +110,29 @@ class AmForms_InstallService extends BaseApplicationComponent
                 'value' => false
             ),
             array(
-                'name' => 'Export rows per set',
-                'value' => 50
+                'name' => 'Bcc email address',
+                'value' => ''
             )
         );
         $this->installSettings($settings, AmFormsModel::SettingGeneral);
+    }
+
+    /**
+     * Install Export settings.
+     */
+    private function _installExport()
+    {
+        $settings = array(
+            array(
+                'name' => 'Export rows per set',
+                'value' => 50
+            ),
+            array(
+                'name' => 'Ignore Matrix field and block names',
+                'value' => false
+            )
+        );
+        $this->installSettings($settings, AmFormsModel::SettingExport);
     }
 
     /**

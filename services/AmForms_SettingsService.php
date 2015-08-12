@@ -127,4 +127,16 @@ class AmForms_SettingsService extends BaseApplicationComponent
         }
         return false;
     }
+
+    /**
+     * Delete a setting.
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function deleteSettingById($id)
+    {
+        return craft()->db->createCommand()->delete('amforms_settings', array('id' => $id));
+    }
 }
