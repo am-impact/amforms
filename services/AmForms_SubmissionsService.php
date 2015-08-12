@@ -289,6 +289,29 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
                 $email->replyTo = $replyTo;
             }
 
+            // Add Bcc?
+            $bccEmailAddress = craft()->amForms_settings->getSettingsByHandleAndType('bccEmailAddress', AmFormsModel::SettingGeneral);
+            if ($bccEmailAddress && $bccEmailAddress->value) {
+                $bccAddresses = ArrayHelper::stringToArray($bccEmailAddress->value);
+                $bccAddresses = array_unique($bccAddresses);
+
+                if (count($bccAddresses)) {
+                    $properBccAddresses = array();
+
+                    foreach ($bccAddresses as $bccAddress) {
+                        if (filter_var($bccAddress, FILTER_VALIDATE_EMAIL)) {
+                            $properBccAddresses[] = array(
+                                'email' => $bccAddress
+                            );
+                        }
+                    }
+
+                    if (count($properBccAddresses)) {
+                        $email->bcc = $properBccAddresses;
+                    }
+                }
+            }
+
             foreach ($recipients as $recipient) {
                 $email->toEmail = craft()->templates->renderObjectTemplate($recipient, $submission);
 
