@@ -12,13 +12,14 @@ class AmForms_SubmissionModel extends BaseElementModel
     {
         return array_merge(parent::defineAttributes(),
             array(
-                'id'        => AttributeType::Number,
-                'form'      => AttributeType::Mixed,
-                'formId'    => AttributeType::Number,
-                'formName'  => AttributeType::String,
-                'ipAddress' => AttributeType::String,
-                'userAgent' => AttributeType::Mixed,
-                'spamFree'  => array(AttributeType::Bool, 'default' => true)
+                'id'            => AttributeType::Number,
+                'form'          => AttributeType::Mixed,
+                'formId'        => AttributeType::Number,
+                'formName'      => AttributeType::String,
+                'ipAddress'     => AttributeType::String,
+                'userAgent'     => AttributeType::Mixed,
+                'submittedFrom' => AttributeType::String,
+                'spamFree'      => array(AttributeType::Bool, 'default' => true)
             )
         );
     }
