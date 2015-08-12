@@ -354,6 +354,9 @@ class AmForms_ExportsService extends BaseApplicationComponent
         $fields = array();
         $columns = array();
 
+        // Ignore Matrix fields in column name setting
+        $ignoreMatrixName = craft()->amForms_settings->isSettingValueEnabled('ignoreMatrixFieldAndBlockNames', AmFormsModel::SettingExport);
+
         // Get field layout
         $fieldLayout = $form->getFieldLayout();
         foreach ($fieldLayout->getFields() as $fieldLayoutField) {
@@ -376,7 +379,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                             $blockTypeFields = $blockType->getFields();
 
                             foreach ($blockTypeFields as $blockTypeField) {
-                                $columns[] = $columnName . ':' . $blockType->name . ':' . $blockTypeField->name;
+                                $columns[] = (! $ignoreMatrixName ? $columnName . ':' . $blockType->name . ':' : '') . $blockTypeField->name;
                             }
                         }
                         break;
