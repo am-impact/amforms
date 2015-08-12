@@ -229,6 +229,7 @@ class AmForms_SubmissionElementType extends BaseElementType
         $query->addSelect('submissions.id,
                            submissions.ipAddress,
                            submissions.userAgent,
+                           submissions.submittedFrom,
                            submissions.dateCreated,
                            submissions.dateUpdated,
                            submissions.uid,
