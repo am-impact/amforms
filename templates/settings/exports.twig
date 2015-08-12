@@ -1,0 +1,21 @@
+{% extends 'amforms/_layouts/settings' %}
+
+{% set title = 'Exports'|t %}
+{% set selectedTab = 'exports' %}
+
+{% block fields %}
+    {{ forms.textField({
+        label: exports.exportRowsPerSet.name|t,
+        id: exports.exportRowsPerSet.handle,
+        name: exports.exportRowsPerSet.handle,
+        value: exports.exportRowsPerSet.value,
+        instructions: 'The amount of rows per set when running the export task.'|t
+    }) }}
+    {{ forms.lightswitchField({
+        label: exports.ignoreMatrixFieldAndBlockNames.name|t,
+        id: exports.ignoreMatrixFieldAndBlockNames.handle,
+        name: exports.ignoreMatrixFieldAndBlockNames.handle,
+        on: exports.ignoreMatrixFieldAndBlockNames.value,
+        instructions: 'Don’t include the field and block names in the column name.'|t
+    }) }}
+{% endblock %}

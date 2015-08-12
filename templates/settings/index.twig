@@ -33,10 +33,10 @@
         instructions: 'Switching this on will require a&m mailer in order to work.'|t
     }) }}
     {{ forms.textField({
-        label: general.exportRowsPerSet.name|t,
-        id: general.exportRowsPerSet.handle,
-        name: general.exportRowsPerSet.handle,
-        value: general.exportRowsPerSet.value,
-        instructions: 'The amount of rows per set when running the export task.'|t
+        label: general.bccEmailAddress.name|t,
+        id: general.bccEmailAddress.handle,
+        name: general.bccEmailAddress.handle,
+        value: general.bccEmailAddress.value,
+        instructions: 'Who will receive a copy of each notification? Enter comma separated email addresses for more recipients.'|t
     }) }}
 {% endblock %}

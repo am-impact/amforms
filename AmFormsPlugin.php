@@ -97,6 +97,9 @@ class AmFormsPlugin extends BasePlugin
             'amforms/settings' => array(
                 'action' => 'amForms/settings/index'
             ),
+            'amforms/settings/exports' => array(
+                'action' => 'amForms/settings/exports'
+            ),
             'amforms/settings/antispam' => array(
                 'action' => 'amForms/settings/antispam'
             ),

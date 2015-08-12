@@ -30,6 +30,18 @@ class AmForms_SettingsController extends BaseController
     }
 
     /**
+     * Show Export settings.
+     */
+    public function actionExports()
+    {
+        $variables = array(
+            'type'    => AmFormsModel::SettingExport,
+            'exports' => craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingExport)
+        );
+        $this->renderTemplate('amForms/settings/exports', $variables);
+    }
+
+    /**
      * Show AntiSpam settings.
      */
     public function actionAntispam()

@@ -32,6 +32,7 @@ return array(
     "Are you sure you want to delete this form and all of it's data?" => "Weet u zeker dat u dit formulier wilt verwijderen? U zult alle bijbehorende gegevens kwijtraken.",
     "Are you sure you want to delete this submission and all of it's data?" => "Weet u zeker dat u deze inzending wilt verwijderen? U zult alle bijbehorende gegevens kwijtraken.",
     'Basic fields' => 'Basis velden',
+    'Bcc email address' => 'Bcc e-mailadres',
     'Busy' => 'Bezig',
     'Calculate' => 'Berekenen',
     'Check for duplications on submission.' => 'Controleer op dupliceren tijdens het submitten.',
@@ -51,6 +52,7 @@ return array(
     'Date created' => 'Aanmaakdatum',
     'Date updated' => 'Wijzigingsdatum',
     'Design your form' => 'Stel uw formulier samen',
+    'Don’t include the field and block names in the column name.' => 'De naam van het veld en de blokken niet opnemen in de kolomnaam.',
     'Don’t show' => 'Niet weergeven',
     'Download' => 'Download',
     'Duplicate check enabled' => 'Duplicatie controle inschakelen',
@@ -80,6 +82,7 @@ return array(
     'Google reCAPTCHA enabled' => 'Google reCAPTCHA inschakelen',
     'Honeypot enabled' => 'Honeypot inschakelen',
     'Honeypot name' => 'Honeypot naam',
+    'Ignore Matrix field and block names' => 'Negeer Matrix veld en blok namen',
     'Include in export' => 'Opnemen in export',
     'Leave this field blank' => 'Laat dit veld leeg',
     'Minimum time in seconds' => 'Het minimum aantal seconden',
@@ -164,6 +167,7 @@ return array(
     'Which form do you want to export?' => 'Welk formulier wilt u exporteren?',
     'Which form do you want to see submissions from?' => 'Van welk formulier wilt u de laatste inzendingen zien?',
     'Who will receive the notification? Enter comma separated email addresses for more recipients.' => 'Wie gaan de notificatie ontvangen? Voer komma gescheiden e-mailadressen in voor meer ontvangers.',
+    'Who will receive a copy of each notification? Enter comma separated email addresses for more recipients.' => 'Wie gaan er een kopie van elke notificatie ontvangen? Voer komma gescheiden e-mailadressen in voor meer ontvangers.',
     'Yes' => 'Ja',
     'Your form will contain the fields you set here.' => 'Uw formulier zal de velden bevatten die u hier instelt.'
 );
