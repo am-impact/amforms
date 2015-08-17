@@ -94,6 +94,7 @@ return array(
     'New field' => 'Nieuw veld',
     'New form' => 'Nieuw formulier',
     'No' => 'Nee',
+    'No criteria exist yet.' => 'Er is nog geen criteria aanwezig.',
     'No exports exist yet.' => 'Er zijn nog geen exports aanwezig.',
     'No export exists with the ID “{id}”.' => 'Er bestaat geen export met het ID “{id}”.',
     'No form exists with the ID “{id}”.' => 'Er bestaat geen formulier met het ID “{id}”.',
