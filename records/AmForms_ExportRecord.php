@@ -22,7 +22,7 @@ class AmForms_ExportRecord extends BaseRecord
     {
         return array(
             'name'          => AttributeType::String,
-            'total'         => array(AttributeType::Number, 'required' => true),
+            'total'         => array(AttributeType::Number, 'default' => 0),
             'totalCriteria' => AttributeType::Number,
             'finished'      => array(AttributeType::Bool, 'default' => false),
             'file'          => AttributeType::String,

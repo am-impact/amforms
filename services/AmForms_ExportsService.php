@@ -73,7 +73,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
 
         // Export attributes
         $exportRecord->setAttributes($export->getAttributes(), false);
-        if ($isNewExport) {
+        if ($isNewExport && ! $export->startRightAway) {
             // Set total records to export
             $exportRecord->total = craft()->db->createCommand()
                                     ->select('COUNT(*)')
@@ -90,23 +90,32 @@ class AmForms_ExportsService extends BaseApplicationComponent
         $export->addErrors($exportRecord->getErrors());
 
         if (! $export->hasErrors()) {
-            // Save the export!
-            $result = $exportRecord->save(false); // Skip validation now
+            if ($export->startRightAway) {
+                // Get max power
+                craft()->config->maxPowerCaptain();
 
-            // Start export task?
-            if ($result && $isNewExport) {
-                // Start task
-                $params = array(
-                    'exportId'  => $exportRecord->id,
-                    'batchSize' => craft()->amForms_settings->getSettingsValueByHandleAndType('exportRowsPerSet', AmFormsModel::SettingExport, 100)
-                );
-                craft()->tasks->createTask('AmForms_Export', Craft::t('{form} export', array('form' => $form->name)), $params);
-
-                // Notify user
-                craft()->userSession->setNotice(Craft::t('Export started.'));
+                // Run the export!
+                return $this->runExport($export);
             }
+            else {
+                // Save the export!
+                $result = $exportRecord->save(false); // Skip validation now
 
-            return $result;
+                // Start export task?
+                if ($result && $isNewExport) {
+                    // Start task
+                    $params = array(
+                        'exportId'  => $exportRecord->id,
+                        'batchSize' => craft()->amForms_settings->getSettingsValueByHandleAndType('exportRowsPerSet', AmFormsModel::SettingExport, 100)
+                    );
+                    craft()->tasks->createTask('AmForms_Export', Craft::t('{form} export', array('form' => $form->name)), $params);
+
+                    // Notify user
+                    craft()->userSession->setNotice(Craft::t('Export started.'));
+                }
+
+                return $result;
+            }
         }
 
         return false;
@@ -226,10 +235,10 @@ class AmForms_ExportsService extends BaseApplicationComponent
      *
      * @return bool
      */
-    public function runExport(AmForms_ExportModel $export, $limit, $offset)
+    public function runExport(AmForms_ExportModel $export, $limit = null, $offset = null)
     {
-        // Validate export file
-        if (! IOHelper::fileExists($export->file)) {
+        // Validate export file (if send by task)
+        if (! IOHelper::fileExists($export->file) && ! $export->startRightAway) {
             return false;
         }
 
@@ -246,7 +255,25 @@ class AmForms_ExportsService extends BaseApplicationComponent
         // Add submissions to export file
         if ($submissions && count($submissions) > 0) {
             // Get the export file
-            $this->_exportFiles[$export->id] = fopen($export->file, 'a');
+            if ($export->startRightAway) {
+                // Get form
+                $form = craft()->amForms_forms->getFormById($export->formId);
+                if (! $form) {
+                    return false;
+                }
+
+                // Open output buffer
+                ob_start();
+
+                // Write to output stream
+                $this->_exportFiles['manual'] = fopen('php://output', 'w');
+
+                // Create columns
+                fputcsv($this->_exportFiles['manual'], $this->_getExportColumns($export, $form));
+            }
+            else {
+                $this->_exportFiles[$export->id] = fopen($export->file, 'a');
+            }
 
             // Get field types
             $fields = array();
@@ -304,10 +331,21 @@ class AmForms_ExportsService extends BaseApplicationComponent
             }
 
             // Close export file
-            fclose($this->_exportFiles[$export->id]);
+            fclose($this->_exportFiles[ ($export->startRightAway ? 'manual' : $export->id) ]);
+
+            if ($export->startRightAway) {
+                // Close buffer and return data
+                $data = ob_get_clean();
+
+                // Use windows friendly newlines
+                $data = str_replace("\n", "\r\n", $data);
+
+                return $data;
+            }
         }
 
-        return true;
+        // Only return true if exporting by task
+        return $export->startRightAway ? false : true;
     }
 
     /**
@@ -598,7 +636,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
         if ($returnData) {
             return $data;
         }
-        fputcsv($this->_exportFiles[$export->id], $data);
+        fputcsv($this->_exportFiles[ ($export->startRightAway ? 'manual' : $export->id) ], $data);
 
         // Add more rows?
         if ($hasMoreRows) {
@@ -617,7 +655,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     }
 
                     // Add row to CSV
-                    fputcsv($this->_exportFiles[$export->id], $data);
+                    fputcsv($this->_exportFiles[ ($export->startRightAway ? 'manual' : $export->id) ], $data);
                 }
             }
         }

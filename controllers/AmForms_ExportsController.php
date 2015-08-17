@@ -120,15 +120,23 @@ class AmForms_ExportsController extends BaseController
         $export->totalCriteria = null; // Reset total that met the current criteria
         $export->map = $mapping;
         $export->criteria = $criteria;
+        $export->startRightAway = ! (bool) craft()->request->getPost('save', false);
 
         // Save export
-        if (craft()->amForms_exports->saveExport($export)) {
-            craft()->userSession->setNotice(Craft::t('Export saved.'));
+        $result = craft()->amForms_exports->saveExport($export);
+        if ($result) {
+            if ($export->startRightAway) {
+                craft()->request->sendFile('export.csv', $result, array('forceDownload' => true, 'mimeType' => 'text/csv'));
+            }
+            else {
+                craft()->userSession->setNotice(Craft::t('Export saved.'));
 
-            $this->redirectToPostedUrl($export);
+                $this->redirectToPostedUrl($export);
+            }
         }
         else {
-            craft()->userSession->setError(Craft::t('Couldn’t save export.'));
+            $message = $export->startRightAway ? 'No submissions exists (with given criteria).' : 'Couldn’t save export.';
+            craft()->userSession->setError(Craft::t($message));
 
             // Send the export back to the template
             craft()->urlManager->setRouteVariables(array(
