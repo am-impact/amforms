@@ -40,4 +40,13 @@ class AmForms_ExportRecord extends BaseRecord
             'form' => array(static::BELONGS_TO, 'AmForms_FormRecord', 'required' => true, 'onDelete' => static::CASCADE)
         );
     }
+
+    public function scopes()
+    {
+        return array(
+            'ordered' => array(
+                'order' => 'id desc'
+            )
+        );
+    }
 }

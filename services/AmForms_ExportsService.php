@@ -18,7 +18,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
      */
     public function getAllExports()
     {
-        $exportRecords = AmForms_ExportRecord::model()->findAll();
+        $exportRecords = AmForms_ExportRecord::model()->ordered()->findAll();
         if ($exportRecords) {
             return AmForms_ExportModel::populateModels($exportRecords);
         }
