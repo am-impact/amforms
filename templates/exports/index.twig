@@ -35,7 +35,7 @@
                         <td data-title="{{ 'Name'|t }}">{{ export.name }}</td>
                         <td data-title="{{ 'Total submissions'|t }}">{{ export.total }}</td>
                         <td data-title="{{ 'Total submissions that met the criteria'|t }}">
-                            {% if export.totalCriteria %}
+                            {% if export.totalCriteria is not null %}
                                 {{ export.totalCriteria }}
                             {% else %}
                                 <a href="{{ actionUrl('amForms/exports/getTotalByCriteria', { id: export.id }) }}">{{ 'Calculate'|t }}</a>
