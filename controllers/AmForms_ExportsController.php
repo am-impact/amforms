@@ -52,6 +52,11 @@ class AmForms_ExportsController extends BaseController
 
         // Get available forms
         $variables['availableForms'] = craft()->amForms_forms->getAllForms();
+        if ($variables['availableForms']) {
+            foreach ($variables['availableForms'] as $form) {
+                $variables['fields'][$form->handle] = craft()->amForms_exports->getExportFields($form);
+            }
+        }
 
         // Render template!
         $this->renderTemplate('amforms/exports/_edit', $variables);
@@ -237,14 +242,8 @@ class AmForms_ExportsController extends BaseController
         $form = craft()->amForms_forms->getFormById($formId);
 
         if ($form) {
-            $fields = array();
-
             // Get form fields
-            foreach ($form->getFieldLayout()->getTabs() as $tab) {
-                foreach ($tab->getFields() as $layoutField) {
-                    $fields[] = $layoutField->getField();
-                }
-            }
+            $fields = craft()->amForms_exports->getExportFields($form);
 
             // Get HTML
             $variables = array(

@@ -42,6 +42,70 @@ class AmForms_ExportsService extends BaseApplicationComponent
     }
 
     /**
+     * Get export fields for a form.
+     *
+     * @param AmForms_FormModel $form
+     *
+     * @return array
+     */
+    public function getExportFields(AmForms_FormModel $form)
+    {
+        // Standard fields
+        $exportFields = array(
+            'id' => array(
+                'id' => 'id',
+                'handle' => 'id',
+                'name' => Craft::t('ID'),
+                'checked' => 0,
+                'type' => 'PlainText'
+            ),
+            'title' => array(
+                'id' => 'title',
+                'handle' => 'title',
+                'name' => Craft::t('Title'),
+                'checked' => 1,
+                'type' => 'PlainText'
+            ),
+            'dateCreated' => array(
+                'id' => 'dateCreated',
+                'handle' => 'dateCreated',
+                'name' => Craft::t('Date created'),
+                'checked' => 0,
+                'type' => 'Date'
+            ),
+            'dateUpdated' => array(
+                'id' => 'dateUpdated',
+                'handle' => 'dateUpdated',
+                'name' => Craft::t('Date updated'),
+                'checked' => 0,
+                'type' => 'Date'
+            ),
+            'submittedFrom' => array(
+                'id' => 'submittedFrom',
+                'handle' => 'submittedFrom',
+                'name' => Craft::t('Submitted from'),
+                'checked' => 0,
+                'type' => 'PlainText'
+            )
+        );
+
+        // Get fieldlayout fields
+        foreach ($form->getFieldLayout()->getTabs() as $tab) {
+            // Tab fields
+            $fields = $tab->getFields();
+            foreach ($fields as $layoutField) {
+                // Get actual field
+                $field = $layoutField->getField();
+
+                // Add to fields
+                $exportFields[$field->handle] = $field;
+            }
+        }
+
+        return $exportFields;
+    }
+
+    /**
      * Save an export.
      *
      * @param AmForms_ExportModel $export
@@ -254,14 +318,14 @@ class AmForms_ExportsService extends BaseApplicationComponent
 
         // Add submissions to export file
         if ($submissions && count($submissions) > 0) {
+            // Get form
+            $form = craft()->amForms_forms->getFormById($export->formId);
+            if (! $form) {
+                return false;
+            }
+
             // Get the export file
             if ($export->startRightAway) {
-                // Get form
-                $form = craft()->amForms_forms->getFormById($export->formId);
-                if (! $form) {
-                    return false;
-                }
-
                 // Open output buffer
                 ob_start();
 
@@ -276,14 +340,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
             }
 
             // Get field types
-            $fields = array();
-            $fieldLayout = $submissions[0]->getFieldLayout(); // We just need a model
-            foreach ($fieldLayout->getFields() as $fieldLayoutField) {
-                $field = $fieldLayoutField->getField();
-
-                // Add field type
-                $fields[$field->handle] = $field;
-            }
+            $fields = $this->getExportFields($form);
 
             // Get field handles and columns that should be included
             $columnCounter = 0;
@@ -292,6 +349,9 @@ class AmForms_ExportsService extends BaseApplicationComponent
                 if ($export->map['included'][$fieldHandle] && isset($fields[$fieldHandle])) {
                     // Add field to export fields
                     $field = $fields[$fieldHandle];
+                    if (is_array($field)) {
+                        $field = (object) $field; // Fix standard fields
+                    }
                     $this->_exportFields[$export->id][$fieldHandle] = $field;
 
                     // Remember how much space this field is taking
@@ -389,18 +449,13 @@ class AmForms_ExportsService extends BaseApplicationComponent
      */
     private function _getExportColumns(AmForms_ExportModel $export, AmForms_FormModel $form)
     {
-        $fields = array();
         $columns = array();
 
         // Ignore Matrix fields in column name setting
         $ignoreMatrixName = craft()->amForms_settings->isSettingValueEnabled('ignoreMatrixFieldAndBlockNames', AmFormsModel::SettingExport);
 
-        // Get field layout
-        $fieldLayout = $form->getFieldLayout();
-        foreach ($fieldLayout->getFields() as $fieldLayoutField) {
-            $field = $fieldLayoutField->getField();
-            $fields[$field->handle] = $field;
-        }
+        // Get fields
+        $fields = $this->getExportFields($form);
 
         // Get column names
         foreach ($export->map['fields'] as $fieldHandle => $columnName) {
@@ -408,6 +463,9 @@ class AmForms_ExportsService extends BaseApplicationComponent
             if ($export->map['included'][$fieldHandle] && isset($fields[$fieldHandle])) {
                 // Actual field
                 $field = $fields[$fieldHandle];
+                if (is_array($field)) {
+                    $field = (object) $field; // Fix standard fields
+                }
 
                 // Add column based on the field type
                 switch ($field->type) {
@@ -455,10 +513,12 @@ class AmForms_ExportsService extends BaseApplicationComponent
         // Gather related criteria
         $relatedTo = array('or');
 
-        // Get fieldlayout
-        $fieldLayout = $form->getFieldLayout();
-        foreach ($fieldLayout->getFields() as $fieldLayoutField) {
-            $field = $fieldLayoutField->getField();
+        // Get fields
+        $fields = $this->getExportFields($form);
+        foreach ($fields as $field) {
+            if (is_array($field)) {
+                $field = (object) $field; // Fix standard fields
+            }
 
             // Is field set in criteria?
             if (! isset($export->criteria[ $field->id ])) {

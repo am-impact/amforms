@@ -49,8 +49,7 @@
             <hr>
             <h3>{{ 'Which fields do you want to export?'|t }}</h3>
             {% for form in availableForms %}
-                {% set allFields = [] %}
-                {% set fieldLayout = form.getFieldLayout() -%}
+                {% set exportFields = attribute(fields, form.handle) %}
                 {% set isCurrent = (export.formId ? export.formId == form.id : loop.first) -%}
 
                 <div id="{{ form.id }}"{% if not isCurrent %} class="hidden"{% endif %}>
@@ -62,49 +61,40 @@
                             <th scope="col">{{ 'Export as'|t }}</th>
                         </thead>
                         <tbody>
-                            {% for tab in fieldLayout.getTabs() %}
-                                {% set fields = tab.getFields() %}
+                            {# Override fields order if we saved this export #}
+                            {% if export.formId and export.map|length and export.formId == form.id and export.map.fields|length == exportFields|length %}
+                                {% set newFields = [] %}
 
-                                {# Override fields order if we saved this export #}
-                                {% if export.formId and export.map|length and export.formId == form.id and export.map.fields|length == fieldLayout.getFields()|length %}
-                                    {% set newFields = [] %}
-
-                                    {% for mapField, mapValue in export.map.fields %}
-                                        {% for field in fields %}
-                                            {% set fieldInfo = field.getField() %}
-
-                                            {% if mapField == fieldInfo.handle %}
-                                                {% set newFields = newFields|merge([field]) %}
-                                            {% endif %}
-                                        {% endfor %}
+                                {% for mapField, mapValue in export.map.fields %}
+                                    {% for field in exportFields %}
+                                        {% if mapField == field.handle %}
+                                            {% set newFields = newFields|merge([field]) %}
+                                        {% endif %}
                                     {% endfor %}
-
-                                    {% set fields = newFields %}
-                                {% endif %}
-
-                                {% for field in fields %}
-                                    {% set fieldInfo = field.getField() %}
-                                    {% set allFields = allFields|merge([fieldInfo]) %}
-
-                                    <tr>
-                                        <td class="thin"><a class="move icon" title="{{ 'Reorder'|t }}" role="button"></a></td>
-                                        <td>{{ fieldInfo.name }}</td>
-                                        <td>
-                                            {{ forms.lightswitchField({
-                                                id: form.id ~ '[included][' ~ fieldInfo.handle ~ ']',
-                                                name: form.id ~ '[included][' ~ fieldInfo.handle ~ ']',
-                                                on: (isCurrent and export.map|length and attribute(export.map.included, fieldInfo.handle) is defined ? attribute(export.map.included, fieldInfo.handle) : true)
-                                            }) }}
-                                        </td>
-                                        <td>
-                                            {{ forms.textField({
-                                                id: form.id ~ '[fields][' ~ fieldInfo.handle ~ ']',
-                                                name: form.id ~ '[fields][' ~ fieldInfo.handle ~ ']',
-                                                value: (isCurrent and export.map|length and attribute(export.map.fields, fieldInfo.handle) is defined ? attribute(export.map.fields, fieldInfo.handle) : fieldInfo.name)
-                                            }) }}
-                                        </td>
-                                    </tr>
                                 {% endfor %}
+
+                                {% set exportFields = newFields %}
+                            {% endif %}
+
+                            {% for field in exportFields %}
+                                <tr>
+                                    <td class="thin"><a class="move icon" title="{{ 'Reorder'|t }}" role="button"></a></td>
+                                    <td>{{ field.name }}</td>
+                                    <td>
+                                        {{ forms.lightswitchField({
+                                            id: form.id ~ '[included][' ~ field.handle ~ ']',
+                                            name: form.id ~ '[included][' ~ field.handle ~ ']',
+                                            on: (isCurrent and export.map|length and attribute(export.map.included, field.handle) is defined ? attribute(export.map.included, field.handle) : (field.defaultInclude is not defined ? field.checked : true))
+                                        }) }}
+                                    </td>
+                                    <td>
+                                        {{ forms.textField({
+                                            id: form.id ~ '[fields][' ~ field.handle ~ ']',
+                                            name: form.id ~ '[fields][' ~ field.handle ~ ']',
+                                            value: (isCurrent and export.map|length and attribute(export.map.fields, field.handle) is defined ? attribute(export.map.fields, field.handle) : field.name)
+                                        }) }}
+                                    </td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -124,7 +114,7 @@
                             {% if isCurrent and export.criteria|length and export.criteria.fields|length -%}
                                 {% for criteriaKey, criteriaField in export.criteria.fields %}
                                     {% include 'amforms/exports/_fields/template' with {
-                                        fields: allFields,
+                                        fields: exportFields,
                                         criteriaCounter: loop.index0,
                                         givenField: criteriaField,
                                         givenValue: (attribute(attribute(export.criteria, criteriaField), criteriaKey) is defined ? attribute(attribute(export.criteria, criteriaField), criteriaKey) : null)
