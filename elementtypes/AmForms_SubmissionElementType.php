@@ -250,7 +250,7 @@ class AmForms_SubmissionElementType extends BaseElementType
         if ($criteria->order) {
             // Trying to order by date creates ambiguity errors
             // Let's make sure mysql knows what we want to sort by
-            if (stripos($criteria->order, 'elements.') === false) {
+            if (stripos($criteria->order, 'elements.') === false && stripos($criteria->order, 'submissions.dateCreated') === false) {
                 $criteria->order = str_replace('dateCreated', 'submissions.dateCreated', $criteria->order);
                 $criteria->order = str_replace('dateUpdated', 'submissions.dateUpdated', $criteria->order);
             }
