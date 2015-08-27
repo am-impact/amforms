@@ -26,7 +26,7 @@ class m150723_112500_amForms_redirectUriToRelation extends BaseMigration
 
         // Alter redirectUri to redirectEntryId
         // We drop it first, because it seems altering and adding a key won't work
-        $this->dropColumn('amForms_forms', 'redirectUri');
+        $this->dropColumn('amforms_forms', 'redirectUri');
         $this->addColumnAfter('amforms_forms', 'redirectEntryId', array(ColumnType::Int), 'fieldLayoutId');
         $this->addForeignKey('amforms_forms', 'redirectEntryId', 'entries', 'id', 'SET NULL', null);
 
