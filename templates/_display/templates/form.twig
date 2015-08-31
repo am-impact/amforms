@@ -1,7 +1,7 @@
 {%- set submitValue = (form.submitButton ? form.submitButton : 'Submit'|t) -%}
 {%- set submitAction = (form.submitAction ? form.submitAction : 'amForms/submissions/saveSubmission') -%}
 
-<form method="post" accept-charset="utf-8" enctype="multipart/form-data">
+<form class="form--{{ form.handle }}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
     {% if form.submitAction -%}
         {# Submit form to third party #}
         <input type="hidden" name="action" value="{{ submitAction }}">
