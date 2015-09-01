@@ -238,6 +238,10 @@ class AmForms_FormsService extends BaseApplicationComponent
                 craft()->path->setTemplatesPath($templatePath);
                 $fieldInfo = craft()->fields->populateFieldType($field, $submission);
                 $input = $fieldInfo->getInputHtml($field->handle, $submission->getFieldValue($field->handle));
+                if ($layoutField->required) {
+                    $fieldId = sprintf('name="%s"', $field->handle);
+                    $input = str_replace($fieldId, $fieldId . ' required="true"', $input);
+                }
 
                 // Get field HTML
                 craft()->path->setTemplatesPath($fieldTemplateInfo['path']);
@@ -245,7 +249,7 @@ class AmForms_FormsService extends BaseApplicationComponent
                     'form'     => $form,
                     'field'    => $field,
                     'input'    => $input,
-                    'required' => $field->required,
+                    'required' => $layoutField->required,
                     'element'  => $submission
                 ));
             }
