@@ -27,7 +27,8 @@ class AmForms_ExportRecord extends BaseRecord
             'finished'      => array(AttributeType::Bool, 'default' => false),
             'file'          => AttributeType::String,
             'map'           => AttributeType::Mixed,
-            'criteria'      => AttributeType::Mixed
+            'criteria'      => AttributeType::Mixed,
+            'submissions'   => AttributeType::Mixed
         );
     }
 

@@ -256,12 +256,7 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         if ($event->performAction) {
 
             // Get email body
-            $variables = array(
-                'tabs' => $form->getFieldLayout()->getTabs(),
-                'form' => $form,
-                'submission' => $submission
-            );
-            $body = craft()->amForms->renderDisplayTemplate('email', $form->notificationTemplate, $variables);
+            $body = $this->getSubmissionEmailBody($submission);
 
             // Other email attributes
             $subject = Craft::t($form->notificationSubject);
@@ -333,6 +328,28 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         }
 
         return false;
+    }
+
+    /**
+     * Get submission email body.
+     *
+     * @param AmForms_SubmissionModel $submission
+     *
+     * @return string
+     */
+    public function getSubmissionEmailBody(AmForms_SubmissionModel $submission)
+    {
+        // Get form if not already set
+        $submission->getForm();
+        $form = $submission->form;
+
+        // Get email body
+        $variables = array(
+            'tabs' => $form->getFieldLayout()->getTabs(),
+            'form' => $form,
+            'submission' => $submission
+        );
+        return craft()->amForms->renderDisplayTemplate('email', $form->notificationTemplate, $variables);
     }
 
     /**

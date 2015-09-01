@@ -223,6 +223,32 @@ class AmForms_ExportsController extends BaseController
     }
 
     /**
+     * Export a submission.
+     */
+    public function actionExportSubmission()
+    {
+        $this->requirePostRequest();
+
+        // Get the submission
+        $submissionId = craft()->request->getRequiredPost('submissionId');
+        $submission = craft()->amForms_submissions->getSubmissionById($submissionId);
+        if (! $submission) {
+            throw new Exception(Craft::t('No submission exists with the ID “{id}”.', array('id' => $submissionId)));
+        }
+
+        // Export submission
+        $export = new AmForms_ExportModel();
+        $export->name = Craft::t('{total} submission(s)', array('total' => 1));
+        $export->formId = $submission->formId;
+        $export->total = 1;
+        $export->totalCriteria = 1;
+        $export->submissions = array($submissionId);
+        $result = craft()->amForms_exports->saveExport($export);
+
+        $this->redirectToPostedUrl($submission);
+    }
+
+    /**
      * Get a criteria row.
      */
     public function actionGetCriteria()

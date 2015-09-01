@@ -138,12 +138,14 @@ class AmForms_ExportsService extends BaseApplicationComponent
         // Export attributes
         $exportRecord->setAttributes($export->getAttributes(), false);
         if ($isNewExport && ! $export->startRightAway) {
-            // Set total records to export
-            $exportRecord->total = craft()->db->createCommand()
-                                    ->select('COUNT(*)')
-                                    ->from('amforms_submissions')
-                                    ->where('formId=:formId', array(':formId' => $export->formId))
-                                    ->queryScalar();
+            if (! $export->submissions) {
+                // Set total records to export
+                $exportRecord->total = craft()->db->createCommand()
+                                        ->select('COUNT(*)')
+                                        ->from('amforms_submissions')
+                                        ->where('formId=:formId', array(':formId' => $export->formId))
+                                        ->queryScalar();
+            }
 
             // Create a new export file
             $exportRecord->file = $this->_createExportFile($export, $form);
@@ -211,7 +213,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
      */
     public function deleteExportFilesForForm(AmForms_FormModel $form)
     {
-        $files = IOHelper::getFiles(craft()->path->getStoragePath() . 'amFormsExport/');
+        $files = IOHelper::getFiles($this->_getExportPath());
         if (! $files || ! count($files)) {
             return false;
         }
@@ -243,12 +245,14 @@ class AmForms_ExportsService extends BaseApplicationComponent
 
         // Reset finished
         $export->finished = false;
-        // Set total records to export
-        $export->total = craft()->db->createCommand()
-                        ->select('COUNT(*)')
-                        ->from('amforms_submissions')
-                        ->where('formId=:formId', array(':formId' => $export->formId))
-                        ->queryScalar();
+        if (! $export->submissions) {
+            // Set total records to export
+            $export->total = craft()->db->createCommand()
+                            ->select('COUNT(*)')
+                            ->from('amforms_submissions')
+                            ->where('formId=:formId', array(':formId' => $export->formId))
+                            ->queryScalar();
+        }
         // Create a new export file
         $export->file = $this->_createExportFile($export, $form);
 
@@ -312,100 +316,121 @@ class AmForms_ExportsService extends BaseApplicationComponent
             'limit'  => $limit,
             'offset' => $offset
         );
+        if ($export->submissions) {
+            $params['id'] = $export->submissions;
+        }
         $criteria = craft()->amForms_submissions->getCriteria($params);
         $this->_addExportCriteria($export, $criteria);
         $submissions = $criteria->find();
 
         // Add submissions to export file
         if ($submissions && count($submissions) > 0) {
-            // Get form
-            $form = craft()->amForms_forms->getFormById($export->formId);
-            if (! $form) {
-                return false;
-            }
-
-            // Get the export file
-            if ($export->startRightAway) {
-                // Open output buffer
-                ob_start();
-
-                // Write to output stream
-                $this->_exportFiles['manual'] = fopen('php://output', 'w');
-
-                // Create columns
-                fputcsv($this->_exportFiles['manual'], $this->_getExportColumns($export, $form));
-            }
-            else {
-                $this->_exportFiles[$export->id] = fopen($export->file, 'a');
-            }
-
-            // Get field types
-            $fields = $this->getExportFields($form);
-
-            // Get field handles and columns that should be included
-            $columnCounter = 0;
-            $this->_exportFields[$export->id] = array();
-            foreach ($export->map['fields'] as $fieldHandle => $columnName) {
-                if ($export->map['included'][$fieldHandle] && isset($fields[$fieldHandle])) {
-                    // Add field to export fields
-                    $field = $fields[$fieldHandle];
-                    if (is_array($field)) {
-                        $field = (object) $field; // Fix standard fields
-                    }
-                    $this->_exportFields[$export->id][$fieldHandle] = $field;
-
-                    // Remember how much space this field is taking
-                    $spaceCounter = 0;
-
-                    // Add column so we know where to place the data later
-                    switch ($field->type) {
-                        case 'Matrix':
-                            $blockTypes = $field->getFieldType()->getSettings()->getBlockTypes();
-                            foreach ($blockTypes as $blockType) {
-                                $blockTypeFields = $blockType->getFields();
-
-                                $this->_exportColumns[$export->id][$field->handle . ':' . $blockType->handle] = $columnCounter;
-
-                                $columnCounter += count($blockTypeFields);
-
-                                $spaceCounter += count($blockTypeFields);
-                            }
-                            break;
-
-                        default:
-                            $this->_exportColumns[$export->id][$field->handle] = $columnCounter;
-
-                            $spaceCounter ++;
-                            break;
-                    }
-
-                    $columnCounter ++;
-
-                    $this->_exportSpaceCounter[$export->id][$field->handle] = $spaceCounter;
+            // Export submission to a zip file?
+            if ($export->submissions) {
+                foreach ($submissions as $submission) {
+                    $this->_exportSubmissionToZip($export, $submission);
                 }
             }
+            else {
+                // Get form
+                $form = craft()->amForms_forms->getFormById($export->formId);
+                if (! $form) {
+                    return false;
+                }
 
-            // Export submission model
-            foreach ($submissions as $submission) {
-                 $this->_exportSubmission($export, $submission);
-            }
+                // Get the export file
+                if ($export->startRightAway) {
+                    // Open output buffer
+                    ob_start();
 
-            // Close export file
-            fclose($this->_exportFiles[ ($export->startRightAway ? 'manual' : $export->id) ]);
+                    // Write to output stream
+                    $this->_exportFiles['manual'] = fopen('php://output', 'w');
 
-            if ($export->startRightAway) {
-                // Close buffer and return data
-                $data = ob_get_clean();
+                    // Create columns
+                    fputcsv($this->_exportFiles['manual'], $this->_getExportColumns($export, $form));
+                }
+                else {
+                    $this->_exportFiles[$export->id] = fopen($export->file, 'a');
+                }
 
-                // Use windows friendly newlines
-                $data = str_replace("\n", "\r\n", $data);
+                // Get field types
+                $fields = $this->getExportFields($form);
 
-                return $data;
+                // Get field handles and columns that should be included
+                $columnCounter = 0;
+                $this->_exportFields[$export->id] = array();
+                foreach ($export->map['fields'] as $fieldHandle => $columnName) {
+                    if ($export->map['included'][$fieldHandle] && isset($fields[$fieldHandle])) {
+                        // Add field to export fields
+                        $field = $fields[$fieldHandle];
+                        if (is_array($field)) {
+                            $field = (object) $field; // Fix standard fields
+                        }
+                        $this->_exportFields[$export->id][$fieldHandle] = $field;
+
+                        // Remember how much space this field is taking
+                        $spaceCounter = 0;
+
+                        // Add column so we know where to place the data later
+                        switch ($field->type) {
+                            case 'Matrix':
+                                $blockTypes = $field->getFieldType()->getSettings()->getBlockTypes();
+                                foreach ($blockTypes as $blockType) {
+                                    $blockTypeFields = $blockType->getFields();
+
+                                    $this->_exportColumns[$export->id][$field->handle . ':' . $blockType->handle] = $columnCounter;
+
+                                    $columnCounter += count($blockTypeFields);
+
+                                    $spaceCounter += count($blockTypeFields);
+                                }
+                                break;
+
+                            default:
+                                $this->_exportColumns[$export->id][$field->handle] = $columnCounter;
+
+                                $spaceCounter ++;
+                                break;
+                        }
+
+                        $columnCounter ++;
+
+                        $this->_exportSpaceCounter[$export->id][$field->handle] = $spaceCounter;
+                    }
+                }
+
+                // Export submission model
+                foreach ($submissions as $submission) {
+                    $this->_exportSubmission($export, $submission);
+                }
+
+                // Close export file
+                fclose($this->_exportFiles[ ($export->startRightAway ? 'manual' : $export->id) ]);
+
+                if ($export->startRightAway) {
+                    // Close buffer and return data
+                    $data = ob_get_clean();
+
+                    // Use windows friendly newlines
+                    $data = str_replace("\n", "\r\n", $data);
+
+                    return $data;
+                }
             }
         }
 
         // Only return true if exporting by task
         return $export->startRightAway ? false : true;
+    }
+
+    /**
+     * Get export path.
+     *
+     * @return string
+     */
+    private function _getExportPath()
+    {
+        return craft()->path->getStoragePath() . 'amFormsExport/';
     }
 
     /**
@@ -419,21 +444,27 @@ class AmForms_ExportsService extends BaseApplicationComponent
     private function _createExportFile(AmForms_ExportModel $export, AmForms_FormModel $form)
     {
         // Determine folder
-        $folder = craft()->path->getStoragePath() . 'amFormsExport/';
+        $folder = $this->_getExportPath();
         IOHelper::ensureFolderExists($folder);
 
+        // What type of export?
+        $fileExtension = ($export->submissions) ? '.zip' : '.csv';
+
         // Create export file
-        $file = $folder . $form->handle . '.csv';
+        $file = $folder . $form->handle . $fileExtension;
         $counter = 1;
         while (! IOHelper::createFile($file)) {
-            $file = $folder . $form->handle . $counter . '.csv';
+            $file = $folder . $form->handle . $counter . $fileExtension;
             $counter ++;
         }
 
-        // Add columns to export file
-        $exportFile = fopen($file, 'w');
-        fputcsv($exportFile, $this->_getExportColumns($export, $form));
-        fclose($exportFile);
+        // Only add columns when we are not working with a zip file
+        if (! $export->submissions) {
+            // Add columns to export file
+            $exportFile = fopen($file, 'w');
+            fputcsv($exportFile, $this->_getExportColumns($export, $form));
+            fclose($exportFile);
+        }
 
         // Return file path
         return $file;
@@ -585,7 +616,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
      * Export submission.
      *
      * @param AmForms_ExportModel     $export
-     * @param AmForms_SubmissionModel $submission
+     * @param mixed                   $submission
      * @param bool                    $returnData
      */
     private function _exportSubmission(AmForms_ExportModel $export, $submission, $returnData = false)
@@ -719,5 +750,37 @@ class AmForms_ExportsService extends BaseApplicationComponent
                 }
             }
         }
+    }
+
+    /**
+     * Export a submission to the export's zip file.
+     *
+     * @param AmForms_ExportModel     $export
+     * @param AmForms_SubmissionModel $submission
+     */
+    private function _exportSubmissionToZip(AmForms_ExportModel $export, AmForms_SubmissionModel $submission)
+    {
+        // Get submission content
+        $content = craft()->amForms_submissions->getSubmissionEmailBody($submission);
+
+        // Create submission file
+        $fileName = IOHelper::cleanFilename($submission->title);
+        $fileExtension = '.html';
+        $folder = $this->_getExportPath();
+        $file = $folder . $fileName . $fileExtension;
+        $counter = 1;
+        while (! IOHelper::createFile($file)) {
+            $file = $folder . $fileName . $counter . $fileExtension;
+            $counter ++;
+        }
+
+        // Add content to file
+        file_put_contents($file, $content);
+
+        // Add file to zip
+        Zip::add($export->file, $file, $folder);
+
+        // Remove file now that's in the zip
+        IOHelper::deleteFile($file);
     }
 }

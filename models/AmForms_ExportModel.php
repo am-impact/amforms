@@ -15,6 +15,7 @@ class AmForms_ExportModel extends BaseModel
             'file'           => AttributeType::String,
             'map'            => AttributeType::Mixed,
             'criteria'       => AttributeType::Mixed,
+            'submissions'    => AttributeType::Mixed,
             'dateUpdated'    => AttributeType::DateTime,
 
             // Start export immediately?

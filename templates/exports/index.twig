@@ -30,7 +30,11 @@
 
                     <tr data-id="{{ export.id }}" data-name="{{ '{form} export'|t({'form': form.name}) }}">
                         <th scope="row" data-title="{{ 'Form'|t }}">
-                            <a href="{{ url('amforms/exports/edit/' ~ export.id) }}">{{ form.name|t }}</a>
+                            {% if export.submissions %}
+                                {{ form.name|t }}
+                            {% else %}
+                                <a href="{{ url('amforms/exports/edit/' ~ export.id) }}">{{ form.name|t }}</a>
+                            {% endif %}
                         </th>
                         <td data-title="{{ 'Name'|t }}">{{ export.name }}</td>
                         <td data-title="{{ 'Total submissions'|t }}">{{ export.total }}</td>

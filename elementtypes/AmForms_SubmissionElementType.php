@@ -115,6 +115,14 @@ class AmForms_SubmissionElementType extends BaseElementType
             'successMessage'      => Craft::t('Submissions deleted.'),
         ));
 
+        // Get export action
+        // TODO export action
+        // $export = craft()->elements->getAction('Export');
+        // $exportAction->setParams(array(
+        //     'confirmationMessage' => Craft::t('Are you sure you want to export the selected submissions?'),
+        //     'successMessage'      => Craft::t('Submissions exported.'),
+        // ));
+
         // Set actions
         return array($deleteAction);
     }
