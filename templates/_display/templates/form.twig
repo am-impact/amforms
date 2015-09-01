@@ -1,7 +1,7 @@
 {%- set submitValue = (form.submitButton ? form.submitButton : 'Submit'|t) -%}
 {%- set submitAction = (form.submitAction ? form.submitAction : 'amForms/submissions/saveSubmission') -%}
 
-<form class="form--{{ form.handle }}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+<form class="form form--{{ form.handle }}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
     {% if form.submitAction -%}
         {# Submit form to third party #}
         <input type="hidden" name="action" value="{{ submitAction }}">
@@ -20,9 +20,7 @@
 
     {% endif -%}
 
-    <div class="fields">
-        {{ body|raw }}
-    </div>
+    {{ body|raw }}
 
     {% if recaptcha -%}
         <div class="recaptcha">
@@ -37,7 +35,9 @@
         </div>
     {% endif -%}
 
-    <div class="submit">
-        <input type="submit" value="{{ submitValue }}">
+    <div class="form__note">{{ 'Fields with a * are required'|t }}</div>
+
+    <div class="buttons">
+        <button class="button" name="send" type="submit">{{ submitValue }}</button>
     </div>
 </form>

@@ -12,33 +12,31 @@
 {% endif -%}
 
 {% namespace namespace %}
-    <div class="field {{ type }}{% if first is defined and first %} first{% endif %}{% if class is defined and class
-    %} {{ class }}{% endif %}{% if errors %} has-errors{% endif %}"{% if handle %} id="{{ handle }}-field"{% endif
-    %}>
+    <div class="form__row form__row--{{ type }}{% if class is defined and class %} {{ class }}{% endif %}{% if errors %} has-errors{% endif %}"{% if handle %} id="{{ handle }}-field"{% endif %}>
 
         {% if label or instructions -%}
-            <div class="heading">
+            <div class="form__label">
                 {% if label -%}
                     <label{% if required is defined and required %} class="required"{% endif %}{% if handle %} for="{{ handle }}"{% endif %}>
                         {{ label|raw }}
                     </label>
                 {% endif %}
                 {% if instructions -%}
-                    <p class="instructions">{{ instructions|raw }}</p>
+                    <em>{{ instructions|raw }}</em>
                 {% endif %}
             </div>
         {% endif %}
 
-        <div class="input{% if errors %} errors{% endif %}">
+        <div class="form__field{% if errors %} errors{% endif %}">
             {{ input|raw }}
         </div>
 
-        {%- if errors %}
+        {% if errors -%}
             <ul class="errors">
                 {% for error in errors -%}
                     <li>{{ error }}</li>
                 {% endfor -%}
             </ul>
-        {%- endif %}
+        {% endif -%}
     </div>
 {% endnamespace %}

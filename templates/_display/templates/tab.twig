@@ -1,6 +1,6 @@
 {#- You can use tab.info for tab information and the rendered fields with tab.fields -#}
 {% for tab in tabs -%}
-    <div class="tab">
+    <fieldset>
         {{ tab.fields|join|raw }}
-    </div>
+    </fieldset>
 {% endfor %}
