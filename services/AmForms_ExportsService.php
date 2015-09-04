@@ -325,19 +325,26 @@ class AmForms_ExportsService extends BaseApplicationComponent
 
         // Add submissions to export file
         if ($submissions && count($submissions) > 0) {
+            // Get form
+            $form = craft()->amForms_forms->getFormById($export->formId);
+            if (! $form) {
+                return false;
+            }
+
+            // Get field types
+            $fields = $this->getExportFields($form);
+
             // Export submission to a zip file?
             if ($export->submissions) {
+                // Add all fields
+                $this->_exportFields[$export->id] = $fields;
+
+                // Export submission
                 foreach ($submissions as $submission) {
                     $this->_exportSubmissionToZip($export, $submission);
                 }
             }
             else {
-                // Get form
-                $form = craft()->amForms_forms->getFormById($export->formId);
-                if (! $form) {
-                    return false;
-                }
-
                 // Get the export file
                 if ($export->startRightAway) {
                     // Open output buffer
@@ -352,9 +359,6 @@ class AmForms_ExportsService extends BaseApplicationComponent
                 else {
                     $this->_exportFiles[$export->id] = fopen($export->file, 'a');
                 }
-
-                // Get field types
-                $fields = $this->getExportFields($form);
 
                 // Get field handles and columns that should be included
                 $columnCounter = 0;
@@ -779,6 +783,23 @@ class AmForms_ExportsService extends BaseApplicationComponent
 
         // Add file to zip
         Zip::add($export->file, $file, $folder);
+
+        // Find possible assets
+        foreach ($this->_exportFields[$export->id] as $fieldHandle => $field) {
+            if (is_array($field)) {
+                $field = (object) $field; // Fix standard fields
+            }
+            if ($field->type == 'Assets') {
+                foreach ($submission->$fieldHandle->find() as $asset) {
+                    $assetSource = $asset->getSource();
+                    $assetFile = $assetSource->settings['path'] . $asset->filename;
+
+                    if (IOHelper::fileExists($assetFile)) {
+                        Zip::add($export->file, $assetFile, $assetSource->settings['path']);
+                    }
+                }
+            }
+        }
 
         // Remove file now that's in the zip
         IOHelper::deleteFile($file);
