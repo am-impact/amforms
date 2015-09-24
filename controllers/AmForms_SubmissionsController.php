@@ -6,7 +6,7 @@ namespace Craft;
  */
 class AmForms_SubmissionsController extends BaseController
 {
-    protected $allowAnonymous = array('actionSaveSubmission');
+    protected $allowAnonymous = array('actionSaveSubmission', 'actionSaveSubmissionByAngular');
 
     /**
      * Show submissions.
@@ -82,7 +82,7 @@ class AmForms_SubmissionsController extends BaseController
         $this->requirePostRequest();
 
         // Get the form
-        $handle = craft()->request->getRequiredPost('handle');
+        $handle = craft()->request->getRequiredParam('handle');
         $form = craft()->amForms_forms->getFormByHandle($handle);
         if (! $form) {
             throw new Exception(Craft::t('No form exists with the handle “{handle}”.', array('handle' => $handle)));
@@ -184,6 +184,91 @@ class AmForms_SubmissionsController extends BaseController
     }
 
     /**
+     * Save a form submission by Angular.
+     */
+    public function actionSaveSubmissionByAngular()
+    {
+        $this->requirePostRequest();
+        $this->requireAjaxRequest();
+
+        // Get the form
+        $handle = craft()->request->getRequiredParam('handle');
+        $form = craft()->amForms_forms->getFormByHandle($handle);
+        if (! $form) {
+            throw new Exception(Craft::t('No form exists with the handle “{handle}”.', array('handle' => $handle)));
+        }
+
+        // Get the submission
+        $submission = new AmForms_SubmissionModel();
+
+        // Add the form to the submission
+        $submission->form = $form;
+        $submission->formId = $form->id;
+
+        // Set attributes
+        $fieldsLocation = craft()->request->getParam('fieldsLocation', 'fields');
+        $fieldsContent = json_decode(craft()->request->getParam($fieldsLocation), true);
+        $submission->ipAddress = craft()->request->getUserHostAddress();
+        $submission->userAgent = craft()->request->getUserAgent();
+        $submission->setContentFromPost($fieldsContent);
+        $submission->setContentPostLocation($fieldsLocation);
+
+        // Upload possible files
+        foreach ($form->getFieldLayout()->getTabs() as $tab) {
+            // Tab fields
+            $fields = $tab->getFields();
+            foreach ($fields as $layoutField) {
+                // Get actual field
+                $field = $layoutField->getField();
+
+                // Look for possible file
+                if ($field->type == 'Assets') {
+                    if (! empty($_FILES[ $field->handle ]['name'])) {
+                        // Get folder
+                        $folderId = $field->getFieldType()->resolveSourcePath();
+
+                        // Get the file
+                        $file = $_FILES[ $field->handle ];
+                        $fileName = AssetsHelper::cleanAssetName($file['name']);
+
+                        // Save the file to a temp location and pass this on to the source type implementation
+                        $filePath = AssetsHelper::getTempFilePath(IOHelper::getExtension($fileName));
+                        move_uploaded_file($file['tmp_name'], $filePath);
+
+                        $response = craft()->assets->insertFileByLocalPath($filePath, $fileName, $folderId);
+
+                        // Make sure the file is removed.
+                        IOHelper::deleteFile($filePath, true);
+
+                        // Prevent sensitive information leak. Just in case.
+                        $response->deleteDataItem('filePath');
+
+                        // Add file to submission
+                        $fileId = $response->getDataItem('fileId');
+                        $submission->getContent()->setAttribute($field->handle, array($fileId));
+                    }
+                }
+            }
+        }
+
+        // Save submission
+        if (craft()->amForms_submissions->saveSubmission($submission)) {
+            // Notification
+            craft()->amForms_submissions->emailSubmission($submission);
+
+            // Response
+            $this->returnJson(array('success' => true));
+        }
+        else {
+            $return = array(
+                'success' => false,
+                'errors' => $submission->getErrors()
+            );
+            $this->returnJson($return);
+        }
+    }
+
+    /**
      * Delete a submission.
      *
      * @return void
@@ -193,7 +278,7 @@ class AmForms_SubmissionsController extends BaseController
         $this->requirePostRequest();
 
         // Get the submission
-        $submissionId = craft()->request->getRequiredPost('submissionId');
+        $submissionId = craft()->request->getRequiredParam('submissionId');
         $submission = craft()->amForms_submissions->getSubmissionById($submissionId);
         if (! $submission) {
             throw new Exception(Craft::t('No submission exists with the ID “{id}”.', array('id' => $submissionId)));
