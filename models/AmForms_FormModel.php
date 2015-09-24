@@ -39,6 +39,7 @@ class AmForms_FormModel extends BaseElementModel
             'submitButton'             => AttributeType::String,
             'submissionEnabled'        => array(AttributeType::Bool, 'default' => true),
             'notificationEnabled'      => array(AttributeType::Bool, 'default' => true),
+            'notificationFilesEnabled' => array(AttributeType::Bool, 'default' => false),
             'notificationRecipients'   => array(AttributeType::String, 'default' => $systemEmail),
             'notificationSubject'      => array(AttributeType::String, 'default' => Craft::t('{formName} form was submitted')),
             'notificationSenderName'   => array(AttributeType::String, 'default' => $systemName),

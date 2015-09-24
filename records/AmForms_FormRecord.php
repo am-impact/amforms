@@ -28,6 +28,7 @@ class AmForms_FormRecord extends BaseRecord
             'submitButton'             => AttributeType::String,
             'submissionEnabled'        => array(AttributeType::Bool, 'default' => true),
             'notificationEnabled'      => array(AttributeType::Bool, 'default' => true),
+            'notificationFilesEnabled' => array(AttributeType::Bool, 'default' => false),
             'notificationRecipients'   => AttributeType::String,
             'notificationSubject'      => AttributeType::String,
             'notificationSenderName'   => AttributeType::String,

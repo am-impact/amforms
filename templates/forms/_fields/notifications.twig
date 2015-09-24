@@ -9,6 +9,16 @@
     errors: form.getErrors('notificationEnabled'),
     instructions: 'Whether to email form submissions.'|t
 }) }}
+{{ forms.lightswitchField({
+    label: 'Add attachments with notifications'|t,
+    id: 'notificationFilesEnabled',
+    name: 'notificationFilesEnabled',
+    on: form.notificationFilesEnabled,
+    onLabel: 'Enable'|t,
+    offLabel: 'Disable'|t,
+    errors: form.getErrors('notificationFilesEnabled'),
+    instructions: 'Whether to add possible attachments to the email.'|t
+}) }}
 {{ forms.textField({
     label: 'Email recipients'|t,
     id: 'notificationRecipients',

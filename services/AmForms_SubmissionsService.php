@@ -307,6 +307,31 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
                 }
             }
 
+            // Add files to the notification?
+            if ($form->notificationFilesEnabled) {
+                foreach ($submission->getFieldLayout()->getTabs() as $tab) {
+                    // Tab fields
+                    $fields = $tab->getFields();
+                    foreach ($fields as $layoutField) {
+                        // Get actual field
+                        $field = $layoutField->getField();
+
+                        // Find assets
+                        if ($field->type == 'Assets') {
+                            foreach ($submission->{$field->handle}->find() as $asset) {
+                                $assetSource = $asset->getSource();
+                                $assetFile = $assetSource->settings['path'] . $asset->filename;
+
+                                if (IOHelper::fileExists($assetFile)) {
+                                    $email->addAttachment($assetFile);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Send emails
             foreach ($recipients as $recipient) {
                 $email->toEmail = craft()->templates->renderObjectTemplate($recipient, $submission);
 
