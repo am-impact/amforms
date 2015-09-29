@@ -32,11 +32,19 @@ When you install the plugin, you get some commonly used fields by default. The f
 
 You have the option to export your submissions per form. You'll be able to choose which fields you'd like to be included in your export (Matrix supported!). When you create an export, it'll start a task that export your submissions into a file located in your storage folder. When it's done, you're able to download the file or restart the export.
 
+![NewExport](https://raw.githubusercontent.com/am-impact/am-impact.github.io/master/img/readme/amforms/newexport.png "NewExport")
+
+![ExportCriteria](https://raw.githubusercontent.com/am-impact/am-impact.github.io/master/img/readme/amforms/exportcriteria.png "ExportCriteria")
+
+![ExportOverview](https://raw.githubusercontent.com/am-impact/am-impact.github.io/master/img/readme/amforms/exportoverview.png "ExportOverview")
+
 ### Settings
 
 There's a general setting called **Use Mandrill for email**, which will be implemented later on. By default, the anti-spam is activated for your forms, but there's also an option to activate Google reCAPTCHA.
 
 ![General](https://raw.githubusercontent.com/am-impact/am-impact.github.io/master/img/readme/amforms/general.png "General")
+
+![Exports](https://raw.githubusercontent.com/am-impact/am-impact.github.io/master/img/readme/amforms/exports.png "Exports")
 
 ![AntiSpam](https://raw.githubusercontent.com/am-impact/am-impact.github.io/master/img/readme/amforms/antispam.png "AntiSpam")
 
