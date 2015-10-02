@@ -240,7 +240,7 @@ class AmForms_FormsService extends BaseApplicationComponent
                 $input = $fieldInfo->getInputHtml($field->handle, $submission->getFieldValue($field->handle));
                 if ($layoutField->required) {
                     $fieldId = sprintf('name="%s"', $field->handle);
-                    $input = str_replace($fieldId, $fieldId . ' required="true"', $input);
+                    $input = str_replace($fieldId, $fieldId . ' required', $input);
                 }
 
                 // Get field HTML
