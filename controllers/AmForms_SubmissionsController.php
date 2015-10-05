@@ -223,30 +223,7 @@ class AmForms_SubmissionsController extends BaseController
 
                 // Look for possible file
                 if ($field->type == 'Assets') {
-                    if (! empty($_FILES[ $field->handle ]['name'])) {
-                        // Get folder
-                        $folderId = $field->getFieldType()->resolveSourcePath();
-
-                        // Get the file
-                        $file = $_FILES[ $field->handle ];
-                        $fileName = AssetsHelper::cleanAssetName($file['name']);
-
-                        // Save the file to a temp location and pass this on to the source type implementation
-                        $filePath = AssetsHelper::getTempFilePath(IOHelper::getExtension($fileName));
-                        move_uploaded_file($file['tmp_name'], $filePath);
-
-                        $response = craft()->assets->insertFileByLocalPath($filePath, $fileName, $folderId);
-
-                        // Make sure the file is removed.
-                        IOHelper::deleteFile($filePath, true);
-
-                        // Prevent sensitive information leak. Just in case.
-                        $response->deleteDataItem('filePath');
-
-                        // Add file to submission
-                        $fileId = $response->getDataItem('fileId');
-                        $submission->getContent()->setAttribute($field->handle, array($fileId));
-                    }
+                    $this->_uploadFilesForField($field, $submission, $fieldsContent);
                 }
             }
         }
@@ -306,5 +283,81 @@ class AmForms_SubmissionsController extends BaseController
         );
 
         $this->redirectToPostedUrl($vars);
+    }
+
+    /**
+     * Upload files for an Asset field.
+     *
+     * @param FieldModel              $field
+     * @param AmForms_SubmissionModel &$submission
+     * @param array                   $fieldsContent
+     */
+    private function _uploadFilesForField($field, &$submission, $fieldsContent)
+    {
+        $uploadedFiles = array();
+
+        // Get folder
+        $folderId = $field->getFieldType()->resolveSourcePath();
+
+        // Single file upload
+        if (! empty($_FILES[ $field->handle ]['name'])) {
+            // Upload file
+            $file = $_FILES[ $field->handle ];
+            $fileId = $this->_uploadFile($file, $folderId);
+
+            if (is_numeric($fileId)) {
+                $uploadedFiles[] = $fileId;
+            }
+        }
+
+        // Multi file upload
+        if (isset($fieldsContent['filesNames']) && isset($fieldsContent['filesNames'][ $field->handle ])) {
+            foreach ($fieldsContent['filesNames'][ $field->handle ] as $fileName) {
+                foreach ($_FILES as $key => $possibleFile) {
+                    if (isset($possibleFile['name']) && $possibleFile['name'] == $fileName) {
+                        // Upload file
+                        $fileId = $this->_uploadFile($possibleFile, $folderId);
+
+                        if (is_numeric($fileId)) {
+                            $uploadedFiles[] = $fileId;
+
+                            // Remove from $_FILES so we can't find again if we have more than one multiple file upload field
+                            unset($_FILES[$key]);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Add files to submission
+        $submission->getContent()->setAttribute($field->handle, $uploadedFiles);
+    }
+
+    /**
+     * Upload a file.
+     *
+     * @param array $file
+     * @param int   $folderId
+     *
+     * @return bool|int
+     */
+    private function _uploadFile($file, $folderId)
+    {
+        $fileName = AssetsHelper::cleanAssetName($file['name']);
+
+        // Save the file to a temp location and pass this on to the source type implementation
+        $filePath = AssetsHelper::getTempFilePath(IOHelper::getExtension($fileName));
+        move_uploaded_file($file['tmp_name'], $filePath);
+
+        $response = craft()->assets->insertFileByLocalPath($filePath, $fileName, $folderId);
+
+        // Make sure the file is removed.
+        IOHelper::deleteFile($filePath, true);
+
+        // Prevent sensitive information leak. Just in case.
+        $response->deleteDataItem('filePath');
+
+        // Return file ID
+        return $response->getDataItem('fileId');
     }
 }
