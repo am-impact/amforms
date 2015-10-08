@@ -15,7 +15,7 @@ class AmForms_SettingRecord extends BaseRecord
             'type'    => array(AttributeType::String, 'required' => true),
             'name'    => array(AttributeType::String, 'required' => true),
             'handle'  => array(AttributeType::String, 'required' => true),
-            'value'   => array(AttributeType::Mixed, 'default' => '')
+            'value'   => array(AttributeType::Mixed)
         );
     }
 
