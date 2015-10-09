@@ -34,6 +34,11 @@ class AmFormsService extends BaseApplicationComponent
     {
         // Plugin's default template path
         $templatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
+        $templateSetting = craft()->amForms_settings->getSettingsByHandleAndType($defaultTemplate . 'Template', AmFormsModel::SettingsTemplatePaths);
+
+        if (empty($overrideTemplate) && $templateSetting) {
+            $overrideTemplate = $templateSetting->value;
+        }
 
         // Is the override template set?
         if ($overrideTemplate) {

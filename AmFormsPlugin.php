@@ -28,7 +28,7 @@ class AmFormsPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return '1.1.2';
+        return '1.1.3';
     }
 
     /**
@@ -175,6 +175,9 @@ class AmFormsPlugin extends BasePlugin
             ),
             'amforms/settings/recaptcha' => array(
                 'action' => 'amForms/settings/recaptcha'
+            ),
+            'amforms/settings/templates' => array(
+                'action' => 'amForms/settings/templates'
             )
         );
     }
