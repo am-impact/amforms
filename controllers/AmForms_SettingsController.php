@@ -123,6 +123,10 @@ class AmForms_SettingsController extends BaseController
             }
         }
 
+        /** @var AmFormsPlugin $plugin */
+        $plugin = craft()->plugins->getPlugin('amForms');
+        craft()->plugins->savePluginSettings($plugin, $plugin->getSettings());
+
         if ($success) {
             craft()->userSession->setNotice(Craft::t('Settings saved.'));
         }
