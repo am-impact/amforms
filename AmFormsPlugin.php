@@ -48,6 +48,14 @@ class AmFormsPlugin extends BasePlugin
     }
 
     /**
+     * @return string
+     */
+    public function getSettingsUrl()
+    {
+        return 'amforms/settings';
+    }
+
+    /**
      * @return Model
      */
     public function getSettings()
