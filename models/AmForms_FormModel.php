@@ -37,6 +37,7 @@ class AmForms_FormModel extends BaseElementModel
             'titleFormat'              => array(AttributeType::String, 'default' => "{dateCreated|date('D, d M Y H:i:s')}"),
             'submitAction'             => AttributeType::String,
             'submitButton'             => AttributeType::String,
+            'afterSubmitText'          => AttributeType::Mixed,
             'submissionEnabled'        => array(AttributeType::Bool, 'default' => true),
             'notificationEnabled'      => array(AttributeType::Bool, 'default' => true),
             'notificationFilesEnabled' => array(AttributeType::Bool, 'default' => false),
