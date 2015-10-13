@@ -196,7 +196,7 @@ class AmForms_InstallService extends BaseApplicationComponent
     }
 
     /**
-     * Install gloval templates settings
+     * Install global templates settings.
      */
     private function _installTemplates()
     {

@@ -34,6 +34,8 @@ class AmForms_SettingsService extends BaseApplicationComponent
     }
 
     /**
+     * Get all settings.
+     *
      * @return array
      */
     public function getAllSettings()
