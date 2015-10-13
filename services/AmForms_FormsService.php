@@ -210,13 +210,12 @@ class AmForms_FormsService extends BaseApplicationComponent
         // Get submission model
         $submission = craft()->amForms_submissions->getActiveSubmission($form);
 
-        // Plugin's default template path
-        $templatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
-
         // Build field HTML
         $tabs = array();
         $supportedFields = craft()->amForms_fields->getSupportedFieldTypes();
         $fieldTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', $form->fieldTemplate);
+        $templatePath = $fieldTemplateInfo['path'];
+
         foreach ($form->getFieldLayout()->getTabs() as $tab) {
             // Tab information
             $tabs[$tab->id] = array(
