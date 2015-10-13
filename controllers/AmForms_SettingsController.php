@@ -66,6 +66,18 @@ class AmForms_SettingsController extends BaseController
     }
 
     /**
+     * Show reCAPTCHA settings.
+     */
+    public function actionTemplates()
+    {
+        $variables = array(
+            'type'      => AmFormsModel::SettingsTemplatePaths,
+            'templates' => craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingsTemplatePaths)
+        );
+        $this->renderTemplate('amForms/settings/templates', $variables);
+    }
+
+    /**
      * Saves settings.
      */
     public function actionSaveSettings()
@@ -110,6 +122,10 @@ class AmForms_SettingsController extends BaseController
                 }
             }
         }
+
+        /** @var AmFormsPlugin $plugin */
+        $plugin = craft()->plugins->getPlugin('amForms');
+        craft()->plugins->savePluginSettings($plugin, $plugin->getSettings());
 
         if ($success) {
             craft()->userSession->setNotice(Craft::t('Settings saved.'));

@@ -34,6 +34,15 @@ class AmForms_SettingsService extends BaseApplicationComponent
     }
 
     /**
+     * @return array
+     */
+    public function getAllSettings()
+    {
+        $settingRecords = AmForms_SettingRecord::model()->ordered()->findAll();
+        return AmForms_SettingModel::populateModels($settingRecords, 'handle');
+    }
+
+    /**
      * Get a setting by their handle and type.
      *
      * @param string $handle

@@ -16,6 +16,7 @@ class AmForms_InstallService extends BaseApplicationComponent
         $this->_installExport();
         $this->_installAntiSpam();
         $this->_installRecaptcha();
+        $this->_installTemplates();
         $this->_installFields();
     }
 
@@ -47,6 +48,7 @@ class AmForms_InstallService extends BaseApplicationComponent
             $settingRecord->value = $setting['value'];
             $settingRecord->save();
         }
+        return true;
     }
 
     /**
@@ -54,6 +56,7 @@ class AmForms_InstallService extends BaseApplicationComponent
      *
      * @param array  $settings
      * @param string $settingType
+     * @return bool
      */
     public function removeSettings(array $settings, $settingType)
     {
@@ -69,6 +72,7 @@ class AmForms_InstallService extends BaseApplicationComponent
                 craft()->amForms_settings->deleteSettingById($setting->id);
             }
         }
+        return true;
     }
 
     /**
@@ -189,6 +193,32 @@ class AmForms_InstallService extends BaseApplicationComponent
             )
         );
         $this->installSettings($settings, AmFormsModel::SettingRecaptcha);
+    }
+
+    /**
+     * Install gloval templates settings
+     */
+    private function _installTemplates()
+    {
+        $settings = array(
+            array(
+                'name' => 'Form template',
+                'value' => ''
+            ),
+            array(
+                'name' => 'Tab template',
+                'value' => ''
+            ),
+            array(
+                'name' => 'Field template',
+                'value' => ''
+            ),
+            array(
+                'name' => 'Notification template',
+                'value' => ''
+            ),
+        );
+        $this->installSettings($settings, AmFormsModel::SettingsTemplatePaths);
     }
 
     /**

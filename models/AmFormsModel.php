@@ -18,4 +18,5 @@ class AmFormsModel extends BaseModel
     const SettingExport = 'export';
     const SettingAntispam = 'antispam';
     const SettingRecaptcha = 'recaptcha';
+    const SettingsTemplatePaths = 'templates';
 }

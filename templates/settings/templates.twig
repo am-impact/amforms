@@ -1,0 +1,42 @@
+{% extends 'amforms/_layouts/settings' %}
+
+{% set title = 'Templates'|t %}
+{% set selectedTab = 'templates' %}
+
+{% block fields %}
+    {{ forms.textField({
+        label: templates.formTemplate.name|t,
+        id: templates.formTemplate.handle,
+        name: templates.formTemplate.handle,
+        value: templates.formTemplate.value,
+        placeholder: '_amforms/form',
+        instructions: 'Override default template with your own template. Enter the folder (with template), e.g.: {template}'|t({'template': '_amforms'})
+    }) }}
+
+    {{ forms.textField({
+        label: templates.tabTemplate.name|t,
+        id: templates.tabTemplate.handle,
+        name: templates.tabTemplate.handle,
+        value: templates.tabTemplate.value,
+        placeholder: '_amforms/tab',
+        instructions: 'Override default template with your own template. Enter the folder (with template), e.g.: {template}'|t({'template': '_amforms'})
+    }) }}
+
+    {{ forms.textField({
+        label: templates.fieldTemplate.name|t,
+        id: templates.fieldTemplate.handle,
+        name: templates.fieldTemplate.handle,
+        value: templates.fieldTemplate.value,
+        placeholder: '_amforms/field',
+        instructions: 'Override default template with your own template. Enter the folder (with template), e.g.: {template}'|t({'template': '_amforms'})
+    }) }}
+
+    {{ forms.textField({
+        label: templates.notificationTemplate.name|t,
+        id: templates.notificationTemplate.handle,
+        name: templates.notificationTemplate.handle,
+        value: templates.notificationTemplate.value,
+        placeholder: '_amforms/email',
+        instructions: 'Override default template with your own template. Enter the folder (with template), e.g.: {template}'|t({'template': '_amforms'})
+    }) }}
+{% endblock %}

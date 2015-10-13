@@ -9,6 +9,9 @@ namespace Craft;
 
 class AmFormsPlugin extends BasePlugin
 {
+    /**
+     * @return null|string
+     */
     public function getName()
     {
         if (craft()->plugins->getPlugin('amforms')) {
@@ -20,19 +23,94 @@ class AmFormsPlugin extends BasePlugin
         return Craft::t('a&m forms');
     }
 
+    /**
+     * @return string
+     */
     public function getVersion()
     {
-        return '1.1.2';
+        return '1.1.3';
     }
 
+    /**
+     * @return string
+     */
     public function getDeveloper()
     {
         return 'a&m impact';
     }
 
+    /**
+     * @return string
+     */
     public function getDeveloperUrl()
     {
         return 'http://www.am-impact.nl';
+    }
+
+    /**
+     * @return string
+     */
+    public function getSettingsUrl()
+    {
+        return 'amforms/settings';
+    }
+
+    /**
+     * @return Model
+     */
+    public function getSettings()
+    {
+        $settings = craft()->amForms_settings->getAllSettings();
+        $settings = array_map(function (AmForms_SettingModel $settings) {
+            return  $settings->value;
+        }, $settings);
+
+        $settingsModel = new Model($settings);
+        $settingsModel->setAttributes($settings);
+
+        return $settingsModel;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @param array|BaseModel $values
+     *
+     * @return null
+     */
+    public function setSettings($values)
+    {
+        if ($values)
+        {
+            if ($values instanceof BaseModel)
+            {
+                $values = $values->attributes;
+            }
+
+            // Get all available settings for this type
+            $availableSettings = craft()->amForms_settings->getAllSettings();
+
+            // Save each available setting
+            foreach ($availableSettings as $setting) {
+                // Find new settings
+                if (array_key_exists($setting->handle, $values)) {
+                    $setting->value = $values[$setting->handle];
+                    craft()->amForms_settings->saveSettings($setting);
+                }
+            }
+        }
+    }
+
+    /**
+     * @inheritdoc
+     * @param array $values
+     * @return Model
+     */
+    public function prepSettings($values)
+    {
+        $settingsModel = new Model($values);
+        $settingsModel->setAttributes($values);
+        return $settingsModel;
     }
 
     /**
@@ -105,6 +183,9 @@ class AmFormsPlugin extends BasePlugin
             ),
             'amforms/settings/recaptcha' => array(
                 'action' => 'amForms/settings/recaptcha'
+            ),
+            'amforms/settings/templates' => array(
+                'action' => 'amForms/settings/templates'
             )
         );
     }
@@ -117,7 +198,7 @@ class AmFormsPlugin extends BasePlugin
     public function registerUserPermissions()
     {
         return array(
-            'accessAmFormsExports'   => array(
+            'accessAmFormsExports' => array(
                 'label' => Craft::t('Access to exports')
             ),
             'accessAmFormsFields' => array(
