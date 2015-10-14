@@ -80,10 +80,8 @@ class AmFormsPlugin extends BasePlugin
      */
     public function setSettings($values)
     {
-        if ($values)
-        {
-            if ($values instanceof BaseModel)
-            {
+        if ($values) {
+            if ($values instanceof BaseModel) {
                 $values = $values->attributes;
             }
 

@@ -1,5 +1,5 @@
 {% if craft.request.getParam('submitted') %}
-    <p>{{ form.afterSubmitText|default('Thanks for your submission'|t) }}</p>
+    <p>{{ form.afterSubmitText|default('Thanks for your submission.'|t) }}</p>
 {% else %}
     {%- set submitValue = (form.submitButton ? form.submitButton : 'Submit'|t) -%}
     {%- set submitAction = (form.submitAction ? form.submitAction : 'amForms/submissions/saveSubmission') -%}
