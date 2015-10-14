@@ -49,6 +49,15 @@
 {% if not currentUser.admin %}
     </div>
 {% endif %}
+{{ forms.textareaField({
+    label: 'Custom text after submit'|t,
+    id: 'afterSubmitText',
+    name: 'afterSubmitText',
+    value: form.afterSubmitText,
+    errors: form.getErrors('afterSubmitText'),
+    instructions: 'What the text after a submit should be.'|t,
+    placeholder: 'Thanks for your submission'|t
+}) }}
 <hr>
 {{ forms.elementSelectField({
     label: 'Redirect page'|t,
