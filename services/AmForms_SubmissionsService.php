@@ -6,6 +6,7 @@ namespace Craft;
  */
 class AmForms_SubmissionsService extends BaseApplicationComponent
 {
+    private $_assetFolders = array();
     private $_activeSubmissions = array();
 
     /**
@@ -326,9 +327,22 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
                         // Find assets
                         if ($field->type == 'Assets') {
                             foreach ($submission->{$field->handle}->find() as $asset) {
-                                $assetSource = $asset->getSource();
-                                $assetFile = $assetSource->settings['path'] . $asset->filename;
+                                // Do we know the source folder path?
+                                if (! isset($this->_assetFolders[ $asset->folderId ])) {
+                                    $assetFolder = craft()->assets->getFolderById($asset->folderId);
+                                    $assetSource = $assetFolder->getSource();
+                                    $assetSettings = $assetSource->settings;
+                                    if ($assetFolder->path) {
+                                        $assetSettings['path'] = $assetSettings['path'] . $assetFolder->path;
+                                    }
+                                    $this->_assetFolders[ $asset->folderId ] = $assetSettings['path'];
+                                }
 
+                                // Set asset path
+                                $path = craft()->config->parseEnvironmentString($this->_assetFolders[ $asset->folderId ]);
+                                $assetFile = $path . $asset->filename;
+
+                                // Add asset as attachment
                                 if (IOHelper::fileExists($assetFile)) {
                                     $email->addAttachment($assetFile);
                                 }
