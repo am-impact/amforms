@@ -23,6 +23,8 @@ class AmForms_SubmissionsController extends BaseController
      * Edit a submission.
      *
      * @param array $variables
+     * @throws Exception
+     * @throws HttpException
      */
     public function actionEditSubmission(array $variables = array())
     {
@@ -126,7 +128,7 @@ class AmForms_SubmissionsController extends BaseController
 
             // Redirect our spammers before reCAPTCHA can be triggered
             if (! $submission->spamFree) {
-                $this->_doRedirect($submission);
+                $this->_doRedirect($submission, false);
             }
 
             // Validate reCAPTCHA
@@ -144,7 +146,11 @@ class AmForms_SubmissionsController extends BaseController
 
             // Redirect
             if (craft()->request->isAjaxRequest()) {
-                $this->returnJson(array('success' => true));
+                $afterSubmitText = $form->afterSubmitText ? $form->afterSubmitText : Craft::t('Thanks for your submission');
+                $this->returnJson(array(
+                    'success' => true,
+                    'afterSubmitText' => $afterSubmitText
+                ));
             }
             elseif (craft()->request->isCpRequest()) {
                 craft()->userSession->setNotice(Craft::t('Submission saved.'));
@@ -152,7 +158,7 @@ class AmForms_SubmissionsController extends BaseController
                 $this->redirectToPostedUrl($submission);
             }
             else {
-                $this->_doRedirect($submission);
+                $this->_doRedirect($submission, true);
             }
         }
         else {
@@ -248,7 +254,8 @@ class AmForms_SubmissionsController extends BaseController
     /**
      * Delete a submission.
      *
-     * @return void
+     * @throws Exception
+     * @throws HttpException
      */
     public function actionDeleteSubmission()
     {
@@ -271,18 +278,26 @@ class AmForms_SubmissionsController extends BaseController
      * Do redirect with {placeholders} support.
      *
      * @param AmForms_SubmissionModel $submission
+     * @param boolean $submitted
      */
-    private function _doRedirect(AmForms_SubmissionModel $submission)
+    private function _doRedirect(AmForms_SubmissionModel $submission, $submitted)
     {
         $vars = array_merge(
             array(
-                'siteUrl' => craft()->getSiteUrl()
+                'siteUrl' => craft()->getSiteUrl(),
+                'submitted' => $submitted,
             ),
             $submission->getContent()->getAttributes(),
             $submission->getAttributes()
         );
 
-        $this->redirectToPostedUrl($vars);
+        $url = null;
+        $redirectUrl = $submission->getform()->getRedirectUrl();
+        if(empty($redirectUrl)){
+            $url = craft()->request->getPath() . '?submitted=' . ($submitted ? 1 : 0);
+        }
+
+        $this->redirectToPostedUrl($vars, $url);
     }
 
     /**

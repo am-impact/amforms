@@ -1,43 +1,47 @@
-{%- set submitValue = (form.submitButton ? form.submitButton : 'Submit'|t) -%}
-{%- set submitAction = (form.submitAction ? form.submitAction : 'amForms/submissions/saveSubmission') -%}
+{% if craft.request.getParam('submitted') %}
+    <p>{{ form.afterSubmitText|default('Thanks for your submission'|t) }}</p>
+{% else %}
+    {%- set submitValue = (form.submitButton ? form.submitButton : 'Submit'|t) -%}
+    {%- set submitAction = (form.submitAction ? form.submitAction : 'amForms/submissions/saveSubmission') -%}
 
-<form class="form form--{{ form.handle }}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
-    {% if form.submitAction -%}
-        {# Submit form to third party #}
-        <input type="hidden" name="action" value="{{ submitAction }}">
-    {% else -%}
-        {# Submit form to Am Forms #}
-        {{ getCsrfInput() }}
-        <input type="hidden" name="action" value="{{ submitAction }}">
-        <input type="hidden" name="handle" value="{{ form.handle }}">
-        {% if form.redirectEntryId -%}
-            <input type="hidden" name="redirect" value="{{ form.getRedirectUrl() }}">
-        {% endif -%}
-
-        {%- if antispam -%}
-            {{ antispam }}
-        {% endif -%}
-
-    {% endif -%}
-
-    {{ body|raw }}
-
-    {% if recaptcha -%}
-        <div class="recaptcha">
-            {{ recaptcha }}
-            {% if element.getErrors('spamFree')|length -%}
-                <ul class="errors">
-                    {% for error in element.getErrors('spamFree') -%}
-                        <li>{{ error }}</li>
-                    {% endfor -%}
-                </ul>
+    <form class="form form--{{ form.handle }}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+        {% if form.submitAction -%}
+            {# Submit form to third party #}
+            <input type="hidden" name="action" value="{{ submitAction }}">
+        {% else -%}
+            {# Submit form to Am Forms #}
+            {{ getCsrfInput() }}
+            <input type="hidden" name="action" value="{{ submitAction }}">
+            <input type="hidden" name="handle" value="{{ form.handle }}">
+            {% if form.redirectEntryId -%}
+                <input type="hidden" name="redirect" value="{{ form.getRedirectUrl() }}">
             {% endif -%}
+
+            {%- if antispam -%}
+                {{ antispam }}
+            {% endif -%}
+
+        {% endif -%}
+
+        {{ body|raw }}
+
+        {% if recaptcha -%}
+            <div class="recaptcha">
+                {{ recaptcha }}
+                {% if element.getErrors('spamFree')|length -%}
+                    <ul class="errors">
+                        {% for error in element.getErrors('spamFree') -%}
+                            <li>{{ error }}</li>
+                        {% endfor -%}
+                    </ul>
+                {% endif -%}
+            </div>
+        {% endif -%}
+
+        <div class="form__note">{{ 'Fields with a * are required'|t }}</div>
+
+        <div class="buttons">
+            <button class="button" name="send" type="submit">{{ submitValue }}</button>
         </div>
-    {% endif -%}
-
-    <div class="form__note">{{ 'Fields with a * are required'|t }}</div>
-
-    <div class="buttons">
-        <button class="button" name="send" type="submit">{{ submitValue }}</button>
-    </div>
-</form>
+    </form>
+{% endif %}
