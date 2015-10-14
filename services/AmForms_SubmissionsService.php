@@ -246,15 +246,22 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
             return false;
         }
 
+        // Overridden recipients skips before email event, so by default, send the email!
+        $sendEmail = true;
+
         // Fire an 'onBeforeEmailSubmission' event
-        $event = new Event($this, array(
-            'submission' => $submission
-        ));
-        $this->onBeforeEmailSubmission($event);
+        if ($overrideRecipients === false) {
+            $event = new Event($this, array(
+                'submission' => $submission
+            ));
+            $this->onBeforeEmailSubmission($event);
+
+            // Override sendEmail
+            $sendEmail = $event->performAction;
+        }
 
         // Is the event giving us the go-ahead?
-        if ($event->performAction) {
-
+        if ($sendEmail) {
             // Get email body
             $body = $this->getSubmissionEmailBody($submission);
 
