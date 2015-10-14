@@ -66,7 +66,7 @@ class AmForms_SettingsController extends BaseController
     }
 
     /**
-     * Show reCAPTCHA settings.
+     * Show Templates settings.
      */
     public function actionTemplates()
     {
@@ -123,7 +123,7 @@ class AmForms_SettingsController extends BaseController
             }
         }
 
-        /** @var AmFormsPlugin $plugin */
+        // Save the settings in the plugins table
         $plugin = craft()->plugins->getPlugin('amForms');
         craft()->plugins->savePluginSettings($plugin, $plugin->getSettings());
 

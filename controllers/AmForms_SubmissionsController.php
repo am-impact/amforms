@@ -146,7 +146,7 @@ class AmForms_SubmissionsController extends BaseController
 
             // Redirect
             if (craft()->request->isAjaxRequest()) {
-                $afterSubmitText = $form->afterSubmitText ? $form->afterSubmitText : Craft::t('Thanks for your submission');
+                $afterSubmitText = $form->afterSubmitText ? $form->afterSubmitText : Craft::t('Thanks for your submission.');
                 $this->returnJson(array(
                     'success' => true,
                     'afterSubmitText' => $afterSubmitText
@@ -285,15 +285,15 @@ class AmForms_SubmissionsController extends BaseController
         $vars = array_merge(
             array(
                 'siteUrl' => craft()->getSiteUrl(),
-                'submitted' => $submitted,
+                'submitted' => $submitted
             ),
             $submission->getContent()->getAttributes(),
             $submission->getAttributes()
         );
 
         $url = null;
-        $redirectUrl = $submission->getform()->getRedirectUrl();
-        if(empty($redirectUrl)){
+        $redirectUrl = $submission->getForm()->getRedirectUrl();
+        if (empty($redirectUrl)) {
             $url = craft()->request->getPath() . '?submitted=' . ($submitted ? 1 : 0);
         }
 

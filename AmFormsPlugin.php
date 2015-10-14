@@ -28,7 +28,7 @@ class AmFormsPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return '1.1.4';
+        return '1.2.0';
     }
 
     /**
@@ -80,10 +80,8 @@ class AmFormsPlugin extends BasePlugin
      */
     public function setSettings($values)
     {
-        if ($values)
-        {
-            if ($values instanceof BaseModel)
-            {
+        if ($values) {
+            if ($values instanceof BaseModel) {
                 $values = $values->attributes;
             }
 
