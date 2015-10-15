@@ -60,7 +60,8 @@ class AmForms_FieldsService extends BaseApplicationComponent
             'MultiSelect',
             'Number',
             'PlainText',
-            'RadioButtons'
+            'RadioButtons',
+            'AmForms_Email',
         );
     }
 
