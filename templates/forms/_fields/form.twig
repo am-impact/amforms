@@ -89,8 +89,20 @@
     onLabel: 'Enable'|t,
     offLabel: 'Disable'|t,
     errors: form.getErrors('sendCopy'),
-    instructions: 'Whether to send a copy to the submitter.'|t
+    instructions: 'Whether to send a copy to the submitter.'|t,
+    toggle: 'sendCopyTo-container'
 }) }}
+<div class="hidden" id="sendCopyTo-container">
+    {{ forms.selectField({
+        label: "Send copy to"|t,
+        instructions: "Please select an e-mail field."|t,
+        warning: "The value of this field should be an e-mailaddress."|t,
+        id: 'sendCopyTo',
+        name: 'sendCopyTo',
+        options: craft.amForms.getFieldHandles(),
+        value: form.sendCopyTo
+    }) }}
+</div>
 {% if not currentUser.admin %}
     <div class="hidden">
 {% endif %}

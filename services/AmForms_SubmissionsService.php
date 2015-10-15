@@ -234,6 +234,15 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
 
         // Get our recipients
         $recipients = ArrayHelper::stringToArray($form->notificationRecipients);
+
+        // Send copy?
+        if ($form->sendCopy) {
+            $sendCopyTo = $submission->{$form->sendCopyTo};
+            if (filter_var($sendCopyTo, FILTER_VALIDATE_EMAIL)) {
+                $recipients[] = $sendCopyTo;
+            }
+        }
+
         if ($overrideRecipients !== false) {
             if (is_array($overrideRecipients) && count($overrideRecipients)) {
                 $recipients = $overrideRecipients;

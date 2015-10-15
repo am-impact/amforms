@@ -14,6 +14,9 @@ class m151015_114827_amforms_addSendCopyToForm extends BaseMigration
      */
     public function safeUp()
     {
-        return $this->addColumnAfter('amforms_forms', 'sendCopy', array(AttributeType::Bool, 'default' => false), 'submissionEnabled');
+        $this->addColumnAfter('amforms_forms', 'sendCopyTo', AttributeType::String, 'submissionEnabled');
+        $this->addColumnAfter('amforms_forms', 'sendCopy', array(AttributeType::Bool, 'default' => false), 'submissionEnabled');
+
+        return true;
     }
 }

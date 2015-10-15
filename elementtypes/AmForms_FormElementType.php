@@ -167,6 +167,7 @@ class AmForms_FormElementType extends BaseElementType
                            forms.afterSubmitText,
                            forms.submissionEnabled,
                            forms.sendCopy,
+                           forms.sendCopyTo,
                            forms.notificationEnabled,
                            forms.notificationFilesEnabled,
                            forms.notificationRecipients,
