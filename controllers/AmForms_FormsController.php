@@ -111,6 +111,7 @@ class AmForms_FormsController extends BaseController
         $form->submitButton             = craft()->request->getPost('submitButton');
         $form->afterSubmitText          = craft()->request->getPost('afterSubmitText');
         $form->submissionEnabled        = craft()->request->getPost('submissionEnabled');
+        $form->sendCopy                 = craft()->request->getPost('sendCopy');
         $form->notificationEnabled      = craft()->request->getPost('notificationEnabled');
         $form->notificationFilesEnabled = craft()->request->getPost('notificationFilesEnabled');
         $form->notificationRecipients   = craft()->request->getPost('notificationRecipients');
