@@ -302,6 +302,8 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
                     $properBccAddresses = array();
 
                     foreach ($bccAddresses as $bccAddress) {
+                        $bccAddress = craft()->templates->renderObjectTemplate($bccAddress, $submission);
+
                         if (filter_var($bccAddress, FILTER_VALIDATE_EMAIL)) {
                             $properBccAddresses[] = array(
                                 'email' => $bccAddress
