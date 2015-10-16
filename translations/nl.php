@@ -184,5 +184,6 @@ return array(
     'Who will receive the notification? Enter comma separated email addresses for more recipients.' => 'Wie gaan de notificatie ontvangen? Voer komma gescheiden e-mailadressen in voor meer ontvangers.',
     'Who will receive a copy of each notification? Enter comma separated email addresses for more recipients.' => 'Wie gaan er een kopie van elke notificatie ontvangen? Voer komma gescheiden e-mailadressen in voor meer ontvangers.',
     'Yes' => 'Ja',
-    'Your form will contain the fields you set here.' => 'Uw formulier zal de velden bevatten die u hier instelt.'
+    'Your form will contain the fields you set here.' => 'Uw formulier zal de velden bevatten die u hier instelt.',
+    'Fieldset {index}' => 'Velden groep {index}',
 );
