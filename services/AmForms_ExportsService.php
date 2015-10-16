@@ -136,20 +136,25 @@ class AmForms_ExportsService extends BaseApplicationComponent
         }
 
         // Export attributes
-        $exportRecord->setAttributes($export->getAttributes(), false);
-        if ($isNewExport && ! $export->startRightAway) {
-            if (! $export->submissions) {
+        if ($isNewExport) {
+            // Do we need to get the total submissions to export?
+            if (! $export->submissions && ! $export->startRightAway) {
                 // Set total records to export
-                $exportRecord->total = craft()->db->createCommand()
+                $export->total = craft()->db->createCommand()
                                         ->select('COUNT(*)')
                                         ->from('amforms_submissions')
                                         ->where('formId=:formId', array(':formId' => $export->formId))
                                         ->queryScalar();
             }
 
-            // Create a new export file
-            $exportRecord->file = $this->_createExportFile($export, $form);
+            // We need to create an export file when we already have the submissions
+            // Or when we have no manually given submissions and don't export right way
+            if (! $export->startRightAway || $export->submissions) {
+                // Create a new export file
+                $export->file = $this->_createExportFile($export, $form);
+            }
         }
+        $exportRecord->setAttributes($export->getAttributes(), false);
 
         // Validate the attributes
         $exportRecord->validate();
@@ -316,6 +321,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
             'limit'  => $limit,
             'offset' => $offset
         );
+        // Are there manually given submissions?
         if ($export->submissions) {
             $params['id'] = $export->submissions;
         }
@@ -423,8 +429,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
             }
         }
 
-        // Only return true if exporting by task
-        return $export->startRightAway ? false : true;
+        return true;
     }
 
     /**
@@ -801,7 +806,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
             }
         }
 
-        // Remove file now that's in the zip
+        // Remove submission file now that's in the zip
         IOHelper::deleteFile($file);
     }
 }

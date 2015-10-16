@@ -211,15 +211,7 @@ class AmForms_ExportsController extends BaseController
         }
 
         // Download file!
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename=' . basename($export->file));
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($export->file));
-        readfile($export->file);
-        die();
+        $this->_downloadFile($export);
     }
 
     /**
@@ -243,9 +235,15 @@ class AmForms_ExportsController extends BaseController
         $export->total = 1;
         $export->totalCriteria = 1;
         $export->submissions = array($submissionId);
+        $export->startRightAway = true;
         $result = craft()->amForms_exports->saveExport($export);
 
-        $this->redirectToPostedUrl($submission);
+        if ($result) {
+            $this->_downloadFile($export);
+        }
+        else {
+            $this->redirectToPostedUrl($submission);
+        }
     }
 
     /**
@@ -312,5 +310,23 @@ class AmForms_ExportsController extends BaseController
 
         // Redirect to exports!
         $this->redirect('amforms/exports');
+    }
+
+    /**
+     * Force an export file download.
+     *
+     * @param AmForms_ExportModel $export
+     */
+    private function _downloadFile(AmForms_ExportModel $export)
+    {
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . basename($export->file));
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($export->file));
+        readfile($export->file);
+        die();
     }
 }
