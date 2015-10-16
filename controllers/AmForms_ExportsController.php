@@ -228,6 +228,9 @@ class AmForms_ExportsController extends BaseController
             throw new Exception(Craft::t('No submission exists with the ID “{id}”.', array('id' => $submissionId)));
         }
 
+        // Delete temporarily files from previous single submission exports
+        craft()->amForms_exports->deleteTempExportFiles();
+
         // Export submission
         $export = new AmForms_ExportModel();
         $export->name = Craft::t('{total} submission(s)', array('total' => 1));

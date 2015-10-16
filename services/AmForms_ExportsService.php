@@ -433,6 +433,75 @@ class AmForms_ExportsService extends BaseApplicationComponent
     }
 
     /**
+     * Get temporarily created export files.
+     *
+     * Note: these files were created by single submission export.
+     *
+     * @param array $exports Array with AmForms_ExportModel to be able to skip files.
+     *
+     * @return bool|array
+     */
+    public function getTempExportFiles($exports = array())
+    {
+        // Get exports folder path
+        $folder = $this->_getExportPath();
+        if (! is_dir($folder)) {
+            return false;
+        }
+
+        // Gather files
+        $tempFiles = array();
+        $skipFiles = array();
+
+        // Do we have any exports available?
+        if (is_array($exports) && count($exports)) {
+            foreach ($exports as $export) {
+                $skipFiles[] = $export->file;
+            }
+        }
+
+        // Find temp files
+        $handle = opendir($folder);
+        while (($file = readdir($handle)) !== false) {
+            if ($file === '.' || $file === '..' || substr($file, 0, 1) == '.') {
+                continue;
+            }
+            if (! in_array($folder . $file, $skipFiles)) {
+                $tempFiles[] = $folder . $file;
+            }
+        }
+        closedir($handle);
+
+        // Return files if found any!
+        return count($tempFiles) ? $tempFiles : false;
+    }
+
+    /**
+     * Delete temporarily created export files.
+     *
+     * @return bool
+     */
+    public function deleteTempExportFiles()
+    {
+        // Get temp files
+        $exports = $this->getAllExports();
+        $files = $this->getTempExportFiles($exports);
+
+        // Delete files
+        if ($files) {
+            foreach ($files as $file) {
+                if (IOHelper::fileExists($file)) {
+                    IOHelper::deleteFile($file);
+                }
+            }
+            return true;
+        }
+
+        // We don't have any files to delete
+        return false;
+    }
+
+    /**
      * Get export path.
      *
      * @return string
