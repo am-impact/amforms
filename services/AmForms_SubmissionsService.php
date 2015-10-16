@@ -233,6 +233,15 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
 
         // Get our recipients
         $recipients = ArrayHelper::stringToArray($form->notificationRecipients);
+
+        // Send copy?
+        if ($form->sendCopy) {
+            $sendCopyTo = $submission->{$form->sendCopyTo};
+            if (filter_var($sendCopyTo, FILTER_VALIDATE_EMAIL)) {
+                $recipients[] = $sendCopyTo;
+            }
+        }
+
         if ($overrideRecipients !== false) {
             if (is_array($overrideRecipients) && count($overrideRecipients)) {
                 $recipients = $overrideRecipients;
@@ -301,6 +310,8 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
                     $properBccAddresses = array();
 
                     foreach ($bccAddresses as $bccAddress) {
+                        $bccAddress = craft()->templates->renderObjectTemplate($bccAddress, $submission);
+
                         if (filter_var($bccAddress, FILTER_VALIDATE_EMAIL)) {
                             $properBccAddresses[] = array(
                                 'email' => $bccAddress

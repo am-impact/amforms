@@ -132,6 +132,8 @@ return array(
     'Restart' => 'Herstarten',
     'Save and start' => 'Bewaren en uitvoeren',
     'Save submissions' => 'Inzendingen opslaan',
+    'Send copy' => 'Verstuur kopie',
+    'Whether to send a copy to the submitter.' => 'Of er een kopie naar de inzender verstuurd moet worden.',
     'Secret key' => 'Geheime sleutel',
     'Select a page' => 'Selecteer een pagina',
     'Send notifications' => 'Notificaties versturen',
@@ -184,5 +186,6 @@ return array(
     'Who will receive the notification? Enter comma separated email addresses for more recipients.' => 'Wie gaan de notificatie ontvangen? Voer komma gescheiden e-mailadressen in voor meer ontvangers.',
     'Who will receive a copy of each notification? Enter comma separated email addresses for more recipients.' => 'Wie gaan er een kopie van elke notificatie ontvangen? Voer komma gescheiden e-mailadressen in voor meer ontvangers.',
     'Yes' => 'Ja',
-    'Your form will contain the fields you set here.' => 'Uw formulier zal de velden bevatten die u hier instelt.'
+    'Your form will contain the fields you set here.' => 'Uw formulier zal de velden bevatten die u hier instelt.',
+    'Fieldset {index}' => 'Velden groep {index}',
 );

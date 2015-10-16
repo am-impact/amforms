@@ -81,7 +81,7 @@
 
             <div class="fld-tab unused{% if totalUnselected == 0 %} hidden{% endif %}">
                 <div class="tabs">
-                    <div class="tab sel"><span>{{ 'Fieldset ' ~ loop.index }}</span></div>
+                    <div class="tab sel"><span>{{ 'Fieldset {index}'|t({'index': loop.index}) }}</span></div>
                 </div>
                 <div class="fld-tabcontent">
                     {% for field in group.fields %}
