@@ -28,6 +28,8 @@ class AmForms_FormRecord extends BaseRecord
             'submitButton'             => AttributeType::String,
             'afterSubmitText'          => AttributeType::Mixed,
             'submissionEnabled'        => array(AttributeType::Bool, 'default' => true),
+            'sendCopy'                 => array(AttributeType::Bool, 'default' => false),
+            'sendCopyTo'               => AttributeType::String,
             'notificationEnabled'      => array(AttributeType::Bool, 'default' => true),
             'notificationFilesEnabled' => array(AttributeType::Bool, 'default' => false),
             'notificationRecipients'   => AttributeType::String,

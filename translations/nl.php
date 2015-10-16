@@ -132,6 +132,8 @@ return array(
     'Restart' => 'Herstarten',
     'Save and start' => 'Bewaren en uitvoeren',
     'Save submissions' => 'Inzendingen opslaan',
+    'Send copy' => 'Verstuur kopie',
+    'Whether to send a copy to the submitter.' => 'Of er een kopie naar de inzender verstuurd moet worden.',
     'Secret key' => 'Geheime sleutel',
     'Select a page' => 'Selecteer een pagina',
     'Send notifications' => 'Notificaties versturen',

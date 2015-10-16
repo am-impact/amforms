@@ -28,6 +28,22 @@ class AmFormsVariable
     }
 
     /**
+     * Get field handles.
+     *
+     * @return array
+     */
+    public function getFieldHandles()
+    {
+        $handles = array();
+        $fields = craft()->fields->getAllFields('handle', AmFormsModel::FieldContext);
+        foreach ($fields as $field) {
+            $handles[] = array('label' => $field->name, 'value' => $field->handle);
+        }
+
+        return $handles;
+    }
+
+    /**
      * Returns a criteria model for AmForms_Submission elements.
      *
      * @param array $attributes
