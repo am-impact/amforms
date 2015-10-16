@@ -6,6 +6,8 @@ namespace Craft;
  */
 class AmFormsService extends BaseApplicationComponent
 {
+    private $_assetFolders = array();
+
     /**
      * Handle an error message.
      *
@@ -20,6 +22,29 @@ class AmFormsService extends BaseApplicationComponent
         else {
             throw $e;
         }
+    }
+
+    /**
+     * Get the server path for an asset.
+     *
+     * @param AssetFileModel $asset
+     *
+     * @return string
+     */
+    public function getPathForAsset($asset)
+    {
+        // Do we know the source folder path?
+        if (! isset($this->_assetFolders[ $asset->folderId ])) {
+            $assetFolder = craft()->assets->getFolderById($asset->folderId);
+            $assetSource = $assetFolder->getSource();
+            $assetSettings = $assetSource->settings;
+            if ($assetFolder->path) {
+                $assetSettings['path'] = $assetSettings['path'] . $assetFolder->path;
+            }
+            $this->_assetFolders[ $asset->folderId ] = $assetSettings['path'];
+        }
+
+        return craft()->config->parseEnvironmentString($this->_assetFolders[ $asset->folderId ]);
     }
 
     /**

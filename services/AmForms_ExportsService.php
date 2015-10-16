@@ -865,11 +865,10 @@ class AmForms_ExportsService extends BaseApplicationComponent
             }
             if ($field->type == 'Assets') {
                 foreach ($submission->$fieldHandle->find() as $asset) {
-                    $assetSource = $asset->getSource();
-                    $assetFile = $assetSource->settings['path'] . $asset->filename;
+                    $assetPath = craft()->amForms->getPathForAsset($asset);
 
-                    if (IOHelper::fileExists($assetFile)) {
-                        Zip::add($export->file, $assetFile, $assetSource->settings['path']);
+                    if (IOHelper::fileExists($assetPath . $asset->filename)) {
+                        Zip::add($export->file, $assetPath . $asset->filename, $assetPath);
                     }
                 }
             }
