@@ -96,28 +96,7 @@ class AmForms_InstallService extends BaseApplicationComponent
      */
     private function _installGeneral()
     {
-        $settings = array(
-            array(
-                'name' => 'Plugin name',
-                'value' => ''
-            ),
-            array(
-                'name' => 'Quiet errors',
-                'value' => false
-            ),
-            array(
-                'name' => 'Fields per set',
-                'value' => 8
-            ),
-            array(
-                'name' => 'Use Mandrill for email',
-                'value' => false
-            ),
-            array(
-                'name' => 'Bcc email address',
-                'value' => ''
-            )
-        );
+        $settings = craft()->config->get('general', 'amforms');
         $this->installSettings($settings, AmFormsModel::SettingGeneral);
     }
 
@@ -126,16 +105,7 @@ class AmForms_InstallService extends BaseApplicationComponent
      */
     private function _installExport()
     {
-        $settings = array(
-            array(
-                'name' => 'Export rows per set',
-                'value' => 50
-            ),
-            array(
-                'name' => 'Ignore Matrix field and block names',
-                'value' => false
-            )
-        );
+        $settings = craft()->config->get('export', 'amforms');
         $this->installSettings($settings, AmFormsModel::SettingExport);
     }
 
@@ -144,32 +114,7 @@ class AmForms_InstallService extends BaseApplicationComponent
      */
     private function _installAntiSpam()
     {
-        $settings = array(
-            array(
-                'name' => 'Honeypot enabled',
-                'value' => true
-            ),
-            array(
-                'name' => 'Honeypot name',
-                'value' => 'yourssince1615'
-            ),
-            array(
-                'name' => 'Time check enabled',
-                'value' => true
-            ),
-            array(
-                'name' => 'Minimum time in seconds',
-                'value' => 3
-            ),
-            array(
-                'name' => 'Duplicate check enabled',
-                'value' => true
-            ),
-            array(
-                'name' => 'Origin check enabled',
-                'value' => true
-            )
-        );
+        $settings = craft()->config->get('antispam', 'amforms');
         $this->installSettings($settings, AmFormsModel::SettingAntispam);
     }
 
@@ -178,20 +123,7 @@ class AmForms_InstallService extends BaseApplicationComponent
      */
     private function _installRecaptcha()
     {
-        $settings = array(
-            array(
-                'name' => 'Google reCAPTCHA enabled',
-                'value' => false
-            ),
-            array(
-                'name' => 'Site key',
-                'value' => ''
-            ),
-            array(
-                'name' => 'Secret key',
-                'value' => ''
-            )
-        );
+        $settings = craft()->config->get('recaptcha', 'amforms');
         $this->installSettings($settings, AmFormsModel::SettingRecaptcha);
     }
 
@@ -200,24 +132,7 @@ class AmForms_InstallService extends BaseApplicationComponent
      */
     private function _installTemplates()
     {
-        $settings = array(
-            array(
-                'name' => 'Form template',
-                'value' => ''
-            ),
-            array(
-                'name' => 'Tab template',
-                'value' => ''
-            ),
-            array(
-                'name' => 'Field template',
-                'value' => ''
-            ),
-            array(
-                'name' => 'Notification template',
-                'value' => ''
-            ),
-        );
+        $settings = craft()->config->get('templates', 'amforms');
         $this->installSettings($settings, AmFormsModel::SettingsTemplatePaths);
     }
 
@@ -226,96 +141,31 @@ class AmForms_InstallService extends BaseApplicationComponent
      */
     private function _installFields()
     {
-        // Fields to install
-        $fields = array(
-            array(
-                'name' => Craft::t('Name'),
-                'type' => 'PlainText'
-            ),
-            array(
-                'name' => Craft::t('First name'),
-                'type' => 'PlainText'
-            ),
-            array(
-                'name' => Craft::t('Last name'),
-                'type' => 'PlainText'
-            ),
-            array(
-                'name' => Craft::t('Website'),
-                'type' => 'PlainText'
-            ),
-            array(
-                'name' => Craft::t('Email address'),
-                'type' => 'PlainText'
-            ),
-            array(
-                'name' => Craft::t('Telephone number'),
-                'type' => 'PlainText'
-            ),
-            array(
-                'name' => Craft::t('Mobile number'),
-                'type' => 'PlainText'
-            ),
-            array(
-                'name' => Craft::t('Comment'),
-                'type' => 'PlainText',
-                'settings' => array(
-                    'multiline'   => 1,
-                    'initialRows' => 4
-                )
-            ),
-            array(
-                'name' => Craft::t('Reaction'),
-                'type' => 'PlainText',
-                'settings' => array(
-                    'multiline'   => 1,
-                    'initialRows' => 4
-                )
-            ),
-            array(
-                'name' => Craft::t('Image'),
-                'type' => 'Assets',
-                'translatable' => false,
-                'settings' => array(
-                    'restrictFiles' => 1,
-                    'allowedKinds' => array('image'),
-                    'sources' => array('folder:1'),
-                    'singleUploadLocationSource' => '1',
-                    'defaultUploadLocationSource' => '1',
-                    'limit' => 1
-                )
-            ),
-            array(
-                'name' => Craft::t('File'),
-                'type' => 'Assets',
-                'translatable' => false,
-                'settings' => array(
-                    'sources' => array('folder:1'),
-                    'singleUploadLocationSource' => '1',
-                    'defaultUploadLocationSource' => '1',
-                    'limit' => 1
-                )
-            )
-        );
+        // Get fields to install
+        $fields = craft()->config->get('fields', 'amforms');
 
-        // Set field context and content
-        craft()->content->fieldContext = AmFormsModel::FieldContext;
-        craft()->content->contentTable = AmFormsModel::FieldContent;
+        // Validate fields
+        if (is_array($fields) && count($fields)) {
 
-        // Create fields
-        foreach ($fields as $field) {
-            $newField = new FieldModel();
-            $newField->name         = $field['name'];
-            $newField->handle       = $this->_camelCase($field['name']);
-            $newField->translatable = isset($field['translatable']) ? $field['translatable'] : true;
-            $newField->type         = $field['type'];
-            if (isset($field['instructions'])) {
-                $newField->instructions = $field['instructions'];
+            // Set field context and content
+            craft()->content->fieldContext = AmFormsModel::FieldContext;
+            craft()->content->contentTable = AmFormsModel::FieldContent;
+
+            // Create fields
+            foreach ($fields as $field) {
+                $newField = new FieldModel();
+                $newField->name         = $field['name'];
+                $newField->handle       = isset($field['handle']) ? $field['handle'] : $this->_camelCase($field['name']);
+                $newField->translatable = isset($field['translatable']) ? $field['translatable'] : true;
+                $newField->type         = $field['type'];
+                if (isset($field['instructions'])) {
+                    $newField->instructions = $field['instructions'];
+                }
+                if (isset($field['settings'])) {
+                    $newField->settings = $field['settings'];
+                }
+                craft()->fields->saveField($newField, false); // Don't validate
             }
-            if (isset($field['settings'])) {
-                $newField->settings = $field['settings'];
-            }
-            craft()->fields->saveField($newField, false); // Don't validate
         }
     }
 
