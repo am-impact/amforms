@@ -95,7 +95,7 @@ class AmForms_SchematicService extends BaseApplicationComponent
 
         if ($force) {
             foreach ($forms as $form) {
-                craft()->amForms_form->deleteForm($form);
+                craft()->amForms_forms->deleteForm($form);
             }
         }
 
