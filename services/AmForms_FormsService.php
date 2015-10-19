@@ -24,9 +24,9 @@ class AmForms_FormsService extends BaseApplicationComponent
      *
      * @return AmForms_FormModel|array|null
      */
-    public function getAllForms()
+    public function getAllForms($indexBy = 'id')
     {
-        return $this->getCriteria(array('order' => 'name'))->find();
+        return $this->getCriteria(array('order' => 'name', 'indexBy' => $indexBy))->find();
     }
 
     /**

@@ -237,4 +237,16 @@ class AmFormsPlugin extends BasePlugin
         // Delete content table
         craft()->db->createCommand()->dropTable('amforms_content');
     }
+
+    /**
+     * Register migration service for Schematic plugin.
+     *
+     * @return array
+     */
+    public function registerMigrationService()
+    {
+        return array(
+            'amforms' => craft()->amForms_schematic,
+        );
+    }
 }
