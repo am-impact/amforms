@@ -96,43 +96,35 @@ return array(
     ),
     'fields' => array(
         array(
-            'name' => Craft::t('Name'),
+            'name' => 'Name',
             'type' => 'PlainText',
         ),
         array(
-            'name' => Craft::t('First name'),
+            'name' => 'First name',
             'type' => 'PlainText',
         ),
         array(
-            'name' => Craft::t('Last name'),
+            'name' => 'Last name',
             'type' => 'PlainText',
         ),
         array(
-            'name' => Craft::t('Website'),
+            'name' => 'Website',
             'type' => 'PlainText',
         ),
         array(
-            'name' => Craft::t('Email address'),
+            'name' => 'Email address',
             'type' => 'AmForms_Email',
         ),
         array(
-            'name' => Craft::t('Telephone number'),
+            'name' => 'Telephone number',
             'type' => 'PlainText',
         ),
         array(
-            'name' => Craft::t('Mobile number'),
+            'name' => 'Mobile number',
             'type' => 'PlainText',
         ),
         array(
-            'name' => Craft::t('Comment'),
-            'type' => 'PlainText',
-            'settings' => array(
-                'multiline'   => 1,
-                'initialRows' => 4,
-            ),
-        ),
-        array(
-            'name' => Craft::t('Reaction'),
+            'name' => 'Comment',
             'type' => 'PlainText',
             'settings' => array(
                 'multiline'   => 1,
@@ -140,7 +132,15 @@ return array(
             ),
         ),
         array(
-            'name' => Craft::t('Image'),
+            'name' => 'Reaction',
+            'type' => 'PlainText',
+            'settings' => array(
+                'multiline'   => 1,
+                'initialRows' => 4,
+            ),
+        ),
+        array(
+            'name' => 'Image',
             'type' => 'Assets',
             'translatable' => false,
             'settings' => array(
@@ -153,7 +153,7 @@ return array(
             ),
         ),
         array(
-            'name' => Craft::t('File'),
+            'name' => 'File',
             'type' => 'Assets',
             'translatable' => false,
             'settings' => array(
