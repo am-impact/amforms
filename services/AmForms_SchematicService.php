@@ -64,7 +64,7 @@ class AmForms_SchematicService extends BaseApplicationComponent
     /**
      * Attempt to import forms.
      *
-     * @param array $forms
+     * @param array $formDefinitions
      * @param bool  $force If set to true forms not included in the import will be deleted
      *
      * @return Schematic_ResultModel
@@ -84,7 +84,6 @@ class AmForms_SchematicService extends BaseApplicationComponent
             $form = array_key_exists($formHandle, $forms)
                 ? $forms[$formHandle]
                 : new AmForms_FormModel();
-
             $this->populateFormModel($form, $formDefinition, $formHandle);
 
             // Save form via craft
@@ -133,8 +132,15 @@ class AmForms_SchematicService extends BaseApplicationComponent
             'fieldTemplate'             => $form->fieldTemplate,
             'notificationTemplate'      => $form->notificationTemplate,
         ));
+        
+        craft()->content->fieldContext = 'amforms';
+        craft()->content->contentTable = 'amforms_content';
 
         $fieldLayout = craft()->schematic_fields->getFieldLayout($formDefinition['fieldLayout']);
+
+        craft()->content->fieldContext = 'global';
+        craft()->content->contentTable = 'content';
+
         $form->setFieldLayout($fieldLayout);
     }
 }
