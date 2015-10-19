@@ -246,7 +246,7 @@ class AmForms_InstallService extends BaseApplicationComponent
             ),
             array(
                 'name' => Craft::t('Email address'),
-                'type' => 'PlainText'
+                'type' => 'AmForms_Email',
             ),
             array(
                 'name' => Craft::t('Telephone number'),
