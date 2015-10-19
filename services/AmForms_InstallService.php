@@ -154,8 +154,8 @@ class AmForms_InstallService extends BaseApplicationComponent
             // Create fields
             foreach ($fields as $field) {
                 $newField = new FieldModel();
-                $newField->name         = $field['name'];
-                $newField->handle       = isset($field['handle']) ? $field['handle'] : $this->_camelCase($field['name']);
+                $newField->name         = Craft::t($field['name']);
+                $newField->handle       = isset($field['handle']) ? $field['handle'] : $this->_camelCase(Craft::t($field['name']));
                 $newField->translatable = isset($field['translatable']) ? $field['translatable'] : true;
                 $newField->type         = $field['type'];
                 if (isset($field['instructions'])) {
