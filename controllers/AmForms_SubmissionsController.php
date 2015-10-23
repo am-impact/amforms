@@ -107,17 +107,6 @@ class AmForms_SubmissionsController extends BaseController
             $submission = new AmForms_SubmissionModel();
         }
 
-        // Add the form to the submission
-        $submission->form = $form;
-        $submission->formId = $form->id;
-
-        // Set attributes
-        $fieldsLocation = craft()->request->getParam('fieldsLocation', 'fields');
-        $submission->ipAddress = craft()->request->getUserHostAddress();
-        $submission->userAgent = craft()->request->getUserAgent();
-        $submission->setContentFromPost($fieldsLocation);
-        $submission->setContentPostLocation($fieldsLocation);
-
         // Front-end submission, trigger AntiSpam or reCAPTCHA?
         if (! craft()->request->isCpRequest()) {
             // Where was this submission submitted?
@@ -134,8 +123,31 @@ class AmForms_SubmissionsController extends BaseController
             // Validate reCAPTCHA
             if (craft()->amForms_settings->isSettingValueEnabled('googleRecaptchaEnabled', AmFormsModel::SettingRecaptcha)) {
                 $submission->spamFree = craft()->amForms_recaptcha->verify();
+
+                // Was it verified?
+                if (! $submission->spamFree) {
+                    $submission->addError('spamFree', Craft::t('reCAPTCHA was not verified.'));
+
+                    // Don't upload files now
+                    if (count($_FILES)) {
+                        foreach ($_FILES as $key => $file) {
+                            unset($_FILES[$key]);
+                        }
+                    }
+                }
             }
         }
+
+        // Add the form to the submission
+        $submission->form = $form;
+        $submission->formId = $form->id;
+
+        // Set attributes
+        $fieldsLocation = craft()->request->getParam('fieldsLocation', 'fields');
+        $submission->ipAddress = craft()->request->getUserHostAddress();
+        $submission->userAgent = craft()->request->getUserAgent();
+        $submission->setContentFromPost($fieldsLocation);
+        $submission->setContentPostLocation($fieldsLocation);
 
         // Save submission
         if (craft()->amForms_submissions->saveSubmission($submission)) {

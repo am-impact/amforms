@@ -105,11 +105,6 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         $submissionRecord->validate();
         $submission->addErrors($submissionRecord->getErrors());
 
-        // reCAPTCHA enabled and was it verified?
-        if (! $submission->spamFree) {
-            $submission->addError('spamFree', Craft::t('reCAPTCHA was not verified.'));
-        }
-
         if (! $submission->hasErrors()) {
 
             // Fire an 'onBeforeSaveSubmission' event
