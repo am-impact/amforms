@@ -237,10 +237,6 @@ class AmForms_FormsService extends BaseApplicationComponent
                 craft()->path->setTemplatesPath($templatePath);
                 $fieldInfo = craft()->fields->populateFieldType($field, $submission);
                 $input = $fieldInfo->getInputHtml($field->handle, $submission->getFieldValue($field->handle));
-                if ($layoutField->required) {
-                    $fieldId = sprintf('name="%s"', $field->handle);
-                    $input = str_replace($fieldId, $fieldId . ' required', $input);
-                }
 
                 // Get field HTML
                 craft()->path->setTemplatesPath($fieldTemplateInfo['path']);
