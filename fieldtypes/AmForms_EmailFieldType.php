@@ -37,6 +37,26 @@ class AmForms_EmailFieldType extends BaseFieldType
      */
     public function getInputHtml($name, $value)
     {
-        return HtmlHelper::encodeParams('<input class="text fullwidth" type="email" name="{name}" value="{value}"/>', array('name' => $name, 'value' => $value));
+        return craft()->templates->render('_components/fieldtypes/PlainText/input', array(
+            'name'     => $name,
+            'value'    => $value,
+            'settings' => $this->getSettings(),
+            'type'     => 'email',
+        ));
+    }
+
+    /**
+     * @inheritDoc BaseSavableComponentType::defineSettings()
+     *
+     * @return array
+     */
+    protected function defineSettings()
+    {
+        return array(
+            'placeholder'   => array(AttributeType::String),
+            'multiline'     => array(AttributeType::Bool),
+            'initialRows'   => array(AttributeType::Number, 'min' => 1, 'default' => 4),
+            'maxLength'     => array(AttributeType::Number, 'min' => 0),
+        );
     }
 }
