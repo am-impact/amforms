@@ -7,14 +7,15 @@ namespace Craft;
  *
  * @author    Hubert Prein
  */
-class AmForms_SchematicService extends BaseApplicationComponent
+class AmForms_SchematicService extends Schematic_AbstractService
 {
     /**
      * Export forms.
      *
+     * @param array $data
      * @return array
      */
-    public function export()
+    public function export(array $data = array())
     {
         $forms = craft()->amForms_forms->getAllForms();
 
@@ -69,7 +70,7 @@ class AmForms_SchematicService extends BaseApplicationComponent
      *
      * @return Schematic_ResultModel
      */
-    public function import($formDefinitions, $force = false)
+    public function import(array $formDefinitions, $force = false)
     {
         $result = new Schematic_ResultModel();
 
