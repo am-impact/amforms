@@ -1,4 +1,4 @@
-{% if craft.request.getParam('submitted') %}
+{% if craft.request.getParam('submitted') == form.handle %}
     <p>{{ form.afterSubmitText|default('Thanks for your submission.'|t) }}</p>
 {% else %}
     {%- set submitValue = (form.submitButton ? form.submitButton : 'Submit'|t) -%}

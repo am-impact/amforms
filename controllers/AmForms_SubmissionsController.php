@@ -306,7 +306,7 @@ class AmForms_SubmissionsController extends BaseController
         $url = null;
         $redirectUrl = $submission->getForm()->getRedirectUrl();
         if (empty($redirectUrl)) {
-            $url = craft()->request->getPath() . '?submitted=' . ($submitted ? 1 : 0);
+            $url = craft()->request->getPath() . '?submitted=' . ($submitted ? $submission->getForm()->handle : 0);
         }
 
         $this->redirectToPostedUrl($vars, $url);
