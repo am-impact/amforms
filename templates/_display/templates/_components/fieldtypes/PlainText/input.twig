@@ -8,7 +8,8 @@
     maxlength: settings.maxLength,
     showCharsLeft: true,
     placeholder: settings.placeholder,
-    rows: settings.initialRows
+    rows: settings.initialRows,
+    type: type is defined ? type : null
 } %}
 
 {% if settings.multiline %}
