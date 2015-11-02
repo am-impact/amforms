@@ -61,6 +61,14 @@ This will only display basic fields!
 {{ craft.amForms.displayForm('formHandle') }}
 ```
 
+### Simple field tag
+
+```
+{% set form = craft.amForms.getForm('formHandle') %}
+
+{{ form.displayField('fieldHandle') }}
+```
+
 ### Custom HTML
 
 ```
@@ -83,6 +91,35 @@ This will only display basic fields!
     {{ craft.amForms.displayRecaptcha() }}
 
     {# Place the HTML of your fields here #}
+
+    <input type="submit" value="Submit">
+</form>
+```
+
+### Custom HTML with displayField
+
+```
+{% set form = craft.amForms.getForm('formHandle') %}
+
+<form method="post" action="" accept-charset="UTF-8">
+    {{ getCsrfInput() }}
+
+    {# This should always be here! #}
+    <input type="hidden" name="action" value="amForms/submissions/saveSubmission">
+
+    {# Insert your form's handle. #}
+    <input type="hidden" name="handle" value="{{ form.handle }}">
+
+    {# Optional: Anti-spam protection. #}
+    {{ craft.amForms.displayAntispam() }}
+
+    {# Optional: Google reCAPTCHA protection. #}
+    {{ craft.amForms.displayRecaptcha() }}
+
+    {# Place the HTML of your fields here #}
+    {{ form.displayField('fieldHandle') }}
+    {{ form.displayField('aFieldHandle') }}
+    {{ form.displayField('anotherFieldHandle') }}
 
     <input type="submit" value="Submit">
 </form>
