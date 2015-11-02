@@ -132,6 +132,18 @@ class AmForms_FormModel extends BaseElementModel
     }
 
     /**
+     * Display a field.
+     *
+     * @param string $handle
+     *
+     * @return string
+     */
+    public function displayField($handle)
+    {
+        return craft()->amForms_forms->displayField($this, $handle);
+    }
+
+    /**
      * Display the form.
      *
      * With this we can display the Form FieldType on a front-end template.

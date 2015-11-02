@@ -6,6 +6,8 @@ namespace Craft;
  */
 class AmForms_FormsService extends BaseApplicationComponent
 {
+    private $_fields = array();
+
     /**
      * Returns a criteria model for AmForms_Form elements.
      *
@@ -196,6 +198,68 @@ class AmForms_FormsService extends BaseApplicationComponent
         }
 
         return false;
+    }
+
+    /**
+     * Display a field.
+     *
+     * @param AmForms_FormModel $form
+     * @param string            $handle
+     *
+     * @return string
+     */
+    public function displayField(AmForms_FormModel $form, $handle)
+    {
+        // Get submission model
+        $submission = craft()->amForms_submissions->getActiveSubmission($form);
+
+        // Get template path
+        $fieldTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', $form->fieldTemplate);
+        $templatePath = $fieldTemplateInfo['path'];
+
+        // Do we have the current form fields?
+        if (! isset($this->_fields[$form->id])) {
+            $this->_fields[$form->id] = array();
+
+            // Get tabs
+            foreach ($form->getFieldLayout()->getTabs() as $tab) {
+                // Get tab's fields
+                foreach ($tab->getFields() as $layoutField) {
+                    // Get actual field
+                    $field = $layoutField->getField();
+
+                    // Reset templates path for input and get field input
+                    craft()->path->setTemplatesPath($templatePath);
+                    $fieldInfo = craft()->fields->populateFieldType($field, $submission);
+                    $input = $fieldInfo->getInputHtml($field->handle, $submission->getFieldValue($field->handle));
+                    if ($layoutField->required) {
+                        $fieldId = sprintf('name="%s"', $field->handle);
+                        $input = str_replace($fieldId, $fieldId . ' required', $input);
+                    }
+
+                    // Get field HTML
+                    craft()->path->setTemplatesPath($fieldTemplateInfo['path']);
+                    $fieldHtml = craft()->templates->render($fieldTemplateInfo['template'], array(
+                        'form'     => $form,
+                        'field'    => $field,
+                        'input'    => $input,
+                        'required' => $layoutField->required,
+                        'element'  => $submission
+                    ));
+
+                    // Add to fields
+                    $this->_fields[$form->id][$field->handle] = $fieldHtml;
+                }
+            }
+        }
+
+        // Return field!
+        if (isset($this->_fields[$form->id][$handle])) {
+            return new \Twig_Markup($this->_fields[$form->id][$handle], craft()->templates->getTwig()->getCharset());
+        }
+        else {
+            return null;
+        }
     }
 
     /**
