@@ -360,7 +360,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     $this->_exportFiles['manual'] = fopen('php://output', 'w');
 
                     // Create columns
-                    fputcsv($this->_exportFiles['manual'], $this->_getExportColumns($export, $form));
+                    fputcsv($this->_exportFiles['manual'], $this->_getExportColumns($export, $form), ';');
                 }
                 else {
                     $this->_exportFiles[$export->id] = fopen($export->file, 'a');
@@ -540,7 +540,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
         if (! $export->submissions) {
             // Add columns to export file
             $exportFile = fopen($file, 'w');
-            fputcsv($exportFile, $this->_getExportColumns($export, $form));
+            fputcsv($exportFile, $this->_getExportColumns($export, $form), ';');
             fclose($exportFile);
         }
 
@@ -805,7 +805,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
         if ($returnData) {
             return $data;
         }
-        fputcsv($this->_exportFiles[ ($export->startRightAway ? 'manual' : $export->id) ], $data);
+        fputcsv($this->_exportFiles[ ($export->startRightAway ? 'manual' : $export->id) ], $data, ';');
 
         // Add more rows?
         if ($hasMoreRows) {
@@ -824,7 +824,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     }
 
                     // Add row to CSV
-                    fputcsv($this->_exportFiles[ ($export->startRightAway ? 'manual' : $export->id) ], $data);
+                    fputcsv($this->_exportFiles[ ($export->startRightAway ? 'manual' : $export->id) ], $data, ';');
                 }
             }
         }
