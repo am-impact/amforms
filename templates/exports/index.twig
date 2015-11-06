@@ -1,10 +1,13 @@
 {% extends 'amforms/_layouts/overview' %}
 
+{% set title = 'Exports'|t %}
 {% set selectedTab = 'exports' %}
 
-{% set sidebar %}
-    <div class="buttons">
-        <a class="btn submit add icon" href="{{ url('amforms/exports/new') }}">{{ 'New export'|t }}</a>
+{% set extraPageHeaderHtml %}
+    <div class="buttons right">
+        <div class="btngroup submit">
+            <a class="btn submit add icon" href="{{ url('amforms/exports/new') }}">{{ 'New export'|t }}</a>
+        </div>
     </div>
 {% endset %}
 

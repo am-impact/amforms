@@ -1,10 +1,13 @@
 {% extends 'amforms/_layouts/overview' %}
 
+{% set title = 'Fields'|t %}
 {% set selectedTab = 'fields' %}
 
-{% set sidebar %}
-    <div class="buttons">
-        <a class="btn submit add icon" href="{{ url('amforms/fields/new') }}">{{ 'New field'|t }}</a>
+{% set extraPageHeaderHtml %}
+    <div class="buttons right">
+        <div class="btngroup submit">
+            <a class="btn submit add icon" href="{{ url('amforms/fields/new') }}">{{ 'New field'|t }}</a>
+        </div>
     </div>
 {% endset %}
 
