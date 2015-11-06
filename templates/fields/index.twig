@@ -11,7 +11,7 @@
     </div>
 {% endset %}
 
-{% set content %}
+{% block content %}
     <p id="nofields"{% if fields %} class="hidden"{% endif %}>
         {{ "No fields exist yet."|t }}
     </p>
@@ -45,7 +45,7 @@
             </tbody>
         </table>
     {% endif %}
-{% endset %}
+{% endblock %}
 
 {% set js %}
     new Craft.AdminTable({
