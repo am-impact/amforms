@@ -74,6 +74,9 @@ class AmForms_SchematicService extends Schematic_AbstractService
     {
         $result = new Schematic_ResultModel();
 
+        // temporarily do nothing, because this messes up contact forms.
+        return $result;
+
         if (empty($formDefinitions)) {
             // Ignore importing globals.
             return $result;
