@@ -1,11 +1,12 @@
 {% extends 'amforms/_layouts/overview' %}
 
+{% set title = 'Forms'|t %}
 {% set selectedTab = 'forms' %}
 
-{% block sidebar %}
-    <div class="buttons">
-        <a class="btn submit add icon" href="{{ url('amforms/forms/new') }}">{{ 'New form'|t }}</a>
+{% set extraPageHeaderHtml %}
+    <div class="buttons right">
+        <div class="btngroup submit">
+            <a class="btn submit add icon" href="{{ url('amforms/forms/new') }}">{{ 'New form'|t }}</a>
+        </div>
     </div>
-
-    {{ parent() }}
-{% endblock %}
+{% endset %}

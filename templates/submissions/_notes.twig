@@ -1,5 +1,7 @@
 {% extends '_layouts/cp' %}
 
+{% set fullPageForm = true %}
+
 {% import '_includes/forms' as forms %}
 
 {% set title = 'Notes'|t %}
@@ -59,36 +61,30 @@
         <div class="item" data-position="right" data-colspan="1">
             <div class="pane">
                 <h1>{{ 'Add a note'|t }}</h1>
-                <form method="post" accept-charset="UTF-8" enctype="multipart/form-data" data-saveshortcut="1" data-saveshortcut-redirect="amforms/submissions/edit/{{ submission.id }}/notes" data-confirm-unload>
-                    {{ getCsrfInput() }}
-                    <input type="hidden" name="action" value="amForms/notes/saveNote">
-                    <input type="hidden" name="submissionId" value="{{ submission.id }}">
-                    <input type="hidden" name="redirect" value="amforms/submissions/edit/{{ submission.id }}/notes">
 
-                    {{ forms.textField({
-                        label: 'Name'|t,
-                        id: 'name',
-                        name: 'name',
-                        value: (note.name|length ? note.name : user.firstName),
-                        errors: note.getErrors('name'),
-                        first: true,
-                        required: true,
-                        instructions: 'Name of the contact person.'|t
-                    }) }}
-                    {{ forms.textareaField({
-                        label: 'Note'|t,
-                        id: 'text',
-                        name: 'text',
-                        value: note.text,
-                        errors: note.getErrors('text'),
-                        rows: 10,
-                        required: true
-                    }) }}
+                <input type="hidden" name="action" value="amForms/notes/saveNote">
+                <input type="hidden" name="submissionId" value="{{ submission.id }}">
+                <input type="hidden" name="redirect" value="amforms/submissions/edit/{{ submission.id }}/notes">
 
-                    <div class="buttons first">
-                        <input type="submit" class="btn submit" value="{{ 'Save'|t }}">
-                    </div>
-                </form>
+                {{ forms.textField({
+                    label: 'Name'|t,
+                    id: 'name',
+                    name: 'name',
+                    value: (note.name|length ? note.name : user.firstName),
+                    errors: note.getErrors('name'),
+                    first: true,
+                    required: true,
+                    instructions: 'Name of the contact person.'|t
+                }) }}
+                {{ forms.textareaField({
+                    label: 'Note'|t,
+                    id: 'text',
+                    name: 'text',
+                    value: note.text,
+                    errors: note.getErrors('text'),
+                    rows: 10,
+                    required: true
+                }) }}
             </div>
         </div>
     </div>

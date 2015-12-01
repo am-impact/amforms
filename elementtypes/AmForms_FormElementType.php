@@ -56,7 +56,7 @@ class AmForms_FormElementType extends BaseElementType
      * @param string|null $source
      * @return array
      */
-    public function defineTableAttributes($source = null)
+    public function defineAvailableTableAttributes($source = null)
     {
         return array(
             'name' => Craft::t('Name'),
