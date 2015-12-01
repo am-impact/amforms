@@ -16,6 +16,24 @@ class AmFormsVariable
     }
 
     /**
+     * Get a setting value by their handle and type.
+     *
+     * @param string $handle
+     * @param string $type
+     * @param mixed  $defaultValue
+     *
+     * @return mixed
+     */
+    public function getSettingsValueByHandleAndType($handle, $type, $defaultValue = null)
+    {
+        return craft()->amForms_settings->getSettingsValueByHandleAndType($handle, $type, $defaultValue);
+    }
+
+
+    // Field methods
+    // =========================================================================
+
+    /**
      * Get proper field types.
      *
      * @param array $fieldTypes All Craft's fieldtypes.
@@ -43,6 +61,10 @@ class AmFormsVariable
         return $handles;
     }
 
+
+    // Submission methods
+    // =========================================================================
+
     /**
      * Returns a criteria model for AmForms_Submission elements.
      *
@@ -66,6 +88,10 @@ class AmFormsVariable
     {
         return craft()->amForms_submissions->getSubmissionById($id);
     }
+
+
+    // Form methods
+    // =========================================================================
 
     /**
      * Get a form by its ID.
@@ -136,6 +162,10 @@ class AmFormsVariable
         }
         return craft()->amForms_forms->displayForm($form);
     }
+
+
+    // Anti spam methods
+    // =========================================================================
 
     /**
      * Display AntiSpam widget.
