@@ -217,7 +217,7 @@ class AmForms_FormsService extends BaseApplicationComponent
         $fieldTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', $form->fieldTemplate);
         $templatePath = $fieldTemplateInfo['path'];
 
-        // get the current templates path so we can restore it at the end of this function
+        // Get the current templates path so we can restore it at the end of this function
         $oldTemplatesPath = craft()->path->getTemplatesPath();
 
         // Do we have the current form fields?
@@ -256,7 +256,7 @@ class AmForms_FormsService extends BaseApplicationComponent
             }
         }
 
-        // restore the templates path variable to it's original value
+        // Restore the templates path variable to it's original value
         craft()->path->setTemplatesPath($oldTemplatesPath);
 
         // Return field!
@@ -286,9 +286,9 @@ class AmForms_FormsService extends BaseApplicationComponent
         $fieldTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', $form->fieldTemplate);
         $templatePath = $fieldTemplateInfo['path'];
 
-        // get the current templates path so we can restore it at the end of this function
+        // Get the current templates path so we can restore it at the end of this function
         $oldTemplatesPath = craft()->path->getTemplatesPath();
-        
+
         foreach ($form->getFieldLayout()->getTabs() as $tab) {
             // Tab information
             $tabs[$tab->id] = array(
@@ -327,10 +327,9 @@ class AmForms_FormsService extends BaseApplicationComponent
             }
         }
 
-
-        // restore the templates path variable to it's original value
+        // Restore the templates path variable to it's original value
         craft()->path->setTemplatesPath($oldTemplatesPath);
-        
+
         // Build tab HTML
         $variables = array(
             'form'    => $form,
