@@ -28,7 +28,7 @@ class AmFormsPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return '1.2.8';
+        return '1.2.9';
     }
 
     /**
@@ -53,62 +53,6 @@ class AmFormsPlugin extends BasePlugin
     public function getSettingsUrl()
     {
         return 'amforms/settings';
-    }
-
-    /**
-     * @return Model
-     */
-    public function getSettings()
-    {
-        $settings = craft()->amForms_settings->getAllSettings();
-        $settings = array_map(function (AmForms_SettingModel $settings) {
-            return  $settings->value;
-        }, $settings);
-
-        $settingsModel = new Model($settings);
-        $settingsModel->setAttributes($settings);
-
-        return $settingsModel;
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @param array|BaseModel $values
-     *
-     * @return null
-     */
-    public function setSettings($values)
-    {
-        if ($values) {
-            if ($values instanceof BaseModel) {
-                $values = $values->attributes;
-            }
-
-            // Get all available settings for this type
-            $availableSettings = craft()->amForms_settings->getAllSettings();
-
-            // Save each available setting
-            foreach ($availableSettings as $setting) {
-                // Find new settings
-                if (array_key_exists($setting->handle, $values)) {
-                    $setting->value = $values[$setting->handle];
-                    craft()->amForms_settings->saveSettings($setting);
-                }
-            }
-        }
-    }
-
-    /**
-     * @inheritdoc
-     * @param array $values
-     * @return Model
-     */
-    public function prepSettings($values)
-    {
-        $settingsModel = new Model($values);
-        $settingsModel->setAttributes($values);
-        return $settingsModel;
     }
 
     /**

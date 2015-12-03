@@ -1,6 +1,8 @@
 {% extends (elementType is defined ? '_layouts/elementindex' : '_layouts/cp') %}
 
-{% set title = craft.amForms.name %}
+{% if title is not defined %}
+    {% set title = craft.amForms.name %}
+{% endif %}
 
 {% set tabs = {
     submissions: {
@@ -27,15 +29,15 @@
         url: url('amforms/exports')
     } }) %}
 {% endif %}
+{% if currentUser.can('accessAmFormsSettings') %}
+    {% set tabs = tabs|merge({ settings: {
+        label: 'Settings'|t,
+        url: url('amforms/settings')
+    } }) %}
+{% endif %}
 
 {% set activeCrumb = attribute(tabs, selectedTab) %}
 {% set crumbs = [
     { label: title, url: url('amforms') },
     { label: activeCrumb.label, url: activeCrumb.url }
 ] %}
-
-{% if currentUser.can('accessAmFormsSettings') %}
-    {% set extraPageHeaderHtml %}
-      <a class="btn settings icon" href="{{ url('amforms/settings') }}" title="{{ 'Settings'|t }}"></a>
-    {% endset %}
-{% endif %}

@@ -217,6 +217,9 @@ class AmForms_FormsService extends BaseApplicationComponent
         $fieldTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', $form->fieldTemplate);
         $templatePath = $fieldTemplateInfo['path'];
 
+        // Get the current templates path so we can restore it at the end of this function
+        $oldTemplatesPath = craft()->path->getTemplatesPath();
+
         // Do we have the current form fields?
         if (! isset($this->_fields[$form->id])) {
             $this->_fields[$form->id] = array();
@@ -253,6 +256,9 @@ class AmForms_FormsService extends BaseApplicationComponent
             }
         }
 
+        // Restore the templates path variable to it's original value
+        craft()->path->setTemplatesPath($oldTemplatesPath);
+
         // Return field!
         if (isset($this->_fields[$form->id][$handle])) {
             return new \Twig_Markup($this->_fields[$form->id][$handle], craft()->templates->getTwig()->getCharset());
@@ -279,6 +285,9 @@ class AmForms_FormsService extends BaseApplicationComponent
         $supportedFields = craft()->amForms_fields->getSupportedFieldTypes();
         $fieldTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', $form->fieldTemplate);
         $templatePath = $fieldTemplateInfo['path'];
+
+        // Get the current templates path so we can restore it at the end of this function
+        $oldTemplatesPath = craft()->path->getTemplatesPath();
 
         foreach ($form->getFieldLayout()->getTabs() as $tab) {
             // Tab information
@@ -317,6 +326,9 @@ class AmForms_FormsService extends BaseApplicationComponent
                 ));
             }
         }
+
+        // Restore the templates path variable to it's original value
+        craft()->path->setTemplatesPath($oldTemplatesPath);
 
         // Build tab HTML
         $variables = array(

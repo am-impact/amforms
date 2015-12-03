@@ -129,7 +129,7 @@ class AmForms_SubmissionElementType extends BaseElementType
      *
      * @return array
      */
-    public function defineTableAttributes($source = null)
+    public function defineAvailableTableAttributes($source = null)
     {
         // Don't display the form's name, since the source already indicates that!
         if ($source && $source !== '*') {
