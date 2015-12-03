@@ -55,7 +55,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
             'id' => array(
                 'id' => 'id',
                 'handle' => 'id',
-                'name' => Craft::t('ID'),
+                'name' => Craft::t('id'),
                 'checked' => 0,
                 'type' => 'PlainText'
             ),
