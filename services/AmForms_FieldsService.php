@@ -38,9 +38,11 @@ class AmForms_FieldsService extends BaseApplicationComponent
             $fieldTypeGroups[$key] = $fieldType;
         }
 
-        $fieldTypeGroups['advanced'] = array('optgroup' => Craft::t('Advanced fields'));
-        foreach ($advancedFields as $key => $fieldType) {
-            $fieldTypeGroups[$key] = $fieldType;
+        if(craft()->userSession->isAdmin()) {
+            $fieldTypeGroups['advanced'] = array('optgroup' => Craft::t('Advanced fields'));
+            foreach ($advancedFields as $key => $fieldType) {
+                $fieldTypeGroups[$key] = $fieldType;
+            }
         }
 
         return $fieldTypeGroups;
