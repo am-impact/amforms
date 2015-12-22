@@ -19,15 +19,6 @@ class AmForms_RecentSubmissionsWidget extends BaseWidget
         return $name;
     }
 
-    public function getColspan()
-    {
-        // Bigger widget, if no form was chosen
-        if ($this->getSettings()->form == 0) {
-            return 2;
-        }
-        return 1;
-    }
-
     public function getBodyHtml()
     {
         // Widget settings

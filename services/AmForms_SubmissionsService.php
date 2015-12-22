@@ -270,13 +270,8 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
             $body = $this->getSubmissionEmailBody($submission);
 
             // Other email attributes
-            $subject = Craft::t($form->notificationSubject);
-            if ($form->notificationSubject) {
-                $subject = craft()->templates->renderObjectTemplate($form->notificationSubject, $submission);
-            }
-
             if ($form->notificationReplyToEmail) {
-                $replyTo = craft()->templates->renderObjectTemplate($form->notificationReplyToEmail, $submission);
+                $replyTo = $this->_translatedObjectPlusEnvironment($form->notificationReplyToEmail, $submission);
                 if (! filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
                     $replyTo = null;
                 }
@@ -288,9 +283,9 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
             // @TODO Mandrill
             $email = new EmailModel();
             $email->htmlBody = $body;
-            $email->fromEmail = $form->notificationSenderEmail;
-            $email->fromName = $form->notificationSenderName;
-            $email->subject = $subject;
+            $email->fromEmail = $this->_translatedObjectPlusEnvironment($form->notificationSenderEmail, $submission);
+            $email->fromName = $this->_translatedObjectPlusEnvironment($form->notificationSenderName, $submission);
+            $email->subject = $this->_translatedObjectPlusEnvironment($form->notificationSubject, $submission);
             if ($replyTo) {
                 $email->replyTo = $replyTo;
             }
@@ -305,7 +300,7 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
                     $properBccAddresses = array();
 
                     foreach ($bccAddresses as $bccAddress) {
-                        $bccAddress = craft()->templates->renderObjectTemplate($bccAddress, $submission);
+                        $bccAddress = $this->_translatedObjectPlusEnvironment($bccAddress, $submission);
 
                         if (filter_var($bccAddress, FILTER_VALIDATE_EMAIL)) {
                             $properBccAddresses[] = array(
@@ -346,7 +341,7 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
 
             // Send emails
             foreach ($recipients as $recipient) {
-                $email->toEmail = craft()->templates->renderObjectTemplate($recipient, $submission);
+                $email->toEmail = $this->_translatedObjectPlusEnvironment($recipient, $submission);
 
                 if (filter_var($email->toEmail, FILTER_VALIDATE_EMAIL)) {
                     // Add variable for email event
@@ -428,5 +423,27 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
     public function onEmailSubmission(Event $event)
     {
         $this->raiseEvent('onEmailSubmission', $event);
+    }
+
+    /**
+     * Parse a string through an object and environment variables.
+     *
+     * @param string $string
+     * @param mixed  $object
+     *
+     * @return string
+     */
+    private function _translatedObjectPlusEnvironment($string, $object = null)
+    {
+        // Parse through object
+        if ($object) {
+            $string = craft()->templates->renderObjectTemplate($string, $object);
+        }
+
+        // Parse through environment variables
+        $string = craft()->config->parseEnvironmentString($string);
+
+        // Return translated string
+        return Craft::t($string);
     }
 }

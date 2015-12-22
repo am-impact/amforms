@@ -113,11 +113,14 @@ class AmForms_SubmissionsController extends BaseController
             $submission->submittedFrom = craft()->request->getUrlReferrer();
 
             // Validate AntiSpam settings
-            $submission->spamFree = craft()->amForms_antispam->verify();
+            $submission->spamFree = craft()->amForms_antispam->verify($form->handle);
 
             // Redirect our spammers before reCAPTCHA can be triggered
             if (! $submission->spamFree) {
                 $this->_doRedirect($submission, false);
+            }
+            else {
+                craft()->amForms_antispam->setMarkedAsNoSpam($form->handle);
             }
 
             // Validate reCAPTCHA
@@ -151,6 +154,9 @@ class AmForms_SubmissionsController extends BaseController
 
         // Save submission
         if (craft()->amForms_submissions->saveSubmission($submission)) {
+            // Remove spam free token
+            craft()->amForms_antispam->verify($form->handle);
+
             // Notification
             if (! craft()->request->isCpRequest()) {
                 craft()->amForms_submissions->emailSubmission($submission);

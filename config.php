@@ -28,6 +28,10 @@ return array(
     ),
     'export' => array(
         array(
+            'name' => 'Delimiter',
+            'value' => ';',
+        ),
+        array(
             'name' => 'Export rows per set',
             'value' => 50,
         ),

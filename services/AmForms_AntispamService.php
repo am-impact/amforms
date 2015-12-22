@@ -7,6 +7,28 @@ namespace Craft;
 class AmForms_AntispamService extends BaseApplicationComponent
 {
     /**
+     * Check whether a form is marked as no spam.
+     *
+     * @param string $formHandle
+     *
+     * @return bool
+     */
+    public function isMarkedAsNoSpam($formHandle)
+    {
+        return $this->_verifyToken($formHandle);
+    }
+
+    /**
+     * Set a form marked as no spam.
+     *
+     * @param string $formHandle
+     */
+    public function setMarkedAsNoSpam($formHandle)
+    {
+        $this->_setToken($formHandle);
+    }
+
+    /**
      * Render AntiSpam functionality.
      *
      * @return bool|string
@@ -40,7 +62,7 @@ class AmForms_AntispamService extends BaseApplicationComponent
 
             // Duplicate check enabled?
             if ($antispamSettings['duplicateCheckEnabled']->value) {
-                $this->_renderDuplicate();
+                $this->_setToken('duplicate');
             }
 
             // Origin check enabled?
@@ -65,9 +87,11 @@ class AmForms_AntispamService extends BaseApplicationComponent
     /**
      * Verify AntiSpam submission.
      *
+     * @param string $formHandle
+     *
      * @return bool
      */
-    public function verify()
+    public function verify($formHandle)
     {
         // Get AntiSpam settings
         $antispamSettings = craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingAntispam);
@@ -82,7 +106,7 @@ class AmForms_AntispamService extends BaseApplicationComponent
             }
 
             // Time check enabled?
-            if ($antispamSettings['timeCheckEnabled']->value) {
+            if ($antispamSettings['timeCheckEnabled']->value && ! $this->isMarkedAsNoSpam($formHandle)) {
                 if (! $this->_verifyTime($antispamSettings['minimumTimeInSeconds']->value)) {
                     return false;
                 }
@@ -90,7 +114,7 @@ class AmForms_AntispamService extends BaseApplicationComponent
 
             // Duplicate check enabled?
             if ($antispamSettings['duplicateCheckEnabled']->value) {
-                if (! $this->_verifyDuplicate()) {
+                if (! $this->_verifyToken('duplicate')) {
                     return false;
                 }
             }
@@ -192,34 +216,6 @@ class AmForms_AntispamService extends BaseApplicationComponent
     }
 
     /**
-     * Render duplicate.
-     */
-    private function _renderDuplicate()
-    {
-        // Create a unique token
-        $token = uniqid();
-
-        // Create session variable
-        craft()->httpSession->add('amFormsDuplicateToken', $token);
-    }
-
-    /**
-     * Verify duplicate submission.
-     *
-     * @return bool
-     */
-    private function _verifyDuplicate()
-    {
-        if (craft()->httpSession->get('amFormsDuplicateToken')) {
-            // We got a token, so this is a valid submission
-            craft()->httpSession->remove('amFormsDuplicateToken');
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Render origin.
      *
      * @return string
@@ -254,6 +250,35 @@ class AmForms_AntispamService extends BaseApplicationComponent
         }
 
         return true;
+    }
+
+    /**
+     * Set token.
+     */
+    private function _setToken($suffix)
+    {
+        // Create a unique token
+        $token = uniqid();
+
+        // Create session variable
+        craft()->httpSession->add('amFormsToken_' . $suffix, $token);
+    }
+
+    /**
+     * Verify token.
+     *
+     * @return bool
+     */
+    private function _verifyToken($suffix)
+    {
+        $tokenName = 'amFormsToken_' . $suffix;
+        if (craft()->httpSession->get($tokenName)) {
+            // We got a token, so this is a valid submission
+            craft()->httpSession->remove($tokenName);
+            return true;
+        }
+
+        return false;
     }
 
     /**
