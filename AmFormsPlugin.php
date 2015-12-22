@@ -28,7 +28,15 @@ class AmFormsPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return '1.2.10';
+        return '1.3.0';
+    }
+
+    /**
+     * @return string
+     */
+    public function getSchemaVersion()
+    {
+        return '1.3.0';
     }
 
     /**
