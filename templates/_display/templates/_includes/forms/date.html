@@ -16,7 +16,6 @@
 
 (function ($) {
     var $datePicker = $('#fields-{{ id|namespaceInputId|e('js') }}');
-    console.log($datePicker);
     $datePicker.datepicker({
     constrainInput: false,
     dateFormat: '{{ craft.i18n.datepickerJsFormat }}',
