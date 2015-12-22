@@ -218,7 +218,9 @@ class AmForms_FormsService extends BaseApplicationComponent
         $templatePath = $fieldTemplateInfo['path'];
 
         // Get the current templates path so we can restore it at the end of this function
-        $oldTemplatesPath = craft()->path->getTemplatesPath();
+        $siteTemplatesPath = craft()->path->getTemplatesPath();
+        $pluginTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', false);
+        $pluginTemplatePath = $pluginTemplateInfo['path'];
 
         // Do we have the current form fields?
         if (! isset($this->_fields[$form->id])) {
@@ -232,7 +234,7 @@ class AmForms_FormsService extends BaseApplicationComponent
                     $field = $layoutField->getField();
 
                     // Reset templates path for input and get field input
-                    craft()->path->setTemplatesPath($templatePath);
+                    craft()->path->setTemplatesPath($pluginTemplatePath);
                     $fieldInfo = craft()->fields->populateFieldType($field, $submission);
                     $input = $fieldInfo->getInputHtml($field->handle, $submission->getFieldValue($field->handle));
                     if ($layoutField->required) {
@@ -257,7 +259,7 @@ class AmForms_FormsService extends BaseApplicationComponent
         }
 
         // Restore the templates path variable to it's original value
-        craft()->path->setTemplatesPath($oldTemplatesPath);
+        craft()->path->setTemplatesPath($siteTemplatesPath);
 
         // Return field!
         if (isset($this->_fields[$form->id][$handle])) {
@@ -287,7 +289,9 @@ class AmForms_FormsService extends BaseApplicationComponent
         $templatePath = $fieldTemplateInfo['path'];
 
         // Get the current templates path so we can restore it at the end of this function
-        $oldTemplatesPath = craft()->path->getTemplatesPath();
+        $siteTemplatesPath = craft()->path->getTemplatesPath();
+        $pluginTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', false);
+        $pluginTemplatePath = $pluginTemplateInfo['path'];
 
         foreach ($form->getFieldLayout()->getTabs() as $tab) {
             // Tab information
@@ -307,7 +311,7 @@ class AmForms_FormsService extends BaseApplicationComponent
                 }
 
                 // Reset templates path for input and get field input
-                craft()->path->setTemplatesPath($templatePath);
+                craft()->path->setTemplatesPath($pluginTemplatePath);
                 $fieldInfo = craft()->fields->populateFieldType($field, $submission);
                 $input = $fieldInfo->getInputHtml($field->handle, $submission->getFieldValue($field->handle));
                 if ($layoutField->required) {
@@ -328,7 +332,7 @@ class AmForms_FormsService extends BaseApplicationComponent
         }
 
         // Restore the templates path variable to it's original value
-        craft()->path->setTemplatesPath($oldTemplatesPath);
+        craft()->path->setTemplatesPath($siteTemplatesPath);
 
         // Build tab HTML
         $variables = array(
