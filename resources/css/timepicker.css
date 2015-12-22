@@ -1,0 +1,97 @@
+@font-face {
+    font-family: 'Craft';
+    src: url("../../fonts/Craft.eot");
+    src: url("../../fonts/Craft.eot?#iefix") format("embedded-opentype"), url("../../fonts/Craft.woff") format("woff"), url("../../fonts/Craft.ttf") format("truetype"), url("../../fonts/Craft.svg#Craft") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Timepicker */
+.ui-timepicker-wrapper {
+    z-index: 1;
+}
+
+.ui-timepicker-list {
+    overflow-y: auto;
+    width: 8em;
+    height: 210px;
+    z-index: 100;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    background: #fff;
+    list-style: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 5px 25px -5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 5px 25px -5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 5px 25px -5px rgba(0, 0, 0, 0.25);
+}
+
+body.ltr .ui-timepicker-list {
+    margin-left: 1px;
+}
+
+body.rtl .ui-timepicker-list {
+    margin-right: 1px;
+}
+
+.ui-timepicker-list li {
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+body.ltr .ui-timepicker-list li {
+    padding: 2px 0 2px 21px;
+}
+
+body.rtl .ui-timepicker-list li {
+    padding: 2px 21px 2px 0;
+}
+
+.ui-timepicker-list li:hover {
+    background: #d5d8dd;
+}
+
+.ui-timepicker-list li.ui-timepicker-selected {
+    background: #737f8c;
+    color: #fff;
+    cursor: default;
+}
+
+/* Timewrapper */
+.timewrapper {
+    display: inline-block;
+    position: relative;
+    width: 7em
+}
+
+.timewrapper:before {
+    font-family: 'Craft';
+    text-rendering: optimizeLegibility;
+    position: absolute;
+    color: #b9bfc6;
+    top: 10px;
+    font-size: 11px;
+    content: 'time';
+}
+
+.timewrapper .text {
+    width: 100%;
+}
+
+body.ltr .timewrapper .text {
+    padding-left: 22px;
+}
+
+body.rtl .timewrapper .text {
+    padding-right: 22px;
+}
+
+body.ltr .timewrapper:before {
+    left: 7px;
+}
+
+body.rtl .timewrapper:before {
+    right: 7px;
+}

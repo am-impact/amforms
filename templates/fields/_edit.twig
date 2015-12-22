@@ -79,7 +79,7 @@
 
     {{ forms.selectField({
         label: "Field Type"|t,
-        instructions: "What type of field is this?"|t ~ "<br>" ~ "<strong>Note: Basic fields are supported in the displayForm() tag.</strong>"|t,
+        instructions: "What type of field is this?"|t ~ (currentUser.admin ? ("<br>" ~ "<strong>Note: Basic fields are supported in the displayForm() tag.</strong>"|t) : ''),
         warning: (fieldId is defined ? "Changing this may result in data loss."|t),
         id: 'type',
         name: 'type',
