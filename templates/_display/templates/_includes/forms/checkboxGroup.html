@@ -2,6 +2,10 @@
 {%- set values = (values is defined ? values : []) %}
 {%- set name = (name is defined and name ? name~'[]' : null) %}
 
+{% if name is defined and name and not options|length %}
+	<input type="hidden" name="{{ name|slice(0, -2) }}" value="">
+{% endif -%}
+
 {%- for key, option in options %}
 	{%- set optionLabel = (option.label is defined ? option.label : option) %}
 	{%- set optionValue = (option.value is defined ? option.value : key) -%}
