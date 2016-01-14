@@ -78,7 +78,8 @@ class AmForms_FieldsService extends BaseApplicationComponent
         return array(
             'Entries',
             'Lightswitch',
-            'Matrix'
+            'Matrix',
+            'Table',
         );
     }
 }

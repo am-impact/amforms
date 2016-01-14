@@ -225,6 +225,7 @@ class AmForms_FormsService extends BaseApplicationComponent
         // Do we have the current form fields?
         if (! isset($this->_fields[$form->id])) {
             $this->_fields[$form->id] = array();
+            $supportedFields = craft()->amForms_fields->getSupportedFieldTypes();
 
             // Get tabs
             foreach ($form->getFieldLayout()->getTabs() as $tab) {
@@ -232,6 +233,10 @@ class AmForms_FormsService extends BaseApplicationComponent
                 foreach ($tab->getFields() as $layoutField) {
                     // Get actual field
                     $field = $layoutField->getField();
+                    if (! in_array($field->type, $supportedFields)) {
+                        // We don't display unsupported fields
+                        continue;
+                    }
 
                     // Reset templates path for input and get field input
                     craft()->path->setTemplatesPath($pluginTemplatePath);

@@ -13,6 +13,10 @@
 ] %}
 
 {% set tabs = {
+    form: {
+        label: "General"|t,
+        url: '#form'
+    },
     formfields: {
         label: "Fields"|t,
         url: '#designer'
@@ -37,30 +41,25 @@
     <input type="hidden" name="redirect" value="amforms/forms/edit/{id}">
     {% if formId is defined -%}<input type="hidden" name="formId" value="{{ formId }}">{% endif %}
 
-    <div class="grid first">
-        <div class="item first" data-position="left" data-min-colspan="2" data-max-colspan="3">
-            <div class="pane">
-                {% include "_includes/tabs" %}
+    <div class="pane">
+        {% include "_includes/tabs" %}
 
-                <div id="designer">
-                    {% include 'amforms/forms/_fields/designer' %}
-                </div>
-
-                <div id="notification" class="hidden">
-                    {% include 'amforms/forms/_fields/notifications' %}
-                </div>
-
-                {% if currentUser.admin -%}
-                    <div id="templates" class="hidden">
-                        {% include 'amforms/forms/_fields/templates' %}
-                    </div>
-                {% endif %}
-            </div>
+        <div id="form">
+            {% include 'amforms/forms/_fields/form' %}
         </div>
-        <div class="item" data-position="right" data-colspan="1">
-            <div class="pane">
-                {% include 'amforms/forms/_fields/form' %}
-            </div>
+
+        <div id="designer" class="hidden">
+            {% include 'amforms/forms/_fields/designer' %}
         </div>
+
+        <div id="notification" class="hidden">
+            {% include 'amforms/forms/_fields/notifications' %}
+        </div>
+
+        {% if currentUser.admin -%}
+            <div id="templates" class="hidden">
+                {% include 'amforms/forms/_fields/templates' %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

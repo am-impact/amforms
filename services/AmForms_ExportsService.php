@@ -799,8 +799,25 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     }
                     break;
 
+                case 'Table':
+                    if (isset($submission->$fieldHandle) && count($submission->$fieldHandle)) {
+                        $fieldExportData = array();
+                        foreach ($submission->$fieldHandle as $fieldData) {
+                            foreach ($fieldData as $columnKey => $columnValue) {
+                                if (substr($columnKey, 0, 3) == 'col' && $columnValue) {
+                                    $fieldExportData[] = $columnValue;
+                                }
+                            }
+                        }
+                        $data[] = implode(', ', $fieldExportData);
+                    }
+                    else {
+                        $data[] = '';
+                    }
+                    break;
+
                 default:
-                    $data[] = $submission->$fieldHandle;
+                    $data[] = str_replace(array("\n", "\r", "\r\n", "\n\r"), ' ', $submission->$fieldHandle);
                     break;
             }
 
