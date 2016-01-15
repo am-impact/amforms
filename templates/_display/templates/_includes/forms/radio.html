@@ -7,6 +7,7 @@
 		{%- if name is defined %} name="{{ name }}"{% endif %}
 		{%- if checked is defined and checked %} checked{% endif %}
 		{%- if autofocus is defined and autofocus and not craft.request.isMobileBrowser(true) %} autofocus{% endif %}
-		{%- if disabled is defined and disabled %} disabled{% endif %}>
+		{%- if disabled is defined and disabled %} disabled{% endif %}
+        {%- if required is defined and required %} required {% endif %}>
 	{% if label is defined %}{{ label|raw }}{% endif %}
 </label>
