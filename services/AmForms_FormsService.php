@@ -318,11 +318,10 @@ class AmForms_FormsService extends BaseApplicationComponent
                 // Reset templates path for input and get field input
                 craft()->path->setTemplatesPath($pluginTemplatePath);
                 $fieldInfo = craft()->fields->populateFieldType($field, $submission);
+
+                craft()->templates->getTwig()->addGlobal('required', $layoutField->required);
                 $input = $fieldInfo->getInputHtml($field->handle, $submission->getFieldValue($field->handle));
-                if ($layoutField->required) {
-                    $fieldId = sprintf('name="%s"', $field->handle);
-                    $input = str_replace($fieldId, $fieldId . ' required', $input);
-                }
+                craft()->templates->getTwig()->addGlobal('required', null);
 
                 // Get field HTML
                 craft()->path->setTemplatesPath($fieldTemplateInfo['path']);
