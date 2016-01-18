@@ -737,6 +737,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     break;
 
                 case 'Checkboxes':
+                case 'MultiSelect':
                     if (isset($submission->$fieldHandle) && count($submission->$fieldHandle)) {
                         $fieldExportData = array();
                         foreach ($submission->$fieldHandle as $fieldData) {
