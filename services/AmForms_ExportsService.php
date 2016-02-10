@@ -728,6 +728,12 @@ class AmForms_ExportsService extends BaseApplicationComponent
         foreach ($fields as $fieldHandle => $field) {
             switch ($field->type) {
                 case 'Assets':
+                    $fieldExportData = array();
+                    foreach ($submission->$fieldHandle->find() as $fieldData) {
+                        $fieldExportData[] = $fieldData->getUrl();
+                    }
+                    $data[] = implode(', ', $fieldExportData);
+                    break;
                 case 'Entries':
                     $fieldExportData = array();
                     foreach ($submission->$fieldHandle->find() as $fieldData) {
@@ -737,6 +743,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     break;
 
                 case 'Checkboxes':
+                case 'MultiSelect':
                     if (isset($submission->$fieldHandle) && count($submission->$fieldHandle)) {
                         $fieldExportData = array();
                         foreach ($submission->$fieldHandle as $fieldData) {

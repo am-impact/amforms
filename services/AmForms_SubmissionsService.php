@@ -327,11 +327,19 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
                         // Find assets
                         if ($field->type == 'Assets') {
                             foreach ($submission->{$field->handle}->find() as $asset) {
-                                $assetPath = craft()->amForms->getPathForAsset($asset);
+                                if($asset->source->type == 'S3'){
+                                    $file = @file_get_contents($asset->url);
+                                    // Add asset as attachment
+                                    if ($file) {
+                                        $email->addStringAttachment($file, $asset->filename);
+                                    }
+                                } else {
+                                    $assetPath = craft()->amForms->getPathForAsset($asset);
 
-                                // Add asset as attachment
-                                if (IOHelper::fileExists($assetPath . $asset->filename)) {
-                                    $email->addAttachment($assetPath . $asset->filename);
+                                    // Add asset as attachment
+                                    if (IOHelper::fileExists($assetPath . $asset->filename)) {
+                                        $email->addAttachment($assetPath . $asset->filename);
+                                    }
                                 }
                             }
                         }
