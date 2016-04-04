@@ -24,13 +24,14 @@ class AmForms_RecaptchaService extends BaseApplicationComponent
             $templatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
 
             // Build reCAPTCHA HTML
-            craft()->path->setTemplatesPath($templatePath);
+            $oldPath = method_exists(craft()->templates, 'getTemplatesPath') ? craft()->templates->getTemplatesPath() : craft()->path->getTemplatesPath();
+            method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($templatePath) : craft()->path->setTemplatesPath($templatePath);
             $html = craft()->templates->render('recaptcha', array(
                 'siteKey' => $recaptchaSettings['siteKey']->value
             ));
 
             // Reset templates path
-            craft()->path->setTemplatesPath(craft()->path->getSiteTemplatesPath());
+            method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($oldPath) : craft()->path->setTemplatesPath($oldPath);
 
             // Include Google's reCAPTCHA API
             craft()->templates->includeJsFile('https://www.google.com/recaptcha/api.js');

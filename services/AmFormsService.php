@@ -111,13 +111,14 @@ class AmFormsService extends BaseApplicationComponent
         $templateInfo = $this->getDisplayTemplateInfo($defaultTemplate, $overrideTemplate);
 
         // Override Craft template path
-        craft()->path->setTemplatesPath($templateInfo['path']);
+        $oldPath = method_exists(craft()->templates, 'getTemplatesPath') ? craft()->templates->getTemplatesPath() : craft()->path->getTemplatesPath();
+        method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($templateInfo['path']) : craft()->path->setTemplatesPath($templateInfo['path']);
 
         // Get template HTML
         $html = craft()->templates->render($templateInfo['template'], $variables);
 
         // Reset templates path
-        craft()->path->setTemplatesPath(craft()->path->getSiteTemplatesPath());
+        method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($oldPath) : craft()->path->setTemplatesPath($oldPath);
 
         // Return rendered template!
         return $html;

@@ -43,8 +43,9 @@ class AmForms_AntispamService extends BaseApplicationComponent
             $rendered = array();
 
             // Plugin's default template path
+            $oldPath = method_exists(craft()->templates, 'getTemplatesPath') ? craft()->templates->getTemplatesPath() : craft()->path->getTemplatesPath();
             $templatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/_antispam/';
-            craft()->path->setTemplatesPath($templatePath);
+            method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($templatePath) : craft()->path->setTemplatesPath($templatePath);
 
             // Honeypot enabled?
             if ($antispamSettings['honeypotEnabled']->value) {
@@ -73,7 +74,7 @@ class AmForms_AntispamService extends BaseApplicationComponent
             }
 
             // Reset templates path
-            craft()->path->setTemplatesPath(craft()->path->getSiteTemplatesPath());
+            method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($oldPath) : craft()->path->setTemplatesPath($oldPath);
 
             // Parse antispam protection
             if (count($rendered)) {
