@@ -19,6 +19,11 @@ class AmForms_RecentSubmissionsWidget extends BaseWidget
         return $name;
     }
 
+    public function getIconPath()
+    {
+        return craft()->path->getPluginsPath() . 'amforms/resources/icon.svg';
+    }
+
     public function getBodyHtml()
     {
         // Widget settings
