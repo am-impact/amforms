@@ -18,7 +18,7 @@
             <div class="form__label">
                 {% if label -%}
                     <label{% if required is defined and required %} class="required"{% endif %}{% if handle %} for="{{ handle }}"{% endif %}>
-                        {{ label|raw }}
+                        {{ label|raw|t }}
                     </label>
                 {% endif %}
                 {% if instructions -%}

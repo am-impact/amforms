@@ -33,7 +33,7 @@ class AmFormsPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return '1.3.7';
+        return '1.3.8';
     }
 
     /**
