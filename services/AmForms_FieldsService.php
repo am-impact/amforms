@@ -19,16 +19,15 @@ class AmForms_FieldsService extends BaseApplicationComponent
         $advancedFields = array();
         $fieldTypeGroups = array();
 
-        // Supported & unsupported fields
+        // Supported fields for displayForm functionality
         $supported = $this->getSupportedFieldTypes();
-        $unsupported = $this->getUnsupportedFieldTypes();
 
         // Set allowed fields
         foreach ($fieldTypes as $key => $fieldType) {
             if (in_array($key, $supported)) {
                 $basicFields[$key] = $fieldType;
             }
-            elseif (in_array($key, $unsupported)) {
+            else {
                 $advancedFields[$key] = $fieldType;
             }
         }
@@ -65,21 +64,6 @@ class AmForms_FieldsService extends BaseApplicationComponent
             'PlainText',
             'RadioButtons',
             'AmForms_Email',
-        );
-    }
-
-    /**
-     * Get unsupported field types.
-     *
-     * @return array
-     */
-    public function getUnsupportedFieldTypes()
-    {
-        return array(
-            'Entries',
-            'Lightswitch',
-            'Matrix',
-            'Table',
         );
     }
 }
