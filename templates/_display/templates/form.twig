@@ -13,6 +13,7 @@
             {{ getCsrfInput() }}
             <input type="hidden" name="action" value="{{ submitAction }}">
             <input type="hidden" name="handle" value="{{ form.handle }}">
+            <input type="hidden" name="namespace" value="{{ namespace }}">
             {% if form.redirectEntryId -%}
                 <input type="hidden" name="redirect" value="{{ form.getRedirectUrl() }}">
             {% endif -%}

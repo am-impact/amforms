@@ -84,11 +84,14 @@ class AmForms_SubmissionsController extends BaseController
         $this->requirePostRequest();
 
         // Get the form
-        $handle = craft()->request->getRequiredParam('handle');
+        $handle = craft()->request->getRequiredPost('handle');
         $form = craft()->amForms_forms->getFormByHandle($handle);
         if (! $form) {
             throw new Exception(Craft::t('No form exists with the handle “{handle}”.', array('handle' => $handle)));
         }
+
+        // Get namespace
+        $namespace = craft()->request->getPost('namespace');
 
         // Get the submission from CP?
         if (craft()->request->isCpRequest()) {
@@ -146,11 +149,20 @@ class AmForms_SubmissionsController extends BaseController
         $submission->formId = $form->id;
 
         // Set attributes
-        $fieldsLocation = craft()->request->getParam('fieldsLocation', 'fields');
+        $fieldsLocation = craft()->request->getPost('fieldsLocation', 'fields');
         $submission->ipAddress = craft()->request->getUserHostAddress();
         $submission->userAgent = craft()->request->getUserAgent();
-        $submission->setContentFromPost($fieldsLocation);
-        $submission->setContentPostLocation($fieldsLocation);
+        if ($namespace) {
+            $namespaceAttributes = craft()->request->getPost($namespace);
+            if (isset($namespaceAttributes[$fieldsLocation])) {
+                $submission->setContentFromPost($namespaceAttributes[$fieldsLocation]);
+                $submission->setContentPostLocation($namespace . '.' . $fieldsLocation);
+            }
+        }
+        else {
+            $submission->setContentFromPost($fieldsLocation);
+            $submission->setContentPostLocation($fieldsLocation);
+        }
 
         // Save submission
         if (craft()->amForms_submissions->saveSubmission($submission)) {
@@ -216,7 +228,7 @@ class AmForms_SubmissionsController extends BaseController
         $this->requireAjaxRequest();
 
         // Get the form
-        $handle = craft()->request->getRequiredParam('handle');
+        $handle = craft()->request->getRequiredPost('handle');
         $form = craft()->amForms_forms->getFormByHandle($handle);
         if (! $form) {
             throw new Exception(Craft::t('No form exists with the handle “{handle}”.', array('handle' => $handle)));
@@ -230,8 +242,8 @@ class AmForms_SubmissionsController extends BaseController
         $submission->formId = $form->id;
 
         // Set attributes
-        $fieldsLocation = craft()->request->getParam('fieldsLocation', 'fields');
-        $fieldsContent = json_decode(craft()->request->getParam($fieldsLocation), true);
+        $fieldsLocation = craft()->request->getPost('fieldsLocation', 'fields');
+        $fieldsContent = json_decode(craft()->request->getPost($fieldsLocation), true);
         $submission->ipAddress = craft()->request->getUserHostAddress();
         $submission->userAgent = craft()->request->getUserAgent();
         $submission->setContentFromPost($fieldsContent);

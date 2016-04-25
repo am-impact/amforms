@@ -213,6 +213,10 @@ class AmForms_FormsService extends BaseApplicationComponent
         // Get submission model
         $submission = craft()->amForms_submissions->getActiveSubmission($form);
 
+        // Set namespace
+        $namespace = 'form_'.StringHelper::randomString(10);
+        craft()->templates->setNamespace($namespace);
+
         // Get template path
         $fieldTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', $form->fieldTemplate);
         $templatePath = $fieldTemplateInfo['path'];
@@ -249,12 +253,14 @@ class AmForms_FormsService extends BaseApplicationComponent
                     // Get field HTML
                     method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($fieldTemplateInfo['path']) : craft()->path->setTemplatesPath($fieldTemplateInfo['path']);
                     $fieldHtml = craft()->templates->render($fieldTemplateInfo['template'], array(
-                        'form'     => $form,
-                        'field'    => $field,
-                        'input'    => $input,
-                        'required' => $layoutField->required,
-                        'element'  => $submission
+                        'form'      => $form,
+                        'field'     => $field,
+                        'input'     => $input,
+                        'required'  => $layoutField->required,
+                        'element'   => $submission,
+                        'namespace' => $namespace
                     ));
+                    $fieldHtml = craft()->templates->namespaceInputs($fieldHtml);
 
                     // Add to fields
                     $this->_fields[$form->id][$field->handle] = $fieldHtml;
@@ -264,6 +270,9 @@ class AmForms_FormsService extends BaseApplicationComponent
 
         // Restore the templates path variable to it's original value
         method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($siteTemplatesPath) : craft()->path->setTemplatesPath($siteTemplatesPath);
+
+        // Reset namespace
+        craft()->templates->setNamespace(null);
 
         // Return field!
         if (isset($this->_fields[$form->id][$handle])) {
@@ -285,6 +294,10 @@ class AmForms_FormsService extends BaseApplicationComponent
     {
         // Get submission model
         $submission = craft()->amForms_submissions->getActiveSubmission($form);
+
+        // Set namespace
+        $namespace = 'form_'.StringHelper::randomString(10);
+        craft()->templates->setNamespace($namespace);
 
         // Build field HTML
         $tabs = array();
@@ -324,13 +337,18 @@ class AmForms_FormsService extends BaseApplicationComponent
 
                 // Get field HTML
                 method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($fieldTemplateInfo['path']) : craft()->path->setTemplatesPath($fieldTemplateInfo['path']);
-                $tabs[$tab->id]['fields'][] = craft()->templates->render($fieldTemplateInfo['template'], array(
-                    'form'     => $form,
-                    'field'    => $field,
-                    'input'    => $input,
-                    'required' => $layoutField->required,
-                    'element'  => $submission
+                $fieldHtml = craft()->templates->render($fieldTemplateInfo['template'], array(
+                    'form'      => $form,
+                    'field'     => $field,
+                    'input'     => $input,
+                    'required'  => $layoutField->required,
+                    'element'   => $submission,
+                    'namespace' => $namespace
                 ));
+                $fieldHtml = craft()->templates->namespaceInputs($fieldHtml);
+
+                // Add to tabs
+                $tabs[$tab->id]['fields'][] = $fieldHtml;
             }
         }
 
@@ -357,10 +375,13 @@ class AmForms_FormsService extends BaseApplicationComponent
             'body'      => $bodyHtml,
             'antispam'  => $antispamHtml,
             'recaptcha' => $recaptchaHtml,
-            'element'   => $submission
+            'element'   => $submission,
+            'namespace' => $namespace
         );
-
         $formHtml = craft()->amForms->renderDisplayTemplate('form', $form->formTemplate, $variables);
+
+        // Reset namespace
+        craft()->templates->setNamespace(null);
 
         // Parse form
         return new \Twig_Markup($formHtml, craft()->templates->getTwig()->getCharset());
