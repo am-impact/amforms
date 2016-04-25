@@ -1,5 +1,20 @@
 [
     {
+        "version": "1.4.0",
+        "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
+        "date": "2016-04-25T10:00:00+01:00",
+        "notes": [
+            "[Added] License added.",
+            "[Added] Namespaced inputs.",
+            "[Added] While editing your form, you can quickly edit a field, with the new option in the field menu.",
+            "[Improved] Display a sub navigation while navigating through the plugin.",
+            "[Improved] Use block content rather than block main when editing a form, to follow Craft's 2.5 styling.",
+            "[Improved] The plugin no longer decides what advanced fields are. Every other Field Type that is not supported by displayField / displayForm, is listed in the advanced section now.",
+            "[Fixed] Honeypot W3C validation fix.",
+            "[Fixed] No longer create 'Name' as a new field when installing the plugin. Using 'Full name' instead."
+        ]
+    },
+    {
         "version": "1.3.8",
         "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
         "date": "2016-04-21T10:00:00+01:00",
