@@ -97,9 +97,14 @@
 
 </div>
 
-{% set js %}
+{% includeTranslations
+    'Edit field'
+%}
+{% includeJsResource 'amforms/js/FieldLayoutDesigner.js' %}
+{% includejs %}
     var initFLD = function() {
-        new Craft.FieldLayoutDesigner('#{{ "fieldlayoutform"|namespaceInputId }}', {
+        new Craft.AmFormsFieldLayoutDesigner('#{{ "fieldlayoutform"|namespaceInputId }}', {
+            editCpUrl: '{{ url('amforms/fields/edit') }}',
             customizableTabs: {{ customizableTabs ? 'true' : 'false' }},
             fieldInputName: '{{ "fieldLayout[__TAB_NAME__][]"|namespaceInputName|e("js") }}',
             requiredFieldInputName: '{{ "requiredFields[]"|namespaceInputName|e("js") }}'
@@ -127,6 +132,4 @@
         initFLD();
 
     {% endif %}
-{% endset %}
-
-{% includeJs js %}
+{% endincludejs %}
