@@ -100,7 +100,7 @@ return array(
     ),
     'fields' => array(
         array(
-            'name' => 'Name',
+            'name' => 'Full name',
             'type' => 'PlainText',
         ),
         array(
