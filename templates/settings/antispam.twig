@@ -1,7 +1,6 @@
 {% extends 'amforms/_layouts/settings' %}
 
 {% set title = 'AntiSpam'|t %}
-{% set selectedTab = 'antispam' %}
 
 {% block fields %}
     {{ forms.lightswitchField({
@@ -9,7 +8,8 @@
         id: antispam.honeypotEnabled.handle,
         name: antispam.honeypotEnabled.handle,
         on: antispam.honeypotEnabled.value,
-        instructions: 'Add a hidden field to the forms that could be filled out by spambots.'|t
+        instructions: 'Add a hidden field to the forms that could be filled out by spambots.'|t,
+        first: true
     }) }}
     {{ forms.textField({
         label: antispam.honeypotName.name|t,

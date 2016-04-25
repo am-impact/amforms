@@ -130,18 +130,9 @@ class AmFormsPlugin extends BasePlugin
             'amforms/settings' => array(
                 'action' => 'amForms/settings/index'
             ),
-            'amforms/settings/exports' => array(
-                'action' => 'amForms/settings/exports'
+            'amforms/settings/(?P<settingsType>{handle})' => array(
+                'action' => 'amForms/settings/showSettings'
             ),
-            'amforms/settings/antispam' => array(
-                'action' => 'amForms/settings/antispam'
-            ),
-            'amforms/settings/recaptcha' => array(
-                'action' => 'amForms/settings/recaptcha'
-            ),
-            'amforms/settings/templates' => array(
-                'action' => 'amForms/settings/templates'
-            )
         );
     }
 

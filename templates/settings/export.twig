@@ -1,0 +1,28 @@
+{% extends 'amforms/_layouts/settings' %}
+
+{% set title = 'Exports'|t %}
+
+{% block fields %}
+    {{ forms.textField({
+        label: export.delimiter.name|t,
+        id: export.delimiter.handle,
+        name: export.delimiter.handle,
+        value: export.delimiter.value,
+        instructions: 'Which character should be used as delimiter?'|t,
+        first: true
+    }) }}
+    {{ forms.textField({
+        label: export.exportRowsPerSet.name|t,
+        id: export.exportRowsPerSet.handle,
+        name: export.exportRowsPerSet.handle,
+        value: export.exportRowsPerSet.value,
+        instructions: 'The amount of rows per set when running the export task.'|t
+    }) }}
+    {{ forms.lightswitchField({
+        label: export.ignoreMatrixFieldAndBlockNames.name|t,
+        id: export.ignoreMatrixFieldAndBlockNames.handle,
+        name: export.ignoreMatrixFieldAndBlockNames.handle,
+        on: export.ignoreMatrixFieldAndBlockNames.value,
+        instructions: 'Don’t include the field and block names in the column name.'|t
+    }) }}
+{% endblock %}

@@ -18,63 +18,36 @@ class AmForms_SettingsController extends BaseController
     }
 
     /**
-     * Show General settings.
+     * Redirect index.
      */
     public function actionIndex()
     {
-        $variables = array(
-            'type'    => AmFormsModel::SettingGeneral,
-            'general' => craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingGeneral)
-        );
-        $this->renderTemplate('amForms/settings/index', $variables);
+        $this->redirect('amforms/settings/general');
     }
 
     /**
-     * Show Export settings.
+     * Show settings.
+     *
+     * @param array $variables
      */
-    public function actionExports()
+    public function actionShowSettings(array $variables = array())
     {
-        $variables = array(
-            'type'    => AmFormsModel::SettingExport,
-            'exports' => craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingExport)
-        );
-        $this->renderTemplate('amForms/settings/exports', $variables);
-    }
+        // Do we have a settings type?
+        if (! isset($variables['settingsType'])) {
+            throw new Exception(Craft::t('Settings type is not set.'));
+        }
+        $settingsType = $variables['settingsType'];
 
-    /**
-     * Show AntiSpam settings.
-     */
-    public function actionAntispam()
-    {
-        $variables = array(
-            'type'     => AmFormsModel::SettingAntispam,
-            'antispam' => craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingAntispam)
-        );
-        $this->renderTemplate('amForms/settings/antispam', $variables);
-    }
+        // Do we have any settings?
+        $settings = craft()->amForms_settings->getAllSettingsByType($settingsType);
+        if (! $settings) {
+            throw new Exception(Craft::t('There are no settings available for settings type “{type}”.', array('type' => $settingsType)));
+        }
 
-    /**
-     * Show reCAPTCHA settings.
-     */
-    public function actionRecaptcha()
-    {
-        $variables = array(
-            'type'      => AmFormsModel::SettingRecaptcha,
-            'recaptcha' => craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingRecaptcha)
-        );
-        $this->renderTemplate('amForms/settings/recaptcha', $variables);
-    }
-
-    /**
-     * Show Templates settings.
-     */
-    public function actionTemplates()
-    {
-        $variables = array(
-            'type'      => AmFormsModel::SettingsTemplatePaths,
-            'templates' => craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingsTemplatePaths)
-        );
-        $this->renderTemplate('amForms/settings/templates', $variables);
+        // Show settings!
+        $variables['type'] = $settingsType;
+        $variables[$settingsType] = $settings;
+        $this->renderTemplate('amForms/settings/' . $settingsType, $variables);
     }
 
     /**

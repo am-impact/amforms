@@ -1,7 +1,6 @@
 {% extends 'amforms/_layouts/settings' %}
 
 {% set title = 'General'|t %}
-{% set selectedTab = 'general' %}
 
 {% block fields %}
     {{ forms.textField({
@@ -9,7 +8,8 @@
         id: general.pluginName.handle,
         name: general.pluginName.handle,
         value: general.pluginName.value,
-        instructions: 'Plugin name for the end user.'|t
+        instructions: 'Plugin name for the end user.'|t,
+        first: true
     }) }}
     {{ forms.lightswitchField({
         label: general.quietErrors.name|t,

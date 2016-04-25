@@ -1,4 +1,4 @@
-{% extends '_layouts/cp' %}
+{% extends 'amforms/_layouts/cp' %}
 
 {% set fullPageForm = true %}
 
@@ -10,13 +10,29 @@
     { label: title, url: '#' }
 ] %}
 
-{% set tabs = {
-    general: { label: 'General'|t, url: url('amforms/settings') },
-    exports: { label: 'Exports'|t, url: url('amforms/settings/exports') },
-    antispam: { label: 'AntiSpam'|t, url: url('amforms/settings/antispam') },
-    recaptcha: { label: 'reCAPTCHA'|t, url: url('amforms/settings/recaptcha') },
-    templates: { label: 'Templates'|t, url: url('amforms/settings/templates') }
+{% set navItems = {
+    'general': { title: "General"|t },
+    'export': { title: "Exports"|t },
+    'antispam': { title: "AntiSpam"|t },
+    'recaptcha': { title: "reCAPTCHA"|t },
+    'templates': { title: "Templates"|t }
 } %}
+{% set selectedItem = craft.request.getSegment(3) %}
+{% set title = navItems[selectedItem].title %}
+
+{% block sidebar %}
+    <nav>
+        <ul>
+            {% for id, item in navItems %}
+                {% if item.heading is defined %}
+                    <li class="heading"><span>{{ item.heading }}</span></li>
+                {% else %}
+                    <li><a href="{{ url('amforms/settings/' ~ id) }}"{% if id == selectedItem %} class="sel"{% endif %}>{{ item.title }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+{% endblock %}
 
 {% block content %}
     <input type="hidden" name="settingsType" value="{{ type }}">

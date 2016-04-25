@@ -1,7 +1,6 @@
 {% extends 'amforms/_layouts/settings' %}
 
 {% set title = 'reCAPTCHA'|t %}
-{% set selectedTab = 'recaptcha' %}
 
 {% block fields %}
     {{ forms.lightswitchField({
@@ -9,7 +8,8 @@
         id: recaptcha.googleRecaptchaEnabled.handle,
         name: recaptcha.googleRecaptchaEnabled.handle,
         on: recaptcha.googleRecaptchaEnabled.value,
-        instructions: 'Use Google reCAPTCHA in forms.'|t
+        instructions: 'Use Google reCAPTCHA in forms.'|t,
+        first: true
     }) }}
     {{ forms.textField({
         label: recaptcha.siteKey.name|t,

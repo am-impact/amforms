@@ -1,7 +1,6 @@
 {% extends 'amforms/_layouts/settings' %}
 
 {% set title = 'Templates'|t %}
-{% set selectedTab = 'templates' %}
 
 {% block fields %}
     {{ forms.textField({
@@ -10,7 +9,8 @@
         name: templates.formTemplate.handle,
         value: templates.formTemplate.value,
         placeholder: '_amforms/form',
-        instructions: 'Override default template with your own template. Enter the folder (with template), e.g.: {template}'|t({'template': '_amforms'})
+        instructions: 'Override default template with your own template. Enter the folder (with template), e.g.: {template}'|t({'template': '_amforms'}),
+        first: true
     }) }}
 
     {{ forms.textField({
