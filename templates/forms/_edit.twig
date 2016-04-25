@@ -36,30 +36,26 @@
     }) %}
 {% endif %}
 
-{% block main %}
+{% block content %}
     <input type="hidden" name="action" value="amForms/forms/saveForm">
     <input type="hidden" name="redirect" value="amforms/forms/edit/{id}">
     {% if formId is defined -%}<input type="hidden" name="formId" value="{{ formId }}">{% endif %}
 
-    <div class="pane">
-        {% include "_includes/tabs" %}
-
-        <div id="form">
-            {% include 'amforms/forms/_fields/form' %}
-        </div>
-
-        <div id="designer" class="hidden">
-            {% include 'amforms/forms/_fields/designer' %}
-        </div>
-
-        <div id="notification" class="hidden">
-            {% include 'amforms/forms/_fields/notifications' %}
-        </div>
-
-        {% if currentUser.admin -%}
-            <div id="templates" class="hidden">
-                {% include 'amforms/forms/_fields/templates' %}
-            </div>
-        {% endif %}
+    <div id="form">
+        {% include 'amforms/forms/_fields/form' %}
     </div>
+
+    <div id="designer" class="hidden">
+        {% include 'amforms/forms/_fields/designer' %}
+    </div>
+
+    <div id="notification" class="hidden">
+        {% include 'amforms/forms/_fields/notifications' %}
+    </div>
+
+    {% if currentUser.admin -%}
+        <div id="templates" class="hidden">
+            {% include 'amforms/forms/_fields/templates' %}
+        </div>
+    {% endif %}
 {% endblock %}
