@@ -69,6 +69,15 @@ This will only display basic fields!
 {{ form.displayField('fieldHandle') }}
 ```
 
+### Simple field tag (using a namespace)
+
+```
+{% set form = craft.amForms.getForm('formHandle') %}
+<input type="hidden" name="namespace" value="{{ form.getNamespace() }}">
+
+{{ form.displayField('fieldHandle') }}
+```
+
 ### Custom HTML
 
 ```
@@ -109,6 +118,9 @@ This will only display basic fields!
 
     {# Insert your form's handle. #}
     <input type="hidden" name="handle" value="{{ form.handle }}">
+
+    {# This will namespace your inputs (for IDs and such), but it's not required though #}
+    <input type="hidden" name="namespace" value="{{ form.getNamespace() }}">
 
     {# Optional: Anti-spam protection. #}
     {{ craft.amForms.displayAntispam() }}

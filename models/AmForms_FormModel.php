@@ -132,6 +132,16 @@ class AmForms_FormModel extends BaseElementModel
     }
 
     /**
+     * Get a namespace for this form.
+     *
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return craft()->amForms_forms->getNamespaceForForm($this);
+    }
+
+    /**
      * Display a field.
      *
      * @param string $handle

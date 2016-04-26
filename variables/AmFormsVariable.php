@@ -128,6 +128,18 @@ class AmFormsVariable
     }
 
     /**
+     * Get a namespace for a form.
+     *
+     * @param AmForms_FormModel $form
+     *
+     * @return string
+     */
+    public function getNamespaceForForm(AmForms_FormModel $form)
+    {
+        return craft()->amForms_forms->getNamespaceForForm($form);
+    }
+
+    /**
      * Get a form by its handle.
      *
      * @param string $handle

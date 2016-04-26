@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.4.1",
+        "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
+        "date": "2016-04-26T10:00:00+01:00",
+        "notes": [
+            "[Added] Get a namespace for your form, using `form.getNamespace()`.",
+            "[Improved] Updated README with examples for getting a namespace when using displayField.",
+            "[Fixed] Don't namespace the form fields automatically when using displayField."
+        ]
+    },
+    {
         "version": "1.4.0",
         "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
         "date": "2016-04-25T10:00:00+01:00",

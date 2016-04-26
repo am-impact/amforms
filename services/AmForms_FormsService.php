@@ -7,6 +7,7 @@ namespace Craft;
 class AmForms_FormsService extends BaseApplicationComponent
 {
     private $_fields = array();
+    private $_namespaces = array();
 
     /**
      * Returns a criteria model for AmForms_Form elements.
@@ -201,6 +202,23 @@ class AmForms_FormsService extends BaseApplicationComponent
     }
 
     /**
+     * Get a namespace for a form.
+     *
+     * @param AmForms_FormModel $form
+     * @param bool              $createNewOnEmpty
+     *
+     * @return false|string
+     */
+    public function getNamespaceForForm(AmForms_FormModel $form, $createNewOnEmpty = true)
+    {
+        if (! isset($this->_namespaces[ $form->id ]) && $createNewOnEmpty) {
+            $this->_namespaces[ $form->id ] = 'form_'.StringHelper::randomString(10);
+        }
+
+        return isset($this->_namespaces[ $form->id ]) ? $this->_namespaces[ $form->id ] : false;
+    }
+
+    /**
      * Display a field.
      *
      * @param AmForms_FormModel $form
@@ -213,9 +231,11 @@ class AmForms_FormsService extends BaseApplicationComponent
         // Get submission model
         $submission = craft()->amForms_submissions->getActiveSubmission($form);
 
-        // Set namespace
-        $namespace = 'form_'.StringHelper::randomString(10);
-        craft()->templates->setNamespace($namespace);
+        // Set namespace, if one was set
+        $namespace = $this->getNamespaceForForm($form, false);
+        if ($namespace) {
+            craft()->templates->setNamespace($namespace);
+        }
 
         // Get template path
         $fieldTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', $form->fieldTemplate);
@@ -260,7 +280,9 @@ class AmForms_FormsService extends BaseApplicationComponent
                         'element'   => $submission,
                         'namespace' => $namespace
                     ));
-                    $fieldHtml = craft()->templates->namespaceInputs($fieldHtml);
+                    if ($namespace) {
+                        $fieldHtml = craft()->templates->namespaceInputs($fieldHtml);
+                    }
 
                     // Add to fields
                     $this->_fields[$form->id][$field->handle] = $fieldHtml;
@@ -272,7 +294,9 @@ class AmForms_FormsService extends BaseApplicationComponent
         method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($siteTemplatesPath) : craft()->path->setTemplatesPath($siteTemplatesPath);
 
         // Reset namespace
-        craft()->templates->setNamespace(null);
+        if ($namespace) {
+            craft()->templates->setNamespace(null);
+        }
 
         // Return field!
         if (isset($this->_fields[$form->id][$handle])) {
