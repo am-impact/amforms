@@ -33,7 +33,7 @@ class AmFormsPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return '1.4.1';
+        return '1.4.2';
     }
 
     /**
@@ -41,7 +41,7 @@ class AmFormsPlugin extends BasePlugin
      */
     public function getSchemaVersion()
     {
-        return '1.3.4';
+        return '1.4.2';
     }
 
     /**

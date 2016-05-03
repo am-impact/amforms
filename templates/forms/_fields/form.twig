@@ -25,6 +25,16 @@
     </div>
 {% endif %}
 <hr>
+{{ forms.lightswitchField({
+    label: 'Display tab titles'|t,
+    id: 'displayTabTitles',
+    name: 'displayTabTitles',
+    on: form.displayTabTitles,
+    onLabel: 'Enable'|t,
+    offLabel: 'Disable'|t,
+    errors: form.getErrors('displayTabTitles'),
+    instructions: 'Whether to display the title of the tabs, above the fields.'|t
+}) }}
 {{ forms.textField({
     label: 'Custom submit button text'|t,
     id: 'submitButton',
