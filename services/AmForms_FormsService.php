@@ -243,8 +243,7 @@ class AmForms_FormsService extends BaseApplicationComponent
 
         // Get the current templates path so we can restore it at the end of this function
         $siteTemplatesPath = method_exists(craft()->templates, 'getTemplatesPath') ? craft()->templates->getTemplatesPath() : craft()->path->getTemplatesPath();
-        $pluginTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', false);
-        $pluginTemplatePath = $pluginTemplateInfo['path'];
+        $pluginTemplatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
 
         // Do we have the current form fields?
         if (! isset($this->_fields[$form->id])) {
@@ -331,8 +330,7 @@ class AmForms_FormsService extends BaseApplicationComponent
 
         // Get the current templates path so we can restore it at the end of this function
         $siteTemplatesPath = method_exists(craft()->templates, 'getTemplatesPath') ? craft()->templates->getTemplatesPath() : craft()->path->getTemplatesPath();
-        $pluginTemplateInfo = craft()->amForms->getDisplayTemplateInfo('field', false);
-        $pluginTemplatePath = $pluginTemplateInfo['path'];
+        $pluginTemplatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
 
         foreach ($form->getFieldLayout()->getTabs() as $tab) {
             // Tab information
