@@ -4,5 +4,10 @@
     <input type="text" id="{{ fieldName }}" name="{{ fieldName }}" value="">
 </div>
 <script>
-    document.querySelector('.{{ fieldName }}__wrapper').style.display = 'none';
+    (function() {
+        var $yoursinces = document.querySelectorAll('.{{ fieldName }}__wrapper');
+        for (var i = 0; i < $yoursinces.length; i++) {
+            $yoursinces[i].style.display = 'none';
+        }
+    })();
 </script>
