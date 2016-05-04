@@ -17,6 +17,9 @@
             {% if form.redirectEntryId -%}
                 <input type="hidden" name="redirect" value="{{ form.getRedirectUrl() }}">
             {% endif -%}
+            {% if element.id %}
+                <input type="hidden" name="submissionId" value="{{ element.id }}">
+            {% endif %}
 
             {%- if antispam -%}
                 {{ antispam }}

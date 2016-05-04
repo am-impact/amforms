@@ -80,13 +80,64 @@ class AmFormsVariable
     /**
      * Get a submission by its ID.
      *
-     * @param int $id
+     * @param int  $id
+     * @param bool $setAsActive [Optional] Set as active submission, for editing purposes.
      *
      * @return AmForms_SubmissionModel|null
      */
-    public function getSubmissionById($id)
+    public function getSubmissionById($id, $setAsActive = false)
     {
+        if ($setAsActive) {
+            // Get the submission
+            $submission = $this->getSubmissionById($id);
+            if (! $submission) {
+                craft()->amForms->handleError(Craft::t('No submission exists with the ID “{id}”.', array('id' => $id)));
+                return false;
+            }
+
+            // Get the form
+            $form = $submission->getForm();
+            if (! $form) {
+                craft()->amForms->handleError(Craft::t('No form exists with the ID “{id}”.', array('id' => $submission->formId)));
+                return false;
+            }
+
+            // Set active submission
+            craft()->amForms_submissions->setActiveSubmission($submission);
+
+            return $submission;
+        }
         return craft()->amForms_submissions->getSubmissionById($id);
+    }
+
+    /**
+     * Display a submission to edit and save it.
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    public function displaySubmission($id)
+    {
+        // Get the submission
+        $submission = $this->getSubmissionById($id);
+        if (! $submission) {
+            craft()->amForms->handleError(Craft::t('No submission exists with the ID “{id}”.', array('id' => $id)));
+            return false;
+        }
+
+        // Get the form
+        $form = $submission->getForm();
+        if (! $form) {
+            craft()->amForms->handleError(Craft::t('No form exists with the ID “{id}”.', array('id' => $submission->formId)));
+            return false;
+        }
+
+        // Set active submission
+        craft()->amForms_submissions->setActiveSubmission($submission);
+
+        // Display the edit form!
+        return craft()->amForms_forms->displayForm($form);
     }
 
 
