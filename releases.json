@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.4.2",
+        "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
+        "date": "2016-05-04T10:00:00+01:00",
+        "notes": [
+            "[Added] Added display tab titles option for forms.",
+            "[Fixed] Fixed namespacing for asset fields.",
+            "[Fixed] Fixed overwriting field template."
+        ]
+    },
+    {
         "version": "1.4.1",
         "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
         "date": "2016-04-26T10:00:00+01:00",
