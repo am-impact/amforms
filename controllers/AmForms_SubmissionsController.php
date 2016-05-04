@@ -93,13 +93,11 @@ class AmForms_SubmissionsController extends BaseController
         // Get namespace
         $namespace = craft()->request->getPost('namespace');
 
-        // Get the submission from CP?
-        if (craft()->request->isCpRequest()) {
-            $submissionId = craft()->request->getPost('submissionId');
-        }
+        // Get the submission? Are we editing one?
+        $submissionId = craft()->request->getPost('submissionId');
 
         // Get the submission
-        if (isset($submissionId)) {
+        if ($submissionId) {
             $submission = craft()->amForms_submissions->getSubmissionById($submissionId);
 
             if (! $submission) {
@@ -169,8 +167,8 @@ class AmForms_SubmissionsController extends BaseController
             // Remove spam free token
             craft()->amForms_antispam->verify($form->handle);
 
-            // Notification
-            if (! craft()->request->isCpRequest()) {
+            // Notification for new submissions
+            if (! craft()->request->isCpRequest() && ! $submissionId) {
                 craft()->amForms_submissions->emailSubmission($submission);
             }
 
