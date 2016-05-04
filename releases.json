@@ -5,6 +5,9 @@
         "date": "2016-05-04T10:00:00+01:00",
         "notes": [
             "[Added] Added display tab titles option for forms.",
+            "[Added] Added template functions to quickly edit submissions on front-end.",
+            "[Fixed] Fixed honeypot when displaying multiple forms on a page.",
+            "[Fixed] Fixed saving submissions for editing on front-end.",
             "[Fixed] Fixed namespacing for asset fields.",
             "[Fixed] Fixed overwriting field template."
         ]
