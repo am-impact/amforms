@@ -155,13 +155,13 @@ class AmForms_SubmissionsController extends BaseController
         if ($namespace) {
             $namespaceAttributes = craft()->request->getPost($namespace);
             if (isset($namespaceAttributes[$fieldsLocation])) {
-                $submission->setContentFromPost($namespaceAttributes[$fieldsLocation]);
                 $submission->setContentPostLocation($namespace . '.' . $fieldsLocation);
+                $submission->setContentFromPost($namespaceAttributes[$fieldsLocation]);
             }
         }
         else {
-            $submission->setContentFromPost($fieldsLocation);
             $submission->setContentPostLocation($fieldsLocation);
+            $submission->setContentFromPost($fieldsLocation);
         }
 
         // Save submission
