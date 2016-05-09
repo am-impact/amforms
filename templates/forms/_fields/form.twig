@@ -80,6 +80,15 @@
     errors: form.getErrors('redirectEntryId'),
     instructions: 'Where to redirect to upon form submission.'|t
 }) }}
+{{ forms.textField({
+    label: 'Custom redirect URL'|t,
+    id: 'redirectUrl',
+    name: 'redirectUrl',
+    value: form.redirectUrl,
+    errors: form.getErrors('redirectUrl'),
+    instructions: 'Where to redirect to upon form submission.'|t,
+    placeholder: 'http://www.domain.com/return-here'
+}) }}
 <hr>
 {{ forms.lightswitchField({
     label: 'Save submissions'|t,
