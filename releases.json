@@ -5,7 +5,8 @@
         "date": "2016-05-09T10:00:00+01:00",
         "notes": [
             "[Added] Added custom redirect URL for forms.",
-            "[Added] Added a link in the Field Layout Designer, to quickly add a new field."
+            "[Added] Added a link in the Field Layout Designer, to quickly add a new field.",
+            "[Fixed] Fixed sending the form data to a custom submit action."
         ]
     },
     {
