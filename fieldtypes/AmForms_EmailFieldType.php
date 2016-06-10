@@ -16,6 +16,18 @@ class AmForms_EmailFieldType extends BaseFieldType
     {
         return Craft::t('E-mail');
     }
+    
+    /**
+    * @inheritDoc ISavableComponentType::getSettingsHtml()
+    *
+    * @return string|null
+    */
+    public function getSettingsHtml()
+    {
+        return craft()->templates->render('amforms/_display/templates/_components/fieldtypes/PlainText/settings', array(
+          'settings' => $this->getSettings()
+        ));
+    }
 
     /**
      * @inheritDoc IFieldType::defineContentAttribute()
