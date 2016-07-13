@@ -4,27 +4,26 @@
     {%- set submitValue = (form.submitButton ? form.submitButton : 'Submit'|t) -%}
     {%- set submitAction = (form.submitAction ? form.submitAction : 'amForms/submissions/saveSubmission') -%}
 
-    <form class="form form--{{ form.handle }}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
-        {% if form.submitAction -%}
-            {# Submit form to third party #}
-            <input type="hidden" name="action" value="{{ submitAction }}">
-        {% else -%}
-            {# Submit form to Am Forms #}
+    <form class="form form--{{ form.handle }}" method="post" accept-charset="utf-8" enctype="multipart/form-data"{% if form.submitAction|length %} action="{{ submitAction }}"{% endif %}>
+        {# Only CSRF protection, when we stay on this site #}
+        {% if not form.submitAction|length -%}
             {{ getCsrfInput() }}
-            <input type="hidden" name="action" value="{{ submitAction }}">
-            <input type="hidden" name="handle" value="{{ form.handle }}">
-            <input type="hidden" name="namespace" value="{{ namespace }}">
-            {% if form.redirectEntryId -%}
-                <input type="hidden" name="redirect" value="{{ form.getRedirectUrl() }}">
-            {% endif -%}
-            {% if element.id %}
-                <input type="hidden" name="submissionId" value="{{ element.id }}">
-            {% endif %}
+        {% endif -%}
 
-            {%- if antispam -%}
-                {{ antispam }}
-            {% endif -%}
+        <input type="hidden" name="action" value="{{ submitAction }}">
+        <input type="hidden" name="handle" value="{{ form.handle }}">
+        <input type="hidden" name="namespace" value="{{ namespace }}">
+        {% if form.redirectEntryId -%}
+            <input type="hidden" name="redirect" value="{{ form.getRedirectUrl() }}">
+        {% elseif form.redirectUrl|length %}
+            <input type="hidden" name="redirect" value="{{ form.redirectUrl }}">
+        {% endif -%}
+        {% if element.id %}
+            <input type="hidden" name="submissionId" value="{{ element.id }}">
+        {% endif %}
 
+        {%- if antispam -%}
+            {{ antispam }}
         {% endif -%}
 
         {{ body|raw }}

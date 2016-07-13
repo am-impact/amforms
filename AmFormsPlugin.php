@@ -33,7 +33,7 @@ class AmFormsPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return '1.4.2';
+        return '1.4.3';
     }
 
     /**
@@ -41,7 +41,7 @@ class AmFormsPlugin extends BasePlugin
      */
     public function getSchemaVersion()
     {
-        return '1.4.2';
+        return '1.4.3';
     }
 
     /**
@@ -184,5 +184,21 @@ class AmFormsPlugin extends BasePlugin
 
         // Delete content table
         craft()->db->createCommand()->dropTable('amforms_content');
+    }
+
+    /**
+     * Add a&m flow event services.
+     *
+     * @return array
+     */
+    public function addFlowEventServices()
+    {
+        return array(
+            array(
+                'name' => Craft::t('Submissions'),
+                'service' => 'amForms_submissions',
+                'model' => 'AmForms_SubmissionModel',
+            )
+        );
     }
 }

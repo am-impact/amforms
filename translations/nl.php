@@ -49,6 +49,7 @@ return array(
     'Couldn’t save settings.' => 'Kon de instellingen niet opslaan.',
     'Couldn’t save submission.' => 'Kon de inzending niet opslaan.',
     'Criteria' => 'Criteria',
+    'Custom redirect URL' => 'Aangepaste redirect URL',
     'Custom submit action URL' => 'Aangepaste verzendknop (actie) URL',
     'Custom submit button text' => 'Aangepaste verzendknop tekst',
     'Custom text after submit' => 'Aangepaste tekst na inzending',

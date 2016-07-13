@@ -40,6 +40,7 @@ class AmForms_FormModel extends BaseElementModel
             'afterSubmitText'          => AttributeType::Mixed,
             'submissionEnabled'        => array(AttributeType::Bool, 'default' => true),
             'displayTabTitles'         => array(AttributeType::Bool, 'default' => false),
+            'redirectUrl'              => AttributeType::String,
             'sendCopy'                 => array(AttributeType::Bool, 'default' => false),
             'sendCopyTo'               => AttributeType::String,
             'notificationEnabled'      => array(AttributeType::Bool, 'default' => true),

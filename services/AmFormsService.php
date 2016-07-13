@@ -70,24 +70,18 @@ class AmFormsService extends BaseApplicationComponent
         // Is the override template set?
         if ($overrideTemplate) {
             // Is the value a folder, or folder with template?
-            $pathParts = explode(DIRECTORY_SEPARATOR, $overrideTemplate);
             $templateFile = craft()->path->getSiteTemplatesPath() . $overrideTemplate;
-            if (count($pathParts) < 2) {
-                // Seems we only have a folder that will use the default template name
-                $templateFile .= DIRECTORY_SEPARATOR . $defaultTemplate;
+            if (is_dir($templateFile)) {
+                // Only a folder was given, so still the default template template
+                $templatePath = $templateFile;
             }
-
-            // Try to find the template for each available template extension
-            foreach (craft()->config->get('defaultTemplateExtensions') as $extension) {
-                if (IOHelper::fileExists($templateFile . '.' . $extension)) {
-                    if (count($pathParts) > 1) {
-                        // We set a specific template
+            else {
+                // Try to find the template for each available template extension
+                foreach (craft()->config->get('defaultTemplateExtensions') as $extension) {
+                    if (IOHelper::fileExists($templateFile . '.' . $extension)) {
+                        $pathParts = explode(DIRECTORY_SEPARATOR, $overrideTemplate);
                         $defaultTemplate = $pathParts[ (count($pathParts) - 1) ];
-                        $templatePath = craft()->path->getSiteTemplatesPath() . str_replace(DIRECTORY_SEPARATOR . $defaultTemplate, '', implode(DIRECTORY_SEPARATOR, $pathParts));
-                    }
-                    else {
-                        // Only a folder was given, so still the default template template
-                        $templatePath = craft()->path->getSiteTemplatesPath() . $overrideTemplate;
+                        $templatePath = craft()->path->getSiteTemplatesPath() . implode(DIRECTORY_SEPARATOR, array_slice($pathParts, 0, (count($pathParts) - 1)));
                     }
                 }
             }
