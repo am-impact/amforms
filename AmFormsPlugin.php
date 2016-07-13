@@ -185,4 +185,20 @@ class AmFormsPlugin extends BasePlugin
         // Delete content table
         craft()->db->createCommand()->dropTable('amforms_content');
     }
+
+    /**
+     * Add a&m flow event services.
+     *
+     * @return array
+     */
+    public function addFlowEventServices()
+    {
+        return array(
+            array(
+                'name' => Craft::t('Submissions'),
+                'service' => 'amForms_submissions',
+                'model' => 'AmForms_SubmissionModel',
+            )
+        );
+    }
 }
