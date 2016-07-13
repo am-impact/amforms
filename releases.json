@@ -6,6 +6,7 @@
         "notes": [
             "[Added] Added custom redirect URL for forms.",
             "[Added] Added a link in the Field Layout Designer, to quickly add a new field.",
+            "[Fixed] Fixed the way a custom template is being searched for.",
             "[Fixed] Fixed sending the form data to a custom submit action."
         ]
     },
