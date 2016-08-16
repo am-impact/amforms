@@ -39,6 +39,10 @@ return array(
             'name' => 'Ignore Matrix field and block names',
             'value' => false,
         ),
+        array(
+            'name' => 'Ignore Matrix multiple rows',
+            'value' => false,
+        ),
     ),
     'antispam' => array(
         array(

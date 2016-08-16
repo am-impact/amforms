@@ -25,4 +25,11 @@
         on: export.ignoreMatrixFieldAndBlockNames.value,
         instructions: 'Don’t include the field and block names in the column name.'|t
     }) }}
+    {{ forms.lightswitchField({
+        label: export.ignoreMatrixMultipleRows.name|t,
+        id: export.ignoreMatrixMultipleRows.handle,
+        name: export.ignoreMatrixMultipleRows.handle,
+        on: export.ignoreMatrixMultipleRows.value,
+        instructions: 'Don’t place multiple block types on multiple rows. You need to be sure that block types will not be used more than once.'|t
+    }) }}
 {% endblock %}
