@@ -111,7 +111,7 @@ class AmForms_SubmissionsController extends BaseController
         // Front-end submission, trigger AntiSpam or reCAPTCHA?
         if (! craft()->request->isCpRequest()) {
             // Where was this submission submitted?
-            $submission->submittedFrom = craft()->request->getUrlReferrer();
+            $submission->submittedFrom = urldecode(craft()->request->getUrlReferrer());
 
             // Validate AntiSpam settings
             $submission->spamFree = craft()->amForms_antispam->verify($form->handle);
