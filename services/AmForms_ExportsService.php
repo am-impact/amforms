@@ -7,6 +7,7 @@ namespace Craft;
 class AmForms_ExportsService extends BaseApplicationComponent
 {
     private $_delimiter;
+    private $_ignoreMatrixMultipleRows;
     private $_exportFiles = array();
     private $_exportFields = array();
     private $_exportColumns = array();
@@ -15,6 +16,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
     public function __construct()
     {
         $this->_delimiter = craft()->amForms_settings->getSettingsValueByHandleAndType('delimiter', AmFormsModel::SettingExport, ';');
+        $this->_ignoreMatrixMultipleRows = craft()->amForms_settings->isSettingValueEnabled('ignoreMatrixMultipleRows', AmFormsModel::SettingExport);
     }
 
     /**
@@ -778,25 +780,31 @@ class AmForms_ExportsService extends BaseApplicationComponent
                             $startFrom = $this->_exportColumns[$export->id][$fieldHandle . ':' . $matrixBlockType->handle];
 
                             // Multiple blocks?
-                            if (count($matrixBlocks) > 1 && $blockCounter > 0) {
+                            if (count($matrixBlocks) > 1 && $blockCounter > 0 && ! $this->_ignoreMatrixMultipleRows) {
                                 $hasMoreRows = true;
                                 $moreRowsData[$startFrom][] = $blockData;
                             }
                             else {
-                                // Empty cells till we've reached the block type
-                                for ($i = 0; $i < ($startFrom - $columnCounter); $i++) {
-                                    $data[] = '';
+                                if (! $this->_ignoreMatrixMultipleRows) {
+                                    // Empty cells till we've reached the block type
+                                    for ($i = 0; $i < ($startFrom - $columnCounter); $i++) {
+                                        $data[] = '';
+                                    }
                                 }
+
                                 // We just have one block or we are adding the first block
                                 $spaceCounter = 0;
                                 foreach ($blockData as $blockValue) {
                                     $data[] = $blockValue;
                                     $spaceCounter ++;
                                 }
-                                // Empty cells till we've reached the next field, if necessary
-                                if ($startFrom == $columnCounter) {
-                                    for ($i = 0; $i < ($this->_exportSpaceCounter[$export->id][$fieldHandle] - $spaceCounter); $i++) {
-                                        $data[] = '';
+
+                                if (! $this->_ignoreMatrixMultipleRows) {
+                                    // Empty cells till we've reached the next field, if necessary
+                                    if ($startFrom == $columnCounter) {
+                                        for ($i = 0; $i < ($this->_exportSpaceCounter[$export->id][$fieldHandle] - $spaceCounter); $i++) {
+                                            $data[] = '';
+                                        }
                                     }
                                 }
                             }

@@ -250,103 +250,94 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
             return false;
         }
 
-        // Overridden recipients skips before email event, so by default, send the email!
-        $sendEmail = true;
+        // Get email body
+        $body = $this->getSubmissionEmailBody($submission);
 
-        // Fire an 'onBeforeEmailSubmission' event
-        if ($overrideRecipients === false) {
-            $event = new Event($this, array(
-                'submission' => $submission
-            ));
-            $this->onBeforeEmailSubmission($event);
-
-            // Override sendEmail
-            $sendEmail = $event->performAction;
+        // Other email attributes
+        if ($form->notificationReplyToEmail) {
+            $replyTo = $this->_translatedObjectPlusEnvironment($form->notificationReplyToEmail, $submission);
+            if (! filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
+                $replyTo = null;
+            }
         }
 
-        // Is the event giving us the go-ahead?
-        if ($sendEmail) {
-            // Get email body
-            $body = $this->getSubmissionEmailBody($submission);
+        // Start mailing!
+        $success = false;
+        $email = new EmailModel();
+        $email->htmlBody = $body;
+        $email->fromEmail = $this->_translatedObjectPlusEnvironment($form->notificationSenderEmail, $submission);
+        $email->fromName = $this->_translatedObjectPlusEnvironment($form->notificationSenderName, $submission);
+        $email->subject = $this->_translatedObjectPlusEnvironment($form->notificationSubject, $submission);
+        if ($replyTo) {
+            $email->replyTo = $replyTo;
+        }
 
-            // Other email attributes
-            if ($form->notificationReplyToEmail) {
-                $replyTo = $this->_translatedObjectPlusEnvironment($form->notificationReplyToEmail, $submission);
-                if (! filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
-                    $replyTo = null;
-                }
-            }
+        // Add Bcc?
+        $bccEmailAddress = craft()->amForms_settings->getSettingsByHandleAndType('bccEmailAddress', AmFormsModel::SettingGeneral);
+        if ($bccEmailAddress && $bccEmailAddress->value) {
+            $bccAddresses = ArrayHelper::stringToArray($bccEmailAddress->value);
+            $bccAddresses = array_unique($bccAddresses);
 
-            // Start mailing!
-            $success = false;
+            if (count($bccAddresses)) {
+                $properBccAddresses = array();
 
-            // @TODO Mandrill
-            $email = new EmailModel();
-            $email->htmlBody = $body;
-            $email->fromEmail = $this->_translatedObjectPlusEnvironment($form->notificationSenderEmail, $submission);
-            $email->fromName = $this->_translatedObjectPlusEnvironment($form->notificationSenderName, $submission);
-            $email->subject = $this->_translatedObjectPlusEnvironment($form->notificationSubject, $submission);
-            if ($replyTo) {
-                $email->replyTo = $replyTo;
-            }
+                foreach ($bccAddresses as $bccAddress) {
+                    $bccAddress = $this->_translatedObjectPlusEnvironment($bccAddress, $submission);
 
-            // Add Bcc?
-            $bccEmailAddress = craft()->amForms_settings->getSettingsByHandleAndType('bccEmailAddress', AmFormsModel::SettingGeneral);
-            if ($bccEmailAddress && $bccEmailAddress->value) {
-                $bccAddresses = ArrayHelper::stringToArray($bccEmailAddress->value);
-                $bccAddresses = array_unique($bccAddresses);
-
-                if (count($bccAddresses)) {
-                    $properBccAddresses = array();
-
-                    foreach ($bccAddresses as $bccAddress) {
-                        $bccAddress = $this->_translatedObjectPlusEnvironment($bccAddress, $submission);
-
-                        if (filter_var($bccAddress, FILTER_VALIDATE_EMAIL)) {
-                            $properBccAddresses[] = array(
-                                'email' => $bccAddress
-                            );
-                        }
-                    }
-
-                    if (count($properBccAddresses)) {
-                        $email->bcc = $properBccAddresses;
+                    if (filter_var($bccAddress, FILTER_VALIDATE_EMAIL)) {
+                        $properBccAddresses[] = array(
+                            'email' => $bccAddress
+                        );
                     }
                 }
+
+                if (count($properBccAddresses)) {
+                    $email->bcc = $properBccAddresses;
+                }
             }
+        }
 
-            // Add files to the notification?
-            if ($form->notificationFilesEnabled) {
-                foreach ($submission->getFieldLayout()->getTabs() as $tab) {
-                    // Tab fields
-                    $fields = $tab->getFields();
-                    foreach ($fields as $layoutField) {
-                        // Get actual field
-                        $field = $layoutField->getField();
+        // Add files to the notification?
+        if ($form->notificationFilesEnabled) {
+            foreach ($submission->getFieldLayout()->getTabs() as $tab) {
+                // Tab fields
+                $fields = $tab->getFields();
+                foreach ($fields as $layoutField) {
+                    // Get actual field
+                    $field = $layoutField->getField();
 
-                        // Find assets
-                        if ($field->type == 'Assets') {
-                            foreach ($submission->{$field->handle}->find() as $asset) {
-                                if($asset->source->type == 'S3'){
-                                    $file = @file_get_contents($asset->url);
-                                    // Add asset as attachment
-                                    if ($file) {
-                                        $email->addStringAttachment($file, $asset->filename);
-                                    }
-                                } else {
-                                    $assetPath = craft()->amForms->getPathForAsset($asset);
+                    // Find assets
+                    if ($field->type == 'Assets') {
+                        foreach ($submission->{$field->handle}->find() as $asset) {
+                            if($asset->source->type == 'S3'){
+                                $file = @file_get_contents($asset->url);
+                                // Add asset as attachment
+                                if ($file) {
+                                    $email->addStringAttachment($file, $asset->filename);
+                                }
+                            } else {
+                                $assetPath = craft()->amForms->getPathForAsset($asset);
 
-                                    // Add asset as attachment
-                                    if (IOHelper::fileExists($assetPath . $asset->filename)) {
-                                        $email->addAttachment($assetPath . $asset->filename);
-                                    }
+                                // Add asset as attachment
+                                if (IOHelper::fileExists($assetPath . $asset->filename)) {
+                                    $email->addAttachment($assetPath . $asset->filename);
                                 }
                             }
                         }
                     }
                 }
             }
+        }
 
+        // Fire an 'onBeforeEmailSubmission' event
+        $event = new Event($this, array(
+            'email'      => $email,
+            'submission' => $submission,
+        ));
+        $this->onBeforeEmailSubmission($event);
+
+        // Is the event giving us the go-ahead?
+        if ($event->performAction) {
             // Send emails
             foreach ($recipients as $recipient) {
                 $email->toEmail = $this->_translatedObjectPlusEnvironment($recipient, $submission);
@@ -362,13 +353,12 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
             // Fire an 'onEmailSubmission' event
             $this->onEmailSubmission(new Event($this, array(
                 'success'    => $success,
-                'submission' => $submission
+                'email'      => $email,
+                'submission' => $submission,
             )));
-
-            return $success;
         }
 
-        return false;
+        return $success;
     }
 
     /**
