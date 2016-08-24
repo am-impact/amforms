@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.4.4",
+        "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
+        "date": "2016-08-24T10:00:00+01:00",
+        "notes": [
+            "[Added] Placeholder on Email FieldType.",
+            "[Fixed] Perform the onBeforeEmailSubmission later in the code with email param added to it.",
+            "[Fixed] URL decode on submitted from location URL."
+        ]
+    },
+    {
         "version": "1.4.3",
         "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
         "date": "2016-05-09T10:00:00+01:00",
