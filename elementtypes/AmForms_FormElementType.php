@@ -199,4 +199,19 @@ class AmForms_FormElementType extends BaseElementType
     {
         return AmForms_FormModel::populateModel($row);
     }
+
+    /**
+     * @inheritDoc IElementType::getEditorHtml()
+     *
+     * @param BaseElementModel $element
+     *
+     * @return string
+     */
+    public function getEditorHtml(BaseElementModel $element)
+    {
+        return sprintf('<div class="pane"><a class="btn submit" href="%s" target="_blank">%s</a></div>',
+            $element->getCpEditUrl(),
+            Craft::t('Edit form')
+        );
+    }
 }

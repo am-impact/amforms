@@ -78,6 +78,16 @@ class AmForms_FormModel extends BaseElementModel
     }
 
     /**
+     * @inheritDoc BaseElementModel::isEditable()
+     *
+     * @return bool
+     */
+    public function isEditable()
+    {
+        return craft()->userSession->checkPermission('accessAmFormsForms');
+    }
+
+    /**
      * Returns the element's CP edit URL.
      *
      * @return string|false
