@@ -26,8 +26,8 @@
                     {%- set value = attribute(submission, field.handle) -%}
 
                     <tr>
-                        <td width="25%">{{ field.name }}:</td>
-                        <td>
+                        <td width="25%" valign="top">{{ field.name }}:</td>
+                        <td valign="top">
                             {% if value is not iterable and value is not empty -%}
                                 {% if field.type == 'Lightswitch' %}
                                     {% if value == '1' %}
@@ -35,6 +35,8 @@
                                     {% else %}
                                         {{ 'No'|t }}
                                     {% endif %}
+                                {% elseif field.settings.multiline %}
+                                    {{ value|nl2br }}
                                 {% else %}
                                     {{ value }}
                                 {% endif %}
