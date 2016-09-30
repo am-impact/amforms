@@ -265,9 +265,9 @@ class AmForms_FormsService extends BaseApplicationComponent
                     method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($pluginTemplatePath) : craft()->path->setTemplatesPath($pluginTemplatePath);
                     $fieldInfo = craft()->fields->populateFieldType($field, $submission);
 
-                    craft()->templates->getTwig()->addGlobal('required', $layoutField->required);
+                    craft()->templates->getTwig(null, array('safe_mode' => false))->addGlobal('required', $layoutField->required);
                     $input = $fieldInfo->getInputHtml($field->handle, $submission->getFieldValue($field->handle));
-                    craft()->templates->getTwig()->addGlobal('required', null);
+                    craft()->templates->getTwig(null, array('safe_mode' => false))->addGlobal('required', null);
 
                     // Get field HTML
                     method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($fieldTemplateInfo['path']) : craft()->path->setTemplatesPath($fieldTemplateInfo['path']);
@@ -353,9 +353,9 @@ class AmForms_FormsService extends BaseApplicationComponent
                 method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($pluginTemplatePath) : craft()->path->setTemplatesPath($pluginTemplatePath);
                 $fieldInfo = craft()->fields->populateFieldType($field, $submission);
 
-                craft()->templates->getTwig()->addGlobal('required', $layoutField->required);
+                craft()->templates->getTwig(null, array('safe_mode' => false))->addGlobal('required', $layoutField->required);
                 $input = $fieldInfo->getInputHtml($field->handle, $submission->getFieldValue($field->handle));
-                craft()->templates->getTwig()->addGlobal('required', null);
+                craft()->templates->getTwig(null, array('safe_mode' => false))->addGlobal('required', null);
 
                 // Get field HTML
                 method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($fieldTemplateInfo['path']) : craft()->path->setTemplatesPath($fieldTemplateInfo['path']);
