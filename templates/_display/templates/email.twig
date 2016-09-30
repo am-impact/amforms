@@ -26,7 +26,7 @@
                     {%- set value = attribute(submission, field.handle) -%}
 
                     <tr>
-                        <td width="25%">{{ field.name }}:</td>
+                        <td width="25%">{{ field.name|t }}:</td>
                         <td>
                             {% if value is not iterable and value is not empty -%}
                                 {% if field.type == 'Lightswitch' %}
