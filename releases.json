@@ -1,5 +1,14 @@
 [
     {
+        "version": "1.4.5",
+        "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
+        "date": "2016-09-30T10:00:00+01:00",
+        "notes": [
+            "[Fixed] Fixed showing translated label for fields.",
+            "[Fixed] Fixed required attribute."
+        ]
+    },
+    {
         "version": "1.4.4",
         "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
         "date": "2016-08-24T10:00:00+01:00",
