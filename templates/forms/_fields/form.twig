@@ -1,3 +1,5 @@
+{% set activeAfterSubmit = form.afterSubmit ?: 'afterSubmitText' %}
+
 {{ forms.textField({
     label: 'Name'|t,
     id: 'name',
@@ -44,9 +46,71 @@
     instructions: 'What the text in the submit button should be.'|t,
     placeholder: 'Submit'|t
 }) }}
-{% if not currentUser.admin %}
-    <div class="hidden">
-{% endif %}
+<hr>
+{{ forms.selectField({
+    label: 'After submission'|t,
+    id: 'afterSubmit',
+    name: 'afterSubmit',
+    options: [
+        {
+            label: 'Redirect to same page and show text'|t,
+            value: 'afterSubmitText'
+        },
+        {
+            label: 'Redirect to a page'|t,
+            value: 'redirectEntryId'
+        },
+        {
+            label: 'Redirect to a URL'|t,
+            value: 'redirectUrl'
+        },
+        {
+            label: 'Submit form to a different URL'|t,
+            value: 'submitAction'
+        }
+    ],
+    value: form.afterSubmit,
+    errors: form.getErrors('afterSubmit'),
+    instructions: 'What should happen upon form submission?'|t,
+    toggle: true,
+    targetPrefix: 'submitType_'
+}) }}
+<div id="submitType_afterSubmitText"{% if activeAfterSubmit != 'afterSubmitText' %} class="hidden"{% endif %}>
+    {{ forms.textareaField({
+        label: 'Custom text after submit'|t,
+        id: 'afterSubmitText',
+        name: 'afterSubmitText',
+        value: form.afterSubmitText,
+        errors: form.getErrors('afterSubmitText'),
+        instructions: 'What the text after a submit should be.'|t,
+        placeholder: 'Thanks for your submission.'|t
+    }) }}
+</div>
+<div id="submitType_redirectEntryId"{% if activeAfterSubmit != 'redirectEntryId' %} class="hidden"{% endif %}>
+    {{ forms.elementSelectField({
+        label: 'Redirect page'|t,
+        id: 'redirectEntryId',
+        name: 'redirectEntryId',
+        elementType: entryElementType,
+        elements: [form.getRedirectEntry()],
+        limit: 1,
+        addButtonLabel: 'Select a page'|t,
+        errors: form.getErrors('redirectEntryId'),
+        instructions: 'Where to redirect to upon form submission.'|t
+    }) }}
+</div>
+<div id="submitType_redirectUrl"{% if activeAfterSubmit != 'redirectUrl' %} class="hidden"{% endif %}>
+    {{ forms.textField({
+        label: 'Custom redirect URL'|t,
+        id: 'redirectUrl',
+        name: 'redirectUrl',
+        value: form.redirectUrl,
+        errors: form.getErrors('redirectUrl'),
+        instructions: 'Where to redirect to upon form submission.'|t,
+        placeholder: 'http://www.domain.com/return-here'
+    }) }}
+</div>
+<div id="submitType_submitAction"{% if activeAfterSubmit != 'submitAction' %} class="hidden"{% endif %}>
     {{ forms.textField({
         label: 'Custom submit action URL'|t,
         id: 'submitAction',
@@ -56,39 +120,7 @@
         instructions: 'Use this if you want to submit the form to a different URL.'|t,
         placeholder: 'http://www.domain.com/submit-here'
     }) }}
-{% if not currentUser.admin %}
-    </div>
-{% endif %}
-{{ forms.textareaField({
-    label: 'Custom text after submit'|t,
-    id: 'afterSubmitText',
-    name: 'afterSubmitText',
-    value: form.afterSubmitText,
-    errors: form.getErrors('afterSubmitText'),
-    instructions: 'What the text after a submit should be.'|t,
-    placeholder: 'Thanks for your submission.'|t
-}) }}
-<hr>
-{{ forms.elementSelectField({
-    label: 'Redirect page'|t,
-    id: 'redirectEntryId',
-    name: 'redirectEntryId',
-    elementType: entryElementType,
-    elements: [form.getRedirectEntry()],
-    limit: 1,
-    addButtonLabel: 'Select a page'|t,
-    errors: form.getErrors('redirectEntryId'),
-    instructions: 'Where to redirect to upon form submission.'|t
-}) }}
-{{ forms.textField({
-    label: 'Custom redirect URL'|t,
-    id: 'redirectUrl',
-    name: 'redirectUrl',
-    value: form.redirectUrl,
-    errors: form.getErrors('redirectUrl'),
-    instructions: 'Where to redirect to upon form submission.'|t,
-    placeholder: 'http://www.domain.com/return-here'
-}) }}
+</div>
 <hr>
 {{ forms.lightswitchField({
     label: 'Save submissions'|t,

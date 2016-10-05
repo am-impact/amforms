@@ -109,6 +109,7 @@ class AmForms_FormsController extends BaseController
         $form->titleFormat              = craft()->request->getPost('titleFormat');
         $form->submitAction             = craft()->request->getPost('submitAction');
         $form->submitButton             = craft()->request->getPost('submitButton');
+        $form->afterSubmit              = craft()->request->getPost('afterSubmit');
         $form->afterSubmitText          = craft()->request->getPost('afterSubmitText');
         $form->submissionEnabled        = craft()->request->getPost('submissionEnabled');
         $form->displayTabTitles         = craft()->request->getPost('displayTabTitles');

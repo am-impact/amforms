@@ -13,9 +13,9 @@
         <input type="hidden" name="action" value="{{ submitAction }}">
         <input type="hidden" name="handle" value="{{ form.handle }}">
         <input type="hidden" name="namespace" value="{{ namespace }}">
-        {% if form.redirectEntryId -%}
+        {% if form.afterSubmit == 'redirectEntryId' and form.redirectEntryId -%}
             <input type="hidden" name="redirect" value="{{ form.getRedirectUrl() }}">
-        {% elseif form.redirectUrl|length %}
+        {% elseif form.afterSubmit == 'redirectUrl' and form.redirectUrl|length %}
             <input type="hidden" name="redirect" value="{{ form.redirectUrl }}">
         {% endif -%}
         {% if element.id %}
