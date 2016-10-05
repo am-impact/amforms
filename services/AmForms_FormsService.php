@@ -202,6 +202,49 @@ class AmForms_FormsService extends BaseApplicationComponent
     }
 
     /**
+     * Get unique name and handle for a form.
+     *
+     * @param AmForms_FormModel $form
+     */
+    public function getUniqueNameAndHandle(AmForms_FormModel $form)
+    {
+        $slugWordSeparator = craft()->config->get('slugWordSeparator');
+        $maxSlugIncrement = craft()->config->get('maxSlugIncrement');
+
+        for ($i = 0; $i < $maxSlugIncrement; $i++) {
+            $testName = $form->name;
+
+            if ($i > 0) {
+                $testName .= $slugWordSeparator.$i;
+            }
+
+            $originalName = $form->name;
+            $originalHandle = $form->handle;
+            $form->name = $testName;
+            $form->handle = StringHelper::toCamelCase($form->name);
+
+            $totalForms = craft()->db->createCommand()
+                ->select('count(id)')
+                ->from('amforms_forms')
+                ->where('name=:name AND handle=:handle', array(
+                    ':name' => $form->name,
+                    ':handle' => $form->handle,
+                ))
+                ->queryScalar();
+
+            if ($totalForms ==  0) {
+                return;
+            }
+            else {
+                $form->name = $originalName;
+                $form->handle = $originalHandle;
+            }
+        }
+
+        throw new Exception(Craft::t('Could not find a unique name and handle for this form.'));
+    }
+
+    /**
      * Get a namespace for a form.
      *
      * @param AmForms_FormModel $form

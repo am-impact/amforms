@@ -1,9 +1,9 @@
 {% extends 'amforms/_layouts/cp' %}
 
-{% set fullPageForm = true %}
-
 {% import '_includes/forms' as forms %}
 
+{% set fullPageForm = true %}
+{% set saveShortcutRedirect = 'amforms/forms/edit/{id}' %}
 {% set title = (formId is defined ? 'Edit form'|t : 'New form'|t) %}
 
 {% set crumbs = [
@@ -36,9 +36,28 @@
     }) %}
 {% endif %}
 
+{% block saveButton %}
+    <div class="btngroup">
+        <input type="submit" class="btn submit" value="{{ 'Save'|t }}">
+
+        <div class="btn submit menubtn"></div>
+        <div class="menu">
+            <ul>
+                <li><a class="formsubmit" data-redirect="amforms/forms/edit/{id}">
+                    {{ 'Save and continue editing'|t }}
+                    {{ forms.optionShortcutLabel('S') }}
+                </a></li>
+                {% if formId is defined %}
+                    <li><a class="formsubmit" data-param="formId" data-value="copy" data-redirect="amforms/forms/edit/{id}">{{ 'Save as a new form'|t }}</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
 {% block content %}
     <input type="hidden" name="action" value="amForms/forms/saveForm">
-    <input type="hidden" name="redirect" value="amforms/forms/edit/{id}">
+    <input type="hidden" name="redirect" value="amforms/forms">
     {% if formId is defined -%}<input type="hidden" name="formId" value="{{ formId }}">{% endif %}
 
     <div id="form">

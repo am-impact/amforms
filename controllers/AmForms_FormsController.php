@@ -83,7 +83,7 @@ class AmForms_FormsController extends BaseController
 
         // Get form if available
         $formId = craft()->request->getPost('formId');
-        if ($formId) {
+        if ($formId && $formId !== 'copy') {
             $form = craft()->amForms_forms->getFormById($formId);
 
             if (! $form) {
@@ -126,6 +126,11 @@ class AmForms_FormsController extends BaseController
         $form->tabTemplate              = craft()->request->getPost('tabTemplate', $form->tabTemplate);
         $form->fieldTemplate            = craft()->request->getPost('fieldTemplate', $form->fieldTemplate);
         $form->notificationTemplate     = craft()->request->getPost('notificationTemplate', $form->notificationTemplate);
+
+        // Duplicate form, so the name and handle are taken
+        if ($formId && $formId === 'copy') {
+            craft()->amForms_forms->getUniqueNameAndHandle($form);
+        }
 
         // Save form
         if (craft()->amForms_forms->saveForm($form)) {
