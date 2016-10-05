@@ -163,7 +163,12 @@ class AmForms_FormsController extends BaseController
         }
 
         // Delete form
-        craft()->amForms_forms->deleteForm($form);
+        if (craft()->amForms_forms->deleteForm($form)) {
+            craft()->userSession->setNotice(Craft::t('Form deleted.'));
+        }
+        else {
+            craft()->userSession->setError(Craft::t('Couldn’t delete form.'));
+        }
 
         $this->redirectToPostedUrl($form);
     }
