@@ -35,6 +35,12 @@
         }
     }) %}
 {% endif %}
+{% set tabs = tabs|merge({
+    usage: {
+        label: "Used at"|t,
+        url: '#usage'
+    }
+}) %}
 
 {% block saveButton %}
     <div class="btngroup">
@@ -78,4 +84,8 @@
             {% include 'amforms/forms/_fields/templates' %}
         </div>
     {% endif %}
+
+    <div id="usage" class="hidden">
+        {% include 'amforms/forms/_fields/usage' %}
+    </div>
 {% endblock %}
