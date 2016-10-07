@@ -1,5 +1,28 @@
 {% set activeAfterSubmit = form.afterSubmit ?: 'afterSubmitText' %}
 
+{% set afterSubmissionOptions = [
+    {
+        label: 'Redirect to same page and show text'|t,
+        value: 'afterSubmitText'
+    },
+    {
+        label: 'Redirect to a page'|t,
+        value: 'redirectEntryId'
+    },
+    {
+        label: 'Redirect to a URL'|t,
+        value: 'redirectUrl'
+    },
+] %}
+{% if currentUser.admin %}
+    {% set afterSubmissionOptions = afterSubmissionOptions|merge([
+        {
+            label: 'Submit form to a different URL'|t,
+            value: 'submitAction'
+        }
+    ]) %}
+{% endif %}
+
 {{ forms.textField({
     label: 'Name'|t,
     id: 'name',
@@ -51,24 +74,7 @@
     label: 'After submission'|t,
     id: 'afterSubmit',
     name: 'afterSubmit',
-    options: [
-        {
-            label: 'Redirect to same page and show text'|t,
-            value: 'afterSubmitText'
-        },
-        {
-            label: 'Redirect to a page'|t,
-            value: 'redirectEntryId'
-        },
-        {
-            label: 'Redirect to a URL'|t,
-            value: 'redirectUrl'
-        },
-        {
-            label: 'Submit form to a different URL'|t,
-            value: 'submitAction'
-        }
-    ],
+    options: afterSubmissionOptions,
     value: form.afterSubmit,
     errors: form.getErrors('afterSubmit'),
     instructions: 'What should happen upon form submission?'|t,
@@ -77,7 +83,7 @@
 }) }}
 <div id="submitType_afterSubmitText"{% if activeAfterSubmit != 'afterSubmitText' %} class="hidden"{% endif %}>
     {{ forms.textareaField({
-        label: 'Custom text after submit'|t,
+        label: 'Text after submit'|t,
         id: 'afterSubmitText',
         name: 'afterSubmitText',
         value: form.afterSubmitText,
@@ -101,7 +107,7 @@
 </div>
 <div id="submitType_redirectUrl"{% if activeAfterSubmit != 'redirectUrl' %} class="hidden"{% endif %}>
     {{ forms.textField({
-        label: 'Custom redirect URL'|t,
+        label: 'Redirect URL'|t,
         id: 'redirectUrl',
         name: 'redirectUrl',
         value: form.redirectUrl,
@@ -112,7 +118,7 @@
 </div>
 <div id="submitType_submitAction"{% if activeAfterSubmit != 'submitAction' %} class="hidden"{% endif %}>
     {{ forms.textField({
-        label: 'Custom submit action URL'|t,
+        label: 'Submit action URL'|t,
         id: 'submitAction',
         name: 'submitAction',
         value: form.submitAction,
