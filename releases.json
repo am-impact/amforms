@@ -1,5 +1,20 @@
 [
     {
+        "version": "1.5.0",
+        "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
+        "date": "2016-10-07T10:00:00+01:00",
+        "notes": [
+            "[Added] New field type: hidden field.",
+            "[Added] Existing forms can now be saved as a new form.",
+            "[Added] New tab added when you edit a form, to see which entry uses the form.",
+            "[Added] Visual indication of which fields support tags / attributes. A popup is now available to those fields.",
+            "[Improved] Updated the email / notification template so that date fields give a decent date and time.",
+            "[Improved] While editing a form, the delete button has been removed, and the action itself is now available in the save button dropdown menu.",
+            "[Improved] The redirect fields are now visible based on the selection choice of a new field: after submit.",
+            "[Fixed] Active state fixed for the send copy / send copy to field. Which was not visible when you saved a form."
+        ]
+    },
+    {
         "version": "1.4.5",
         "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
         "date": "2016-09-30T10:00:00+01:00",
