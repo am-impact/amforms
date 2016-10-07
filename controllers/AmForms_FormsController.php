@@ -71,6 +71,21 @@ class AmForms_FormsController extends BaseController
         // Get redirectEntryId elementType
         $variables['entryElementType'] = craft()->elements->getElementType(ElementType::Entry);
 
+        // Get available attributes
+        $variables['availableAttributes'] = array();
+        $submission = new AmForms_SubmissionModel();
+        $ignoreAttributes = array(
+            'slug', 'uri', 'root', 'lft', 'rgt', 'level', 'searchScore', 'localeEnabled', 'archived', 'spamFree'
+        );
+        foreach ($submission->getAttributes() as $attribute => $value) {
+            if (! in_array($attribute, $ignoreAttributes)) {
+                $variables['availableAttributes'][] = $attribute;
+            }
+        }
+        foreach ($fields as $field) {
+            $variables['availableAttributes'][] = $field['handle'];
+        }
+
         $this->renderTemplate('amforms/forms/_edit', $variables);
     }
 

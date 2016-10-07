@@ -36,6 +36,7 @@ return array(
     "Are you sure you want to delete this submission and all of it's data?" => "Weet u zeker dat u deze inzending wilt verwijderen? U zult alle bijbehorende gegevens kwijtraken.",
     'Are you sure you want to export the selected submissions?' => 'Weet u zeker dat u deze inzendingen wilt exporteren?',
     "Are you sure you want to export this submission and all of it's data?" => "Weet u zeker dat u deze inzending en alle bijbehorende gegevens wilt exporteren?",
+    'Available attributes' => 'Beschikbare attributen',
     'Basic fields' => 'Basis velden',
     'Bcc email address' => 'Bcc e-mailadres',
     'Busy' => 'Bezig',

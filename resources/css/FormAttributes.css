@@ -1,0 +1,37 @@
+.amforms__hud {
+    max-width: 800px;
+}
+
+body .input .text--tags {
+    display: inline-block;
+    padding-right: 26px;
+    max-width: calc( 100% - 20px );
+    vertical-align: top;
+}
+
+.amforms__tags {
+    display: inline-block;
+    cursor: pointer;
+    transform: translate( -20px, 5px );
+    opacity: 0.6;
+}
+
+.amforms__tags:hover {
+    opacity: 1;
+}
+
+.amforms__hud .main-container {
+    max-height: 600px !important;
+    overflow-y: auto;
+}
+
+.amforms__attributes {
+    padding: 10px;
+    max-height: 700px;
+    overflow: auto;
+}
+
+.amforms__attributes span {
+    margin: 0 0 5px 0;
+    cursor: pointer;
+}
