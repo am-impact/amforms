@@ -1,0 +1,12 @@
+{% if isCpRequest %}
+    {% import "_includes/forms" as forms %}
+{% else %}
+    {% import "forms" as forms %}
+{% endif %}
+
+{{ forms.text({
+    id: name,
+    name: name,
+    value: value,
+    type: isCpRequest ? 'text' : 'hidden'
+}) }}

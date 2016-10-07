@@ -3,9 +3,9 @@
 namespace Craft;
 
 /**
- * Email fieldtype.
+ * Hidden fieldtype.
  */
-class AmForms_EmailFieldType extends BaseFieldType
+class AmForms_HiddenFieldType extends BaseFieldType
 {
     /**
      * @inheritDoc IComponentType::getName()
@@ -14,7 +14,7 @@ class AmForms_EmailFieldType extends BaseFieldType
      */
     public function getName()
     {
-        return Craft::t('E-mail');
+        return Craft::t('Hidden');
     }
 
     /**
@@ -24,7 +24,7 @@ class AmForms_EmailFieldType extends BaseFieldType
     */
     public function getSettingsHtml()
     {
-        return craft()->templates->render('amforms/_display/templates/_components/fieldtypes/PlainText/settings', array(
+        return craft()->templates->render('amforms/_display/templates/_components/fieldtypes/Hidden/settings', array(
             'settings' => $this->getSettings()
         ));
     }
@@ -36,7 +36,7 @@ class AmForms_EmailFieldType extends BaseFieldType
      */
     public function defineContentAttribute()
     {
-        return AttributeType::Email;
+        return AttributeType::String;
     }
 
     /**
@@ -49,11 +49,19 @@ class AmForms_EmailFieldType extends BaseFieldType
      */
     public function getInputHtml($name, $value)
     {
-        return craft()->templates->render('_components/fieldtypes/PlainText/input', array(
-            'name'     => $name,
-            'value'    => $value,
-            'settings' => $this->getSettings(),
-            'type'     => 'email',
+        // Get field settings
+        $settings = $this->getSettings();
+
+        // Is this a CP request?
+        $isCpRequest = craft()->request->isCpRequest();
+
+        // Where is the template located?
+        $templatePath = ($isCpRequest ? 'amforms/_display/templates/' : '') . '_components/fieldtypes/Hidden/input';
+
+        return craft()->templates->render($templatePath, array(
+            'name'        => $name,
+            'value'       => craft()->templates->renderString($settings->value),
+            'isCpRequest' => $isCpRequest,
         ));
     }
 
@@ -65,10 +73,7 @@ class AmForms_EmailFieldType extends BaseFieldType
     protected function defineSettings()
     {
         return array(
-            'placeholder'   => array(AttributeType::String),
-            'multiline'     => array(AttributeType::Bool),
-            'initialRows'   => array(AttributeType::Number, 'min' => 1, 'default' => 4),
-            'maxLength'     => array(AttributeType::Number, 'min' => 0),
+            'value' => array(AttributeType::String),
         );
     }
 }

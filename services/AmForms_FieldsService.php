@@ -55,6 +55,7 @@ class AmForms_FieldsService extends BaseApplicationComponent
     public function getSupportedFieldTypes()
     {
         return array(
+            'AmForms_Hidden',
             'Assets',
             'Checkboxes',
             'Date',
