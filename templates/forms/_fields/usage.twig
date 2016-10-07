@@ -1,6 +1,4 @@
-{% set entries = craft.entries.relatedTo({
-    targetElement: form.id
-}) %}
+{% set entries = form.id ? craft.entries.relatedTo({ targetElement: form.id }) : null %}
 
 <h2>{{ 'Entries'|t }}</h2>
 {% if not entries|length %}
