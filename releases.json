@@ -12,7 +12,8 @@
             "[Improved] While editing a form, the delete button has been removed, and the action itself is now available in the save button dropdown menu.",
             "[Improved] The redirect fields are now visible based on the selection choice of a new field: after submit.",
             "[Improved] Updated translations for the redirect fields and only admins can now allow a form to be submitted to a different URL.",
-            "[Fixed] Active state fixed for the send copy / send copy to field. Which was not visible when you saved a form."
+            "[Fixed] Active state fixed for the send copy / send copy to field. Which was not visible when you saved a form.",
+            "[Fixed] Fixed uploading files through Angular."
         ]
     },
     {

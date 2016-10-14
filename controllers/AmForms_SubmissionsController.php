@@ -352,9 +352,8 @@ class AmForms_SubmissionsController extends BaseController
                 $uploadedFiles[] = $fileId;
             }
         }
-
         // Multi file upload
-        if (isset($fieldsContent['filesNames']) && isset($fieldsContent['filesNames'][ $field->handle ])) {
+        elseif (isset($fieldsContent['filesNames']) && isset($fieldsContent['filesNames'][ $field->handle ])) {
             foreach ($fieldsContent['filesNames'][ $field->handle ] as $fileName) {
                 foreach ($_FILES as $key => $possibleFile) {
                     if (isset($possibleFile['name']) && $possibleFile['name'] == $fileName) {
