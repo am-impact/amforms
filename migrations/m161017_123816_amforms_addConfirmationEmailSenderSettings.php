@@ -17,9 +17,9 @@ class m161017_123816_amforms_addConfirmationEmailSenderSettings extends BaseMigr
 		$this->addColumnAfter('amforms_forms', 'confirmationSenderEmail', AttributeType::String, 'notificationSenderEmail');
 
 		// Craft email settings
-        $settings = craft()->email->getSettings();
-        $systemEmail = !empty($settings['emailAddress']) ? $settings['emailAddress'] : '';
-        $systemName =  !empty($settings['senderName']) ? $settings['senderName'] : '';
+		$settings = craft()->email->getSettings();
+		$systemEmail = !empty($settings['emailAddress']) ? $settings['emailAddress'] : '';
+		$systemName =  !empty($settings['senderName']) ? $settings['senderName'] : '';
 
 		$this->update('amforms_forms', array(
 			'confirmationSenderName' => $systemName,
