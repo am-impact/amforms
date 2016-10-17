@@ -60,7 +60,7 @@ class AmFormsService extends BaseApplicationComponent
         // Plugin's default template path
         $templatePath = craft()->path->getPluginsPath() . 'amforms/templates/_display/templates/';
 
-        $settingsName = $defaultTemplate == 'email' ? 'notificationTemplate' : $defaultTemplate . 'Template';
+        $settingsName = $defaultTemplate . 'Template';
         $templateSetting = craft()->amForms_settings->getSettingsByHandleAndType($settingsName, AmFormsModel::SettingsTemplatePaths);
 
         if (empty($overrideTemplate) && $templateSetting) {

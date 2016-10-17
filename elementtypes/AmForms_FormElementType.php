@@ -174,13 +174,17 @@ class AmForms_FormElementType extends BaseElementType
                            forms.notificationFilesEnabled,
                            forms.notificationRecipients,
                            forms.notificationSubject,
+                           forms.confirmationSubject,
                            forms.notificationSenderName,
+                           forms.confirmationSenderName,
                            forms.notificationSenderEmail,
+                           forms.confirmationSenderEmail,
                            forms.notificationReplyToEmail,
                            forms.formTemplate,
                            forms.tabTemplate,
                            forms.fieldTemplate,
-                           forms.notificationTemplate');
+                           forms.notificationTemplate,
+                           forms.confirmationTemplate');
         $query->join('amforms_forms forms', 'forms.id = elements.id');
 
         if ($criteria->handle) {

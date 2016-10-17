@@ -31,6 +31,15 @@
     name: 'notificationTemplate',
     value: form.notificationTemplate,
     errors: form.getErrors('notificationTemplate'),
-    placeholder: '_amforms/email',
+    placeholder: '_amforms/notification',
+    instructions: 'Override default template with your own template. Enter the folder (with template), e.g.: {template}'|t({'template': '_amforms'})
+}) }}
+{{ forms.textField({
+    label: 'Confirmation template'|t,
+    id: 'confirmationTemplate',
+    name: 'confirmationTemplate',
+    value: form.confirmationTemplate,
+    errors: form.getErrors('confirmationTemplate'),
+    placeholder: '_amforms/confirmation',
     instructions: 'Override default template with your own template. Enter the folder (with template), e.g.: {template}'|t({'template': '_amforms'})
 }) }}

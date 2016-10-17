@@ -47,13 +47,17 @@ class AmForms_FormModel extends BaseElementModel
             'notificationFilesEnabled' => array(AttributeType::Bool, 'default' => false),
             'notificationRecipients'   => array(AttributeType::String, 'default' => $systemEmail),
             'notificationSubject'      => array(AttributeType::String, 'default' => Craft::t('{formName} form was submitted')),
+            'confirmationSubject'      => array(AttributeType::String, 'default' => Craft::t('Thanks for your submission.')),
             'notificationSenderName'   => array(AttributeType::String, 'default' => $systemName),
+            'confirmationSenderName'   => array(AttributeType::String, 'default' => $systemName),
             'notificationSenderEmail'  => array(AttributeType::String, 'default' => $systemEmail),
+            'confirmationSenderEmail'  => array(AttributeType::String, 'default' => $systemEmail),
             'notificationReplyToEmail' => array(AttributeType::String, 'default' => $systemEmail),
             'formTemplate'             => AttributeType::String,
             'tabTemplate'              => AttributeType::String,
             'fieldTemplate'            => AttributeType::String,
-            'notificationTemplate'     => AttributeType::String
+            'notificationTemplate'     => AttributeType::String,
+            'confirmationTemplate'     => AttributeType::String
         ));
     }
 
