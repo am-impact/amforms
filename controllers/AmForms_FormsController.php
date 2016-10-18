@@ -119,13 +119,17 @@ class AmForms_FormsController extends BaseController
         $form->notificationFilesEnabled = craft()->request->getPost('notificationFilesEnabled');
         $form->notificationRecipients   = craft()->request->getPost('notificationRecipients');
         $form->notificationSubject      = craft()->request->getPost('notificationSubject');
+        $form->confirmationSubject      = craft()->request->getPost('confirmationSubject');
         $form->notificationSenderName   = craft()->request->getPost('notificationSenderName');
+        $form->confirmationSenderName   = craft()->request->getPost('confirmationSenderName');
         $form->notificationSenderEmail  = craft()->request->getPost('notificationSenderEmail');
+        $form->confirmationSenderEmail  = craft()->request->getPost('confirmationSenderEmail');
         $form->notificationReplyToEmail = craft()->request->getPost('notificationReplyToEmail');
         $form->formTemplate             = craft()->request->getPost('formTemplate', $form->formTemplate);
         $form->tabTemplate              = craft()->request->getPost('tabTemplate', $form->tabTemplate);
         $form->fieldTemplate            = craft()->request->getPost('fieldTemplate', $form->fieldTemplate);
         $form->notificationTemplate     = craft()->request->getPost('notificationTemplate', $form->notificationTemplate);
+        $form->confirmationTemplate     = craft()->request->getPost('confirmationTemplate', $form->confirmationTemplate);
 
         // Save form
         if (craft()->amForms_forms->saveForm($form)) {

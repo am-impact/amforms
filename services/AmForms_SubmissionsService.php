@@ -229,14 +229,6 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         // Get our recipients
         $recipients = ArrayHelper::stringToArray($form->notificationRecipients);
 
-        // Send copy?
-        if ($form->sendCopy) {
-            $sendCopyTo = $submission->{$form->sendCopyTo};
-            if (filter_var($sendCopyTo, FILTER_VALIDATE_EMAIL)) {
-                $recipients[] = $sendCopyTo;
-            }
-        }
-
         if ($overrideRecipients !== false) {
             if (is_array($overrideRecipients) && count($overrideRecipients)) {
                 $recipients = $overrideRecipients;
@@ -250,9 +242,6 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
             return false;
         }
 
-        // Get email body
-        $body = $this->getSubmissionEmailBody($submission);
-
         // Other email attributes
         if ($form->notificationReplyToEmail) {
             $replyTo = $this->_translatedObjectPlusEnvironment($form->notificationReplyToEmail, $submission);
@@ -263,13 +252,30 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
 
         // Start mailing!
         $success = false;
-        $email = new EmailModel();
-        $email->htmlBody = $body;
-        $email->fromEmail = $this->_translatedObjectPlusEnvironment($form->notificationSenderEmail, $submission);
-        $email->fromName = $this->_translatedObjectPlusEnvironment($form->notificationSenderName, $submission);
-        $email->subject = $this->_translatedObjectPlusEnvironment($form->notificationSubject, $submission);
+
+        // Notification email
+        $notificationEmail = new EmailModel();
+        $notificationEmail->htmlBody = $this->getSubmissionEmailBody($submission);
+        $notificationEmail->fromEmail = $this->_translatedObjectPlusEnvironment($form->notificationSenderEmail, $submission);
+        $notificationEmail->fromName = $this->_translatedObjectPlusEnvironment($form->notificationSenderName, $submission);
+        if ($form->notificationSubject) {
+            $notificationEmail->subject = $this->_translatedObjectPlusEnvironment($form->notificationSubject, $submission);
+        } else {
+            $notificationEmail->subject = $this->_translatedObjectPlusEnvironment('{formName} form was submitted', $submission);
+        }
         if ($replyTo) {
-            $email->replyTo = $replyTo;
+            $notificationEmail->replyTo = $replyTo;
+        }
+
+        // Confirmation email
+        $confirmationEmail = new EmailModel();
+        $confirmationEmail->htmlBody = $this->getConfirmationEmailBody($submission);
+        $confirmationEmail->fromEmail = $this->_translatedObjectPlusEnvironment($form->confirmationSenderEmail, $submission);
+        $confirmationEmail->fromName = $this->_translatedObjectPlusEnvironment($form->confirmationSenderName, $submission);
+        if ($form->confirmationSubject) {
+            $confirmationEmail->subject = $this->_translatedObjectPlusEnvironment($form->confirmationSubject, $submission);
+        } else {
+            $confirmationEmail->subject = $this->_translatedObjectPlusEnvironment('Thanks for your submission.', $submission);
         }
 
         // Add Bcc?
@@ -292,7 +298,7 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
                 }
 
                 if (count($properBccAddresses)) {
-                    $email->bcc = $properBccAddresses;
+                    $notificationEmail->bcc = $properBccAddresses;
                 }
             }
         }
@@ -313,14 +319,14 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
                                 $file = @file_get_contents($asset->url);
                                 // Add asset as attachment
                                 if ($file) {
-                                    $email->addStringAttachment($file, $asset->filename);
+                                    $notificationEmail->addStringAttachment($file, $asset->filename);
                                 }
                             } else {
                                 $assetPath = craft()->amForms->getPathForAsset($asset);
 
                                 // Add asset as attachment
                                 if (IOHelper::fileExists($assetPath . $asset->filename)) {
-                                    $email->addAttachment($assetPath . $asset->filename);
+                                    $notificationEmail->addAttachment($assetPath . $asset->filename);
                                 }
                             }
                         }
@@ -331,7 +337,7 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
 
         // Fire an 'onBeforeEmailSubmission' event
         $event = new Event($this, array(
-            'email'      => $email,
+            'email'      => $notificationEmail,
             'submission' => $submission,
         ));
         $this->onBeforeEmailSubmission($event);
@@ -340,11 +346,23 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         if ($event->performAction) {
             // Send emails
             foreach ($recipients as $recipient) {
-                $email->toEmail = $this->_translatedObjectPlusEnvironment($recipient, $submission);
+                $notificationEmail->toEmail = $this->_translatedObjectPlusEnvironment($recipient, $submission);
 
-                if (filter_var($email->toEmail, FILTER_VALIDATE_EMAIL)) {
-                    // Add variable for email event
-                    if (craft()->email->sendEmail($email, array('amFormsSubmission' => $submission))) {
+                if (filter_var($notificationEmail->toEmail, FILTER_VALIDATE_EMAIL)) {
+                    if (craft()->email->sendEmail($notificationEmail, array('amFormsSubmission' => $submission))) {
+                        $success = true;
+                    }
+                }
+            }
+
+            // Send copy?
+            if ($form->sendCopy) {
+                $sendCopyTo = $submission->{$form->sendCopyTo};
+
+                if (filter_var($sendCopyTo, FILTER_VALIDATE_EMAIL)) {
+                    $confirmationEmail->toEmail = $this->_translatedObjectPlusEnvironment($sendCopyTo, $submission);
+
+                    if (craft()->email->sendEmail($confirmationEmail, array('amFormsSubmission' => $submission))) {
                         $success = true;
                     }
                 }
@@ -353,7 +371,7 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
             // Fire an 'onEmailSubmission' event
             $this->onEmailSubmission(new Event($this, array(
                 'success'    => $success,
-                'email'      => $email,
+                'email'      => $notificationEmail,
                 'submission' => $submission,
             )));
         }
@@ -380,7 +398,29 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
             'form' => $form,
             'submission' => $submission
         );
-        return craft()->amForms->renderDisplayTemplate('email', $form->notificationTemplate, $variables);
+        return craft()->amForms->renderDisplayTemplate('notification', $form->notificationTemplate, $variables);
+    }
+
+    /**
+     * Get confirmation email body.
+     *
+     * @param AmForms_SubmissionModel $submission
+     *
+     * @return string
+     */
+    public function getConfirmationEmailBody(AmForms_SubmissionModel $submission)
+    {
+        // Get form if not already set
+        $submission->getForm();
+        $form = $submission->form;
+
+        // Get email body
+        $variables = array(
+            'tabs' => $form->getFieldLayout()->getTabs(),
+            'form' => $form,
+            'submission' => $submission
+        );
+        return craft()->amForms->renderDisplayTemplate('confirmation', $form->confirmationTemplate, $variables);
     }
 
     /**
