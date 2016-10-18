@@ -28,23 +28,28 @@
                     <tr>
                         <td width="25%">{{ field.name|t }}:</td>
                         <td>
-                            {% if value is not iterable and value is not empty -%}
-                                {% if field.type == 'Lightswitch' %}
+                            {% switch field.type %}
+                                {% case "Date" %}
+                                    {{ value|date('d-m-Y  H:i:s') }}
+
+                                {% case "Lightswitch" %}
                                     {% if value == '1' %}
                                         {{ 'Yes'|t }}
                                     {% else %}
                                         {{ 'No'|t }}
                                     {% endif %}
-                                {% else %}
-                                    {{ value }}
-                                {% endif %}
-                            {% else -%}
-                                <ul style="margin-left:0;">
-                                    {% for item in value %}
-                                        <li>{{ (item is iterable ? item|first : item) }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
+
+                                {% default %}
+                                    {% if value is not iterable and value is not empty -%}
+                                        {{ value }}
+                                    {% else -%}
+                                        <ul style="margin-left:0;">
+                                            {% for item in value %}
+                                                <li>{{ (item is iterable ? item|first : item) }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                            {% endswitch %}
                         </td>
                     </tr>
                 {% endfor %}

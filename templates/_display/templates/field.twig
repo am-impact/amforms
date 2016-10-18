@@ -12,31 +12,35 @@
 {% endif -%}
 
 {% namespace namespace %}
-    <div class="form__row form__row--{{ type }}{% if class is defined and class %} {{ class }}{% endif %}{% if errors %} has-errors{% endif %}"{% if handle %} id="{{ handle }}-field"{% endif %}>
+    {% if field.type == 'AmForms_Hidden' %}
+        {{ input|raw }}
+    {% else %}
+        <div class="form__row form__row--{{ type }}{% if class is defined and class %} {{ class }}{% endif %}{% if errors %} has-errors{% endif %}"{% if handle %} id="{{ handle }}-field"{% endif %}>
 
-        {% if label or instructions -%}
-            <div class="form__label">
-                {% if label -%}
-                    <label{% if required is defined and required %} class="required"{% endif %}{% if handle %} for="{{ handle }}"{% endif %}>
-                        {{ label|raw|t }}
-                    </label>
-                {% endif %}
-                {% if instructions -%}
-                    <em>{{ instructions|raw }}</em>
-                {% endif %}
+            {% if label or instructions -%}
+                <div class="form__label">
+                    {% if label -%}
+                        <label{% if required is defined and required %} class="required"{% endif %}{% if handle %} for="{{ handle }}"{% endif %}>
+                            {{ label|raw|t }}
+                        </label>
+                    {% endif %}
+                    {% if instructions -%}
+                        <em>{{ instructions|raw }}</em>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <div class="form__field{% if errors %} errors{% endif %}">
+                {{ input|raw }}
+
+                {% if errors -%}
+                    <ul class="errors">
+                        {% for error in errors -%}
+                            <li>{{ error }}</li>
+                        {% endfor -%}
+                    </ul>
+                {% endif -%}
             </div>
-        {% endif %}
-
-        <div class="form__field{% if errors %} errors{% endif %}">
-            {{ input|raw }}
-
-            {% if errors -%}
-                <ul class="errors">
-                    {% for error in errors -%}
-                        <li>{{ error }}</li>
-                    {% endfor -%}
-                </ul>
-            {% endif -%}
         </div>
-    </div>
+    {% endif %}
 {% endnamespace %}

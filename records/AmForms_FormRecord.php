@@ -26,6 +26,7 @@ class AmForms_FormRecord extends BaseRecord
             'titleFormat'              => array(AttributeType::String, 'required' => true),
             'submitAction'             => AttributeType::String,
             'submitButton'             => AttributeType::String,
+            'afterSubmit'              => AttributeType::String,
             'afterSubmitText'          => AttributeType::Mixed,
             'submissionEnabled'        => array(AttributeType::Bool, 'default' => true),
             'displayTabTitles'         => array(AttributeType::Bool, 'default' => false),

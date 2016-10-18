@@ -71,6 +71,21 @@ class AmForms_FormsController extends BaseController
         // Get redirectEntryId elementType
         $variables['entryElementType'] = craft()->elements->getElementType(ElementType::Entry);
 
+        // Get available attributes
+        $variables['availableAttributes'] = array();
+        $submission = new AmForms_SubmissionModel();
+        $ignoreAttributes = array(
+            'slug', 'uri', 'root', 'lft', 'rgt', 'level', 'searchScore', 'localeEnabled', 'archived', 'spamFree'
+        );
+        foreach ($submission->getAttributes() as $attribute => $value) {
+            if (! in_array($attribute, $ignoreAttributes)) {
+                $variables['availableAttributes'][] = $attribute;
+            }
+        }
+        foreach ($fields as $field) {
+            $variables['availableAttributes'][] = $field['handle'];
+        }
+
         $this->renderTemplate('amforms/forms/_edit', $variables);
     }
 
@@ -83,7 +98,7 @@ class AmForms_FormsController extends BaseController
 
         // Get form if available
         $formId = craft()->request->getPost('formId');
-        if ($formId) {
+        if ($formId && $formId !== 'copy') {
             $form = craft()->amForms_forms->getFormById($formId);
 
             if (! $form) {
@@ -109,6 +124,7 @@ class AmForms_FormsController extends BaseController
         $form->titleFormat              = craft()->request->getPost('titleFormat');
         $form->submitAction             = craft()->request->getPost('submitAction');
         $form->submitButton             = craft()->request->getPost('submitButton');
+        $form->afterSubmit              = craft()->request->getPost('afterSubmit');
         $form->afterSubmitText          = craft()->request->getPost('afterSubmitText');
         $form->submissionEnabled        = craft()->request->getPost('submissionEnabled');
         $form->displayTabTitles         = craft()->request->getPost('displayTabTitles');
@@ -130,6 +146,11 @@ class AmForms_FormsController extends BaseController
         $form->fieldTemplate            = craft()->request->getPost('fieldTemplate', $form->fieldTemplate);
         $form->notificationTemplate     = craft()->request->getPost('notificationTemplate', $form->notificationTemplate);
         $form->confirmationTemplate     = craft()->request->getPost('confirmationTemplate', $form->confirmationTemplate);
+
+        // Duplicate form, so the name and handle are taken
+        if ($formId && $formId === 'copy') {
+            craft()->amForms_forms->getUniqueNameAndHandle($form);
+        }
 
         // Save form
         if (craft()->amForms_forms->saveForm($form)) {
@@ -162,7 +183,12 @@ class AmForms_FormsController extends BaseController
         }
 
         // Delete form
-        craft()->amForms_forms->deleteForm($form);
+        if (craft()->amForms_forms->deleteForm($form)) {
+            craft()->userSession->setNotice(Craft::t('Form deleted.'));
+        }
+        else {
+            craft()->userSession->setError(Craft::t('Couldn’t delete form.'));
+        }
 
         $this->redirectToPostedUrl($form);
     }
