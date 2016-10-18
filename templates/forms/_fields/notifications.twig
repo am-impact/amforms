@@ -41,6 +41,8 @@
     errors: form.getErrors('notificationFilesEnabled'),
     instructions: 'Whether to add possible attachments to the email.'|t
 }) }}
+<hr>
+<h2>{{ 'Notification'|t }}</h2>
 {{ forms.textField({
     label: 'Email recipients'|t,
     id: 'notificationRecipients',
@@ -57,15 +59,8 @@
     class: 'amforms__selector--on',
     value: form.notificationSubject,
     errors: form.getErrors('notificationSubject'),
-    instructions: 'The subject of your notification email.'|t
-}) }}
-{{ forms.textField({
-    label: 'Confirmation subject'|t,
-    id: 'confirmationSubject',
-    name: 'confirmationSubject',
-    value: form.confirmationSubject,
-    errors: form.getErrors('confirmationSubject'),
-    instructions: 'The subject of your confirmation email.'|t
+    instructions: 'The subject of your notification email.'|t,
+    placeholder: '{formName} form was submitted'|t
 }) }}
 {{ forms.textField({
     label: 'Sender name notification email'|t,
@@ -86,9 +81,31 @@
     instructions: 'The email address of the sender of your notification email.'|t
 }) }}
 {{ forms.textField({
+    label: 'Reply to email address'|t,
+    id: 'notificationReplyToEmail',
+    name: 'notificationReplyToEmail',
+    class: 'amforms__selector--on',
+    value: form.notificationReplyToEmail,
+    errors: form.getErrors('notificationReplyToEmail'),
+    instructions: 'The reply to email address of your notification email.'|t
+}) }}
+<hr>
+<h2>{{ 'Confirmation'|t }}</h2>
+{{ forms.textField({
+    label: 'Confirmation subject'|t,
+    id: 'confirmationSubject',
+    name: 'confirmationSubject',
+    class: 'amforms__selector--on',
+    value: form.confirmationSubject,
+    errors: form.getErrors('confirmationSubject'),
+    instructions: 'The subject of your confirmation email.'|t,
+    placeholder: 'Thanks for your submission.'|t
+}) }}
+{{ forms.textField({
     label: 'Sender name confirmation email'|t,
     id: 'confirmationSenderName',
     name: 'confirmationSenderName',
+    class: 'amforms__selector--on',
     value: form.confirmationSenderName,
     errors: form.getErrors('confirmationSenderName'),
     instructions: 'The name of the sender of your confirmation email.'|t
@@ -97,16 +114,8 @@
     label: 'Sender email address confirmation email'|t,
     id: 'confirmationSenderEmail',
     name: 'confirmationSenderEmail',
+    class: 'amforms__selector--on',
     value: form.confirmationSenderEmail,
     errors: form.getErrors('confirmationSenderEmail'),
     instructions: 'The email address of the sender of your confirmation email.'|t
-}) }}
-{{ forms.textField({
-    label: 'Reply to email address'|t,
-    id: 'notificationReplyToEmail',
-    name: 'notificationReplyToEmail',
-    class: 'amforms__selector--on',
-    value: form.notificationReplyToEmail,
-    errors: form.getErrors('notificationReplyToEmail'),
-    instructions: 'The reply to email address of your notification email.'|t
 }) }}

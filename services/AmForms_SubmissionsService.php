@@ -258,7 +258,7 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         $notificationEmail->htmlBody = $this->getSubmissionEmailBody($submission);
         $notificationEmail->fromEmail = $this->_translatedObjectPlusEnvironment($form->notificationSenderEmail, $submission);
         $notificationEmail->fromName = $this->_translatedObjectPlusEnvironment($form->notificationSenderName, $submission);
-        if ($form->notificationSubject) {
+        if (trim($form->notificationSubject) != '') {
             $notificationEmail->subject = $this->_translatedObjectPlusEnvironment($form->notificationSubject, $submission);
         } else {
             $notificationEmail->subject = $this->_translatedObjectPlusEnvironment('{formName} form was submitted', $submission);
@@ -272,7 +272,7 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         $confirmationEmail->htmlBody = $this->getConfirmationEmailBody($submission);
         $confirmationEmail->fromEmail = $this->_translatedObjectPlusEnvironment($form->confirmationSenderEmail, $submission);
         $confirmationEmail->fromName = $this->_translatedObjectPlusEnvironment($form->confirmationSenderName, $submission);
-        if ($form->confirmationSubject) {
+        if (trim($form->confirmationSubject) != '') {
             $confirmationEmail->subject = $this->_translatedObjectPlusEnvironment($form->confirmationSubject, $submission);
         } else {
             $confirmationEmail->subject = $this->_translatedObjectPlusEnvironment('Thanks for your submission.', $submission);
@@ -299,6 +299,7 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
 
                 if (count($properBccAddresses)) {
                     $notificationEmail->bcc = $properBccAddresses;
+                    $confirmationEmail->bcc = $properBccAddresses;
                 }
             }
         }
