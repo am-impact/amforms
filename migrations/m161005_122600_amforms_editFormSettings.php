@@ -17,9 +17,14 @@ class m161005_122600_amforms_editFormSettings extends BaseMigration
         $this->addColumnAfter('amforms_forms', 'afterSubmit', AttributeType::String, 'submitButton');
 
         // Update existing forms
-        $forms = craft()->amForms_forms->getAllForms();
+        $forms = craft()->db->createCommand()
+            ->select('*')
+            ->from('amforms_forms')
+            ->queryAll();
         if ($forms) {
             foreach ($forms as $form) {
+                $form = AmForms_FormModel::populateModel($form);
+
                 // Set afterSubmit
                 if (! empty($form->afterSubmitText)) {
                     $form->afterSubmit = 'afterSubmitText';
