@@ -46,7 +46,8 @@ class AmForms_FormRecord extends BaseRecord
             'formTemplate'             => AttributeType::String,
             'tabTemplate'              => AttributeType::String,
             'fieldTemplate'            => AttributeType::String,
-            'notificationTemplate'     => AttributeType::String
+            'notificationTemplate'     => AttributeType::String,
+            'confirmationTemplate'     => AttributeType::String
         );
     }
 
