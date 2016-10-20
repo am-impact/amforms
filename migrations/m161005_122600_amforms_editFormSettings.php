@@ -23,27 +23,24 @@ class m161005_122600_amforms_editFormSettings extends BaseMigration
             ->queryAll();
         if ($forms) {
             foreach ($forms as $form) {
-                $form = AmForms_FormModel::populateModel($form);
-
                 // Set afterSubmit
-                if (! empty($form->afterSubmitText)) {
-                    $form->afterSubmit = 'afterSubmitText';
+                $afterSubmit = 'afterSubmitText';
+
+                if (! empty($form['afterSubmitText'])) {
+                    $afterSubmit = 'afterSubmitText';
                 }
-                elseif (! empty($form->redirectEntryId)) {
-                    $form->afterSubmit = 'redirectEntryId';
+                elseif (! empty($form['redirectEntryId'])) {
+                    $afterSubmit = 'redirectEntryId';
                 }
-                elseif (! empty($form->redirectUrl)) {
-                    $form->afterSubmit = 'redirectUrl';
+                elseif (! empty($form['redirectUrl'])) {
+                    $afterSubmit = 'redirectUrl';
                 }
-                elseif (! empty($form->submitAction)) {
-                    $form->afterSubmit = 'submitAction';
-                }
-                else {
-                    $form->afterSubmit = 'afterSubmitText';
+                elseif (! empty($form['submitAction'])) {
+                    $afterSubmit = 'submitAction';
                 }
 
                 // Save form!
-                craft()->amForms_forms->saveForm($form);
+                craft()->db->createCommand()->update('amforms_forms', array('afterSubmit' => $afterSubmit), 'id = :id', array(':id' => $form['id']));
             }
         }
     }
