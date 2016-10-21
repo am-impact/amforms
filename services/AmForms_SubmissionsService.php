@@ -421,7 +421,13 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
             'form' => $form,
             'submission' => $submission
         );
-        return craft()->amForms->renderDisplayTemplate('confirmation', $form->confirmationTemplate, $variables);
+
+        $overrideTemplate = $form->confirmationTemplate;
+        if (empty($overrideTemplate)) {
+            $overrideTemplate = $form->notificationTemplate;
+        }
+
+        return craft()->amForms->renderDisplayTemplate('confirmation', $overrideTemplate, $variables);
     }
 
     /**
