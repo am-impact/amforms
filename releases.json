@@ -1,5 +1,13 @@
 [
     {
+        "version": "1.6.1",
+        "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
+        "date": "2016-10-25T10:00:00+01:00",
+        "notes": [
+            "[Fixed] Fixed pull request that missed an attribute in the form record."
+        ]
+    },
+    {
         "version": "1.6.0",
         "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
         "date": "2016-10-18T10:00:00+01:00",
