@@ -101,6 +101,10 @@ return array(
             'name' => 'Notification template',
             'value' => '',
         ),
+        array(
+            'name' => 'Confirmation template',
+            'value' => '',
+        ),
     ),
     'fields' => array(
         array(
