@@ -108,8 +108,14 @@ class AmForms_SubmissionElementType extends BaseElementType
      */
     public function getAvailableActions($source = null)
     {
-        // Get export action
-        $exportAction = craft()->elements->getAction('AmForms_Export');
+        $actions = array();
+
+        // Can the current user handle exports?
+        $user = craft()->userSession->getUser();
+        if ($user->can('accessAmFormsExports')) {
+            // Get export action
+            $actions[] = craft()->elements->getAction('AmForms_Export');
+        }
 
         // Get delete action
         $deleteAction = craft()->elements->getAction('Delete');
@@ -117,9 +123,10 @@ class AmForms_SubmissionElementType extends BaseElementType
             'confirmationMessage' => Craft::t('Are you sure you want to delete the selected submissions?'),
             'successMessage'      => Craft::t('Submissions deleted.'),
         ));
+        $actions[] = $deleteAction;
 
         // Set actions
-        return array($exportAction, $deleteAction);
+        return $actions;
     }
 
     /**
