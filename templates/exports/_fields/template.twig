@@ -39,7 +39,7 @@
                             elementType: craft.elements.getElementType('Asset'),
                             elements: elements,
                             limit: null,
-                            addButtonLabel: (field.settings.selectionLabel is defined ? field.settings.selectionLabel|t : 'Add an asset'|t),
+                            addButtonLabel: (field.settings.selectionLabel is defined and field.settings.selectionLabel|length ? field.settings.selectionLabel|t : 'Add an asset'|t),
                             jsClass: 'Craft.AssetSelectInput',
                             sources: field.settings.sources,
                             criteria: {
@@ -77,7 +77,7 @@
                             elementType: craft.elements.getElementType('Entry'),
                             elements: elements,
                             limit: null,
-                            addButtonLabel: (field.settings.selectionLabel is defined ? field.settings.selectionLabel|t : 'Add an entry'|t),
+                            addButtonLabel: (field.settings.selectionLabel is defined and field.settings.selectionLabel|length ? field.settings.selectionLabel|t : 'Add an entry'|t),
                             sources: field.settings.sources
                         }) }}
 

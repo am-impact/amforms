@@ -278,7 +278,7 @@ class AmForms_ExportsController extends BaseController
                 'fields' => $fields,
                 'criteriaCounter' => $counter
             );
-            $html = craft()->templates->render('amForms/exports/_fields/template', $variables, true);
+            $html = craft()->templates->render('amForms/exports/_fields/template', $variables);
 
             $return = array(
                 'success' => true,
