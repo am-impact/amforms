@@ -34,7 +34,8 @@ class AmForms_RecaptchaService extends BaseApplicationComponent
             method_exists(craft()->templates, 'setTemplatesPath') ? craft()->templates->setTemplatesPath($oldPath) : craft()->path->setTemplatesPath($oldPath);
 
             // Include Google's reCAPTCHA API
-            craft()->templates->includeJsFile('https://www.google.com/recaptcha/api.js');
+            craft()->templates->includeJsFile('https://www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit');
+            craft()->templates->includeJs('var CaptchaCallback = function() { var captchas = document.querySelectorAll(\'.g-recaptcha\'); for (i = 0; i < captchas.length; i += 1) { grecaptcha.render(captchas[i], {\'sitekey\' : \''.$recaptchaSettings['siteKey']->value.'\'}); }; };');
 
             // Parse widget
             return new \Twig_Markup($html, craft()->templates->getTwig()->getCharset());
