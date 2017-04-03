@@ -38,6 +38,9 @@ class AmFormsService extends BaseApplicationComponent
             $assetFolder = craft()->assets->getFolderById($asset->folderId);
             $assetSource = $assetFolder->getSource();
             $assetSettings = $assetSource->settings;
+            if (!array_key_exists('path', $assetSettings)) {
+                $assetSettings['path'] = '';
+            }
             if ($assetFolder->path) {
                 $assetSettings['path'] = $assetSettings['path'] . $assetFolder->path;
             }
