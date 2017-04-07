@@ -8,38 +8,4 @@
     {% set name = name ~ '[time]' -%}
 {% endif -%}
 
-{% includeJsResource 'lib/jquery.timepicker/jquery.timepicker'~(craft.config.useCompressedJs ? '.min' : '')~'.js' -%}
-
-{% if value is not defined -%}
-    {% set value = null -%}
-{% endif -%}
-
-<div class="timewrapper">
-    {%- include "_includes/forms/text" with { autocomplete: false, size: 10, value: (value and value.localeTime is defined ? value.localeTime() : value) } -%}
-</div>
-
-{%-	set localeData = craft.i18n.getLocaleData() %}
-
-{%- set js %}
-
-{% includeJsResource '/lib/jquery.timepicker/jquery.timepicker.min.js' %}
-{% includeCssResource 'amforms/css/timepicker.css' %}
-
-(function ($) {
-    var $timePicker = $('#fields-{{ id|namespaceInputId|e('js') }}');
-    $timePicker.timepicker({
-    timeFormat: '{{ craft.i18n.timepickerJsFormat }}',
-    closeOnWindowScroll: false,
-    orientation: '{{ localeData.getOrientation() }}',
-    {% if minuteIncrement is defined %}step: '{{ minuteIncrement }}',{% endif %}
-    lang: {
-        am: '{{ localeData.getAMName() }}',
-        AM: '{{ localeData.getAMName() }}',
-        pm: '{{ localeData.getPMName() }}',
-        PM: '{{ localeData.getPMName() }}'
-        }
-    });
-})(jQuery);
-
-{%- endset %}
-{%- includeJs js %}
+{%- include "_includes/forms/text" with { class: 'time', autocomplete: false, size: 10, value: (value and value.localeTime is defined ? value.localeTime() : value) } -%}
