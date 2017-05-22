@@ -106,7 +106,6 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         $submission->addErrors($submissionRecord->getErrors());
 
         if (! $submission->hasErrors()) {
-
             // Fire an 'onBeforeSaveSubmission' event
             $event = new Event($this, array(
                 'submission'      => $submission,
@@ -181,23 +180,37 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
      */
     public function deleteSubmission(AmForms_SubmissionModel $submission)
     {
-        $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
+        // Fire an 'onBeforeDeleteSubmission' event
+        $event = new Event($this, array(
+            'submission' => $submission,
+        ));
+        $this->onBeforeDeleteSubmission($event);
 
-        try {
-            // Delete the element and submission
-            craft()->elements->deleteElementById($submission->id);
+        // Is the event giving us the go-ahead?
+        if ($event->performAction) {
+            $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
 
-            if ($transaction !== null) {
-                $transaction->commit();
+            try {
+                // Delete the element and submission
+                craft()->elements->deleteElementById($submission->id);
+
+                if ($transaction !== null) {
+                    $transaction->commit();
+                }
+
+                // Fire an 'onDeleteSubmission' event
+                $this->onDeleteSubmission(new Event($this, array(
+                    'submission' => $submission,
+                )));
+
+                return true;
+            } catch (\Exception $e) {
+                if ($transaction !== null) {
+                    $transaction->rollback();
+                }
+
+                throw $e;
             }
-
-            return true;
-        } catch (\Exception $e) {
-            if ($transaction !== null) {
-                $transaction->rollback();
-            }
-
-            throw $e;
         }
 
         return false;
@@ -460,6 +473,26 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
     public function onSaveSubmission(Event $event)
     {
         $this->raiseEvent('onSaveSubmission', $event);
+    }
+
+    /**
+     * Fires an 'onBeforeDeleteSubmission' event.
+     *
+     * @param Event $event
+     */
+    public function onBeforeDeleteSubmission(Event $event)
+    {
+        $this->raiseEvent('onBeforeDeleteSubmission', $event);
+    }
+
+    /**
+     * Fires an 'onDeleteSubmission' event.
+     *
+     * @param Event $event
+     */
+    public function onDeleteSubmission(Event $event)
+    {
+        $this->raiseEvent('onDeleteSubmission', $event);
     }
 
     /**
