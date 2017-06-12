@@ -29,7 +29,7 @@ class AmForms_FormsService extends BaseApplicationComponent
      */
     public function getAllForms($indexBy = 'id')
     {
-        return $this->getCriteria(array('order' => 'name', 'indexBy' => $indexBy))->find();
+        return $this->getCriteria(array('order' => 'name', 'indexBy' => $indexBy, 'limit' => null))->find();
     }
 
     /**
