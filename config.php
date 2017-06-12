@@ -18,10 +18,6 @@ return array(
             'value' => 8,
         ),
         array(
-            'name' => 'Use Mandrill for email',
-            'value' => false,
-        ),
-        array(
             'name' => 'Bcc email address',
             'value' => '',
         ),

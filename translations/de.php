@@ -202,7 +202,6 @@ return array(
     'Total submissions' => 'Anzahl Übertragungen',
     'Total submissions that met the criteria' => 'Anzahl Übertragungen, die den Kriterien entsprechen',
     'Use Google reCAPTCHA in forms.' => 'Google reCAPTCHA in Formularen verwenden.',
-    'Use Mandrill for email' => 'Mandrill für E-Mail verwenden',
     'Use this if you want to submit the form to a different URL.' => 'Benutzen Sie dies, wenn sie das Formular an eine andere URL senden möchten.',
     'Used at' => 'Verwendet bei',
     'Value' => 'Wert',

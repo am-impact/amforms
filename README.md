@@ -40,7 +40,7 @@ You have the option to export your submissions per form. You'll be able to choos
 
 ### Settings
 
-There's a general setting called **Use Mandrill for email**, which will be implemented later on. By default, the anti-spam is activated for your forms, but there's also an option to activate Google reCAPTCHA.
+By default, the anti-spam is activated for your forms, but there's also an option to activate Google reCAPTCHA.
 
 ![General](https://raw.githubusercontent.com/am-impact/am-impact.github.io/master/img/readme/amforms/general.png "General")
 

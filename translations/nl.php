@@ -202,7 +202,6 @@ return array(
     'Total submissions' => 'Aantal inzendingen',
     'Total submissions that met the criteria' => 'Aantal inzendingen die aan criteria voldoen',
     'Use Google reCAPTCHA in forms.' => 'Gebruik Google reCAPTCHA in formulieren.',
-    'Use Mandrill for email' => 'Gebruik Mandrill voor e-mail',
     'Use this if you want to submit the form to a different URL.' => 'Gebruik dit als u het formulier wilt verzenden naar een andere URL.',
     'Used at' => 'Gebruikt bij',
     'Value' => 'Waarde',
