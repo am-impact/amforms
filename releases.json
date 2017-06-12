@@ -1,5 +1,19 @@
 [
     {
+        "version": "1.7.0",
+        "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
+        "date": "2017-06-12T10:00:00+01:00",
+        "notes": [
+            "[Added] Add onBeforeDeleteSubmission and onDeleteSubmission events.",
+            "[Added] Added support for multiple reCAPTCHA's on one page.",
+            "[Added] Submission confirmation events.",
+            "[Added] German translations.",
+            "[Improved] Remove jQuery from datetime fields.",
+            "[Fixed] Remove the export action if the user does not have the userrights for it.",
+            "[Fixed] Export criteria fix."
+        ]
+    },
+    {
         "version": "1.6.1",
         "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
         "date": "2016-10-25T10:00:00+01:00",
