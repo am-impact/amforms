@@ -654,7 +654,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     break;
 
                 case 'Checkboxes':
-                    $setCriteria = array('or');
+                    $setCriteria = array();
                     foreach ($export->criteria[ $field->id ] as $criteriaValue) {
                         if (! empty($criteriaValue)) {
                             foreach ($criteriaValue as $subCriteriaValue) {
@@ -662,7 +662,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                             }
                         }
                     }
-                    $criteria->{$field->handle} = $setCriteria;
+                    $criteria->{$field->handle} = count($setCriteria) ? array_merge(array('or'), $setCriteria) : '[]';
                     break;
 
                 case 'Lightswitch':
