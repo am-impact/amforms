@@ -15,29 +15,37 @@
 ] %}
 
 {% set extraPageHeaderHtml %}
-    <div class="buttons right">
-        {% if exportId is defined %}
-            <input type="hidden" name="save" value="1">
-            <input type="submit" class="btn submit" value="{{ 'Save'|t }}">
-        {% else %}
-            <div class="btngroup">
-                <input type="submit" class="btn submit" value="{{ 'Start'|t }}">
+    {% if currentForm|length %}
+        <div class="buttons right">
+            {% if exportId is defined %}
+                <input type="hidden" name="save" value="1">
+                <input type="submit" class="btn submit" value="{{ 'Save'|t }}">
+            {% else %}
+                <div class="btngroup">
+                    <input type="submit" class="btn submit" value="{{ 'Start'|t }}">
 
-                <div class="btn submit menubtn"></div>
-                <div class="menu">
-                    <ul>
-                        <li>
-                            <a class="formsubmit" data-param="save" data-value="1">{{ 'Save and start'|t }}</a>
-                        </li>
-                    </ul>
+                    <div class="btn submit menubtn"></div>
+                    <div class="menu">
+                        <ul>
+                            <li>
+                                <a class="formsubmit" data-param="save" data-value="1">{{ 'Save and start'|t }}</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        {% endif %}
-    </div>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endset %}
 
+{%- block containerAttributes -%}
+    id="container" {% if fullPageForm -%}
+        method="post" accept-charset="UTF-8" data-saveshortcut{% if saveShortcutRedirect is defined %} data-saveshortcut-redirect="{{ saveShortcutRedirect }}"{% endif %}
+    {%- endif %}
+{%- endblock -%}
+
 {% block content %}
-    {% if not availableForms|length %}
+    {% if not availableForms|length or not currentForm|length %}
         <p>{{ 'No forms exist yet.'|t }}</p>
     {% else %}
         {% set formOptions = [] %}
@@ -53,11 +61,10 @@
             label: 'Form'|t,
             id: 'formId',
             name: 'formId',
-            value: export.formId,
+            value: currentForm.id,
             options: formOptions,
             errors: export.getErrors('formId'),
             first: true,
-            toggle: true,
             instructions: 'Which form do you want to export?'|t
         }) }}
         {{ forms.textField({
@@ -70,101 +77,101 @@
         }) }}
         <hr>
         <h3>{{ 'Which fields do you want to export?'|t }}</h3>
-        {% for form in availableForms %}
-            {% set exportFields = attribute(fields, form.handle) %}
-            {% set isCurrent = (export.formId ? export.formId == form.id : loop.first) -%}
+        {% set exportFields = availableFields %}
 
-            <div id="{{ form.id }}"{% if not isCurrent %} class="hidden"{% endif %}>
-                <table id="formFields-{{ form.id }}" class="data fullwidth collapsible">
-                    <thead>
-                        <td class="thin"></td>
-                        <th scope="col">{{ 'Field'|t }}</th>
-                        <th scope="col">{{ 'Include in export'|t }}</th>
-                        <th scope="col">{{ 'Export as'|t }}</th>
-                    </thead>
-                    <tbody>
-                        {# Override fields order if we saved this export #}
-                        {% if export.formId and export.map|length and export.formId == form.id and export.map.fields|length == exportFields|length %}
-                            {% set newFields = [] %}
+        <div id="{{ currentForm.id }}">
+            <table id="formFields-{{ currentForm.id }}" class="data fullwidth collapsible">
+                <thead>
+                    <td class="thin"></td>
+                    <th scope="col">{{ 'Field'|t }}</th>
+                    <th scope="col">{{ 'Include in export'|t }}</th>
+                    <th scope="col">{{ 'Export as'|t }}</th>
+                </thead>
+                <tbody>
+                    {# Override fields order if we saved this export #}
+                    {% if export.formId and export.map|length and export.formId == currentForm.id and export.map.fields|length == exportFields|length %}
+                        {% set newFields = [] %}
 
-                            {% for mapField, mapValue in export.map.fields %}
-                                {% for field in exportFields %}
-                                    {% if mapField == field.handle %}
-                                        {% set newFields = newFields|merge([field]) %}
-                                    {% endif %}
-                                {% endfor %}
+                        {% for mapField, mapValue in export.map.fields %}
+                            {% for field in exportFields %}
+                                {% if mapField == field.handle %}
+                                    {% set newFields = newFields|merge([field]) %}
+                                {% endif %}
                             {% endfor %}
-
-                            {% set exportFields = newFields %}
-                        {% endif %}
-
-                        {% for field in exportFields %}
-                            <tr>
-                                <td class="thin"><a class="move icon" title="{{ 'Reorder'|t }}" role="button"></a></td>
-                                <td>{{ field.name }}</td>
-                                <td>
-                                    {{ forms.lightswitchField({
-                                        id: form.id ~ '[included][' ~ field.handle ~ ']',
-                                        name: form.id ~ '[included][' ~ field.handle ~ ']',
-                                        on: (isCurrent and export.map|length and attribute(export.map.included, field.handle) is defined ? attribute(export.map.included, field.handle) : (field.defaultInclude is not defined ? field.checked : true))
-                                    }) }}
-                                </td>
-                                <td>
-                                    {{ forms.textField({
-                                        id: form.id ~ '[fields][' ~ field.handle ~ ']',
-                                        name: form.id ~ '[fields][' ~ field.handle ~ ']',
-                                        value: (isCurrent and export.map|length and attribute(export.map.fields, field.handle) is defined ? attribute(export.map.fields, field.handle) : field.name)
-                                    }) }}
-                                </td>
-                            </tr>
                         {% endfor %}
-                    </tbody>
-                </table>
 
-                <hr>
-                <h3>{{ 'What criteria must be met?'|t }}</h3>
-                <p id="nocriteria-{{ form.id }}">
-                    {{ "No criteria exist yet."|t }}
-                </p>
-                <table id="formCriteria-{{ form.id }}" class="data fullwidth collapsible">
-                    <thead>
-                        <th scope="col">{{ 'Field'|t }}</th>
-                        <th scope="col">{{ 'Criteria'|t }}</th>
-                        <td class="thin"></td>
-                    </thead>
-                    <tbody>
-                        {% if isCurrent and export.criteria|length and export.criteria.fields|length -%}
-                            {% for criteriaKey, criteriaField in export.criteria.fields %}
-                                {% include 'amforms/exports/_fields/template' with {
-                                    fields: exportFields,
-                                    criteriaCounter: loop.index0,
-                                    givenField: criteriaField,
-                                    givenValue: (attribute(attribute(export.criteria, criteriaField), criteriaKey) is defined ? attribute(attribute(export.criteria, criteriaField), criteriaKey) : null)
-                                } %}
-                            {% endfor %}
-                        {% endif -%}
-                    </tbody>
-                </table>
-                <div class="buttons">
-                    <a href="#" id="addCriteria-{{ form.id }}" class="btn dashed add icon">{{ 'Add criteria'|t }}</a>
-                    <div class="spinner hidden"></div>
-                </div>
+                        {% set exportFields = newFields %}
+                    {% endif %}
 
-                {% set js %}
-                    new Craft.AmFormsAdminTable({
-                        tableSelector: '#formFields-{{ form.id }}',
-                        sortable: true
-                    });
-                    new Craft.AmFormsAdminTable({
-                        tableSelector: '#formCriteria-{{ form.id }}',
-                        noObjectsSelector: '#nocriteria-{{ form.id }}',
-                        criteriaSelector: '#addCriteria-{{ form.id }}',
-                        criteriaCounter: {{ (isCurrent and export.criteria|length and export.criteria.fields|length ? export.criteria.fields|length : 0) }},
-                        formId: {{ form.id }}
-                    });
-                {% endset %}
-                {% includeJs js %}
+                    {% for field in exportFields %}
+                        <tr>
+                            <td class="thin"><a class="move icon" title="{{ 'Reorder'|t }}" role="button"></a></td>
+                            <td>{{ field.name }}</td>
+                            <td>
+                                {{ forms.lightswitchField({
+                                    id: currentForm.id ~ '[included][' ~ field.handle ~ ']',
+                                    name: currentForm.id ~ '[included][' ~ field.handle ~ ']',
+                                    on: (export.map|length and attribute(export.map.included, field.handle) is defined ? attribute(export.map.included, field.handle) : (field.defaultInclude is not defined ? field.checked : true))
+                                }) }}
+                            </td>
+                            <td>
+                                {{ forms.textField({
+                                    id: currentForm.id ~ '[fields][' ~ field.handle ~ ']',
+                                    name: currentForm.id ~ '[fields][' ~ field.handle ~ ']',
+                                    value: (export.map|length and attribute(export.map.fields, field.handle) is defined ? attribute(export.map.fields, field.handle) : field.name)
+                                }) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <hr>
+            <h3>{{ 'What criteria must be met?'|t }}</h3>
+            <p id="nocriteria-{{ currentForm.id }}">
+                {{ "No criteria exist yet."|t }}
+            </p>
+            <table id="formCriteria-{{ currentForm.id }}" class="data fullwidth collapsible">
+                <thead>
+                    <th scope="col">{{ 'Field'|t }}</th>
+                    <th scope="col">{{ 'Criteria'|t }}</th>
+                    <td class="thin"></td>
+                </thead>
+                <tbody>
+                    {% if export.criteria|length and export.criteria.fields|length -%}
+                        {% for criteriaKey, criteriaField in export.criteria.fields %}
+                            {% include 'amforms/exports/_fields/template' with {
+                                fields: exportFields,
+                                criteriaCounter: loop.index0,
+                                givenField: criteriaField,
+                                givenValue: (attribute(attribute(export.criteria, criteriaField), criteriaKey) is defined ? attribute(attribute(export.criteria, criteriaField), criteriaKey) : null)
+                            } %}
+                        {% endfor %}
+                    {% endif -%}
+                </tbody>
+            </table>
+            <div class="buttons">
+                <a href="#" id="addCriteria-{{ currentForm.id }}" class="btn dashed add icon">{{ 'Add criteria'|t }}</a>
+                <div class="spinner hidden"></div>
             </div>
-        {% endfor %}
+
+            {% set js %}
+                new Craft.AmFormsAdminTable({
+                    tableSelector: '#formFields-{{ currentForm.id }}',
+                    sortable: true
+                });
+                new Craft.AmFormsAdminTable({
+                    tableSelector: '#formCriteria-{{ currentForm.id }}',
+                    noObjectsSelector: '#nocriteria-{{ currentForm.id }}',
+                    criteriaSelector: '#addCriteria-{{ currentForm.id }}',
+                    criteriaCounter: {{ (export.criteria|length and export.criteria.fields|length ? export.criteria.fields|length : 0) }},
+                    formId: {{ currentForm.id }}
+                });
+                $('#formId').on('change', function() {
+                    window.location = '?formId=' + $(this).val();
+                });
+            {% endset %}
+            {% includeJs js %}
+        </div>
     {% endif %}
 {% endblock %}

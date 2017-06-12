@@ -52,9 +52,30 @@ class AmForms_ExportsController extends BaseController
 
         // Get available forms
         $variables['availableForms'] = craft()->amForms_forms->getAllForms();
-        if ($variables['availableForms']) {
-            foreach ($variables['availableForms'] as $form) {
-                $variables['fields'][$form->handle] = craft()->amForms_exports->getExportFields($form);
+
+        // Get available fields
+        $variables['currentForm'] = null;
+        $variables['availableFields'] = array();
+        if (isset($_GET['formId'])) {
+            $form = craft()->amForms_forms->getFormById($_GET['formId']);
+            if ($form) {
+                $variables['currentForm'] = $form;
+                $variables['availableFields'] = craft()->amForms_exports->getExportFields($form);
+            }
+        }
+        elseif ($variables['export']->formId) {
+            $form = craft()->amForms_forms->getFormById($variables['export']->formId);
+            if ($form) {
+                $variables['currentForm'] = $form;
+                $variables['availableFields'] = craft()->amForms_exports->getExportFields($form);
+            }
+        }
+        else {
+            // Get from first form
+            $firstForm = current($variables['availableForms']);
+            if ($firstForm) {
+                $variables['currentForm'] = $firstForm;
+                $variables['availableFields'] = craft()->amForms_exports->getExportFields($firstForm);
             }
         }
 
