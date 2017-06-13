@@ -82,9 +82,9 @@ class AmFormsService extends BaseApplicationComponent
                 // Try to find the template for each available template extension
                 foreach (craft()->config->get('defaultTemplateExtensions') as $extension) {
                     if (IOHelper::fileExists($templateFile . '.' . $extension)) {
-                        $pathParts = explode('/', $overrideTemplate);
-                        $defaultTemplate = $pathParts[ (count($pathParts) - 1) ];
-                        $templatePath = craft()->path->getSiteTemplatesPath() . implode('/', array_slice($pathParts, 0, (count($pathParts) - 1)));
+                        $defaultTemplate = $overrideTemplate;
+                        $templatePath = craft()->path->getSiteTemplatesPath();
+                        break;
                     }
                 }
             }
