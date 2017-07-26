@@ -1,9 +1,0 @@
-{#- You can use tab.info for tab information and the rendered fields with tab.fields -#}
-{% for tab in tabs -%}
-    {% if form.displayTabTitles %}
-        <h3>{{ tab.info.name|t }}</h3>
-    {% endif %}
-    <fieldset>
-        {{ tab.fields|join|raw }}
-    </fieldset>
-{% endfor %}
