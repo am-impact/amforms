@@ -1,16 +1,16 @@
 <?php
 /**
- * Forms for Craft.
+ * Form manager for Craft.
  *
  * @author    a&m impact
  * @copyright Copyright (c) 2017 a&m impact
  * @link      http://www.am-impact.nl
  */
 
-namespace amimpact\forms;
+namespace amimpact\formmanager;
 
-use amimpact\forms\models\Settings;
-use amimpact\forms\variables\FormsVariable;
+use amimpact\formmanager\models\Settings;
+use amimpact\formmanager\variables\Forms;
 
 use Craft;
 use craft\base\Plugin;
@@ -22,7 +22,7 @@ use craft\web\UrlManager;
 
 use yii\base\Event;
 
-class Forms extends Plugin
+class FormManager extends Plugin
 {
     public static $plugin;
 
@@ -37,7 +37,12 @@ class Forms extends Plugin
     public $hasCpSettings = true;
 
     /**
-     * Init Forms.
+     * @inheritdoc
+     */
+    public $hasCpSection = true;
+
+    /**
+     * Init Form manager.
      */
     public function init()
     {
@@ -63,20 +68,20 @@ class Forms extends Plugin
         $navItem = parent::getCpNavItem();
         $navItem['subnav'] = [
             'submissions' => [
-                'label' => Craft::t('forms', 'Submissions'),
-                'url' => UrlHelper::cpUrl('forms/submissions/'),
+                'label' => Craft::t('form-manager', 'Submissions'),
+                'url' => UrlHelper::cpUrl('form-manager/submissions/'),
             ],
             'forms' => [
-                'label' => Craft::t('forms', 'Forms'),
-                'url' => UrlHelper::cpUrl('forms/forms/'),
+                'label' => Craft::t('form-manager', 'Forms'),
+                'url' => UrlHelper::cpUrl('form-manager/forms/'),
             ],
             'fields' => [
-                'label' => Craft::t('forms', 'Fields'),
-                'url' => UrlHelper::cpUrl('forms/fields/'),
+                'label' => Craft::t('form-manager', 'Fields'),
+                'url' => UrlHelper::cpUrl('form-manager/fields/'),
             ],
             'exports' => [
-                'label' => Craft::t('forms', 'Exports'),
-                'url' => UrlHelper::cpUrl('forms/exports/'),
+                'label' => Craft::t('form-manager', 'Exports'),
+                'url' => UrlHelper::cpUrl('form-manager/exports/'),
             ],
         ];
 
@@ -88,7 +93,7 @@ class Forms extends Plugin
      */
     public function getSettingsResponse()
     {
-        return Craft::$app->controller->renderTemplate('forms/settings/index', [
+        return Craft::$app->controller->renderTemplate('form-manager/settings/index', [
             'plugin' => $this,
         ]);
     }
@@ -109,7 +114,7 @@ class Forms extends Plugin
     private function _registerServices()
     {
         $this->setComponents([
-            'general' => \amimpact\forms\services\General::class,
+            'general' => \amimpact\formmanager\services\General::class,
         ]);
     }
 
@@ -122,9 +127,9 @@ class Forms extends Plugin
     {
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
             $rules = [
-                'forms' => 'forms/forms/index',
-                'forms/forms/new' => 'forms/forms/edit',
-                'forms/forms/edit/<formId:\d+>' => 'forms/forms/edit',
+                'form-manager' => '',
+                'form-manager/forms/new' => 'form-manager/forms/edit',
+                'form-manager/forms/edit/<formId:\d+>' => 'form-manager/forms/edit',
             ];
 
             $event->rules = array_merge($event->rules, $rules);
@@ -139,7 +144,7 @@ class Forms extends Plugin
     private function _registerVariables()
     {
         Event::on(CraftVariable::class, CraftVariable::EVENT_DEFINE_COMPONENTS, function(DefineComponentsEvent $event) {
-            $event->components['forms'] = FormsVariable::class;
+            $event->components['formmanager'] = Forms::class;
         });
     }
 }

@@ -1,6 +1,6 @@
 {
-    "name": "amimpact/forms",
-    "description": "Forms in Craft.",
+    "name": "amimpact/form-manager",
+    "description": "Form manager in Craft.",
     "type": "craft-plugin",
     "version": "3.0.0",
     "keywords": [
@@ -22,20 +22,17 @@
     },
     "autoload": {
         "psr-4": {
-          "amimpact\\forms\\": "src/"
+          "amimpact\\form-manager\\": "src/"
         }
     },
     "extra": {
-        "name": "Forms",
-        "handle": "forms",
+        "name": "Form manager",
+        "handle": "form-manager",
         "version": "3.0.0",
         "schemaVersion": "3.0.0",
-        "hasSettings": true,
-        "hasCpSection": true,
         "developer": "a&m impact",
         "developerUrl": "http://www.am-impact.nl",
-        "description": "Forms in Craft.",
+        "description": "Form manager in Craft.",
         "documentationUrl": "https://github.com/am-impact/amforms/blob/master/README.md",
-        "class": "amimpact\\forms\\Forms"
     }
 }

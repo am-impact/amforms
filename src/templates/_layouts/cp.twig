@@ -7,11 +7,11 @@
 
 {% if crumbs is not defined %}
     {# Find active crumb #}
-    {% set activeCrumb = attribute(craft.forms.getSubNav(), selectedSubnavItem) %}
+    {% set activeCrumb = attribute(craft.form-manager.getSubNav(), selectedSubnavItem) %}
 
     {# Define crumbs #}
     {% set crumbs = [
-        { label: craft.forms.getName(), url: url('forms') },
+        { label: craft.formmanager.getName(), url: url('form-manager') },
         { label: activeCrumb.label, url: activeCrumb.url }
     ] %}
 

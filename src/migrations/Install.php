@@ -1,13 +1,13 @@
 <?php
 /**
- * Forms for Craft.
+ * Form manager for Craft.
  *
  * @author    a&m impact
  * @copyright Copyright (c) 2017 a&m impact
  * @link      http://www.am-impact.nl
  */
 
-namespace amimpact\forms\migrations;
+namespace amimpact\formmanager\migrations;
 
 use Craft;
 use craft\db\Migration;
@@ -33,8 +33,8 @@ class Install extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%forms_submissions}}');
-        $this->dropTable('{{%forms_forms}}');
+        $this->dropTable('{{%formmanager_submissions}}');
+        $this->dropTable('{{%formmanager_forms}}');
     }
 
     /**
@@ -44,7 +44,7 @@ class Install extends Migration
      */
     protected function createTables()
     {
-        $this->createTable('{{%forms_forms}}', [
+        $this->createTable('{{%formmanager_forms}}', [
             'id' => $this->integer()->notNull(),
             'name' => $this->string()->notNull(),
             'handle' => $this->string()->notNull(),
@@ -62,7 +62,7 @@ class Install extends Migration
             'uid' => $this->uid(),
             'PRIMARY KEY(id)',
         ]);
-        $this->createTable('{{%forms_submissions}}', [
+        $this->createTable('{{%formmanager_submissions}}', [
             'id' => $this->integer()->notNull(),
             'formId' => $this->integer()->notNull(),
             'origin' => $this->string(),
@@ -82,10 +82,10 @@ class Install extends Migration
      */
     protected function createIndexes()
     {
-        $this->createIndex(null, '{{%forms_forms}}', 'name', true);
-        $this->createIndex(null, '{{%forms_forms}}', 'handle', true);
-        $this->createIndex(null, '{{%forms_forms}}', 'authorId', false);
-        $this->createIndex(null, '{{%forms_forms}}', 'fieldLayoutId', false);
+        $this->createIndex(null, '{{%formmanager_forms}}', 'name', true);
+        $this->createIndex(null, '{{%formmanager_forms}}', 'handle', true);
+        $this->createIndex(null, '{{%formmanager_forms}}', 'authorId', false);
+        $this->createIndex(null, '{{%formmanager_forms}}', 'fieldLayoutId', false);
     }
 
     /**
@@ -95,10 +95,10 @@ class Install extends Migration
      */
     protected function addForeignKeys()
     {
-        $this->addForeignKey(null, '{{%forms_forms}}', 'authorId', '{{%users}}', 'id', 'SET NULL', null);
-        $this->addForeignKey(null, '{{%forms_forms}}', 'fieldLayoutId', '{{%fieldlayouts}}', 'id', 'SET NULL', null);
-        $this->addForeignKey(null, '{{%forms_forms}}', 'redirectEntryId', '{{%entries}}', 'id', 'SET NULL', null);
-        $this->addForeignKey(null, '{{%forms_submissions}}', 'id', '{{%elements}}', 'id', 'CASCADE', null);
-        $this->addForeignKey(null, '{{%forms_submissions}}', 'formId', '{{%forms_forms}}', 'id', 'CASCADE', null);
+        $this->addForeignKey(null, '{{%formmanager_forms}}', 'authorId', '{{%users}}', 'id', 'SET NULL', null);
+        $this->addForeignKey(null, '{{%formmanager_forms}}', 'fieldLayoutId', '{{%fieldlayouts}}', 'id', 'SET NULL', null);
+        $this->addForeignKey(null, '{{%formmanager_forms}}', 'redirectEntryId', '{{%entries}}', 'id', 'SET NULL', null);
+        $this->addForeignKey(null, '{{%formmanager_submissions}}', 'id', '{{%elements}}', 'id', 'CASCADE', null);
+        $this->addForeignKey(null, '{{%formmanager_submissions}}', 'formId', '{{%formmanager_forms}}', 'id', 'CASCADE', null);
     }
 }

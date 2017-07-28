@@ -1,15 +1,15 @@
 <?php
 /**
- * Forms for Craft.
+ * Form manager for Craft.
  *
  * @author    a&m impact
  * @copyright Copyright (c) 2017 a&m impact
  * @link      http://www.am-impact.nl
  */
 
-namespace amimpact\forms\models;
+namespace amimpact\formmanager\models;
 
-use amimpact\forms\Forms;
+use amimpact\formmanager\FormManager;
 
 use Craft;
 use craft\base\Model;

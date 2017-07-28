@@ -1,15 +1,15 @@
 <?php
 /**
- * Forms for Craft.
+ * Form manager for Craft.
  *
  * @author    a&m impact
  * @copyright Copyright (c) 2017 a&m impact
  * @link      http://www.am-impact.nl
  */
 
-namespace amimpact\forms\controllers;
+namespace amimpact\formmanager\controllers;
 
-use amimpact\forms\Forms;
+use amimpact\formmanager\FormManager;
 
 use Craft;
 use craft\web\Controller;
@@ -28,6 +28,6 @@ class FormsController extends Controller
      */
     public function actionEdit(int $formId = null): Response
     {
-        return $this->renderTemplate('forms/forms/_edit', []);
+        return $this->renderTemplate('form-manager/forms/_edit', []);
     }
 }
