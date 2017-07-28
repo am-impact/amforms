@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-          "amimpact\\form-manager\\": "src/"
+          "amimpact\\formmanager\\": "src/"
         }
     },
     "extra": {
@@ -33,6 +33,6 @@
         "developer": "a&m impact",
         "developerUrl": "http://www.am-impact.nl",
         "description": "Form manager in Craft.",
-        "documentationUrl": "https://github.com/am-impact/amforms/blob/master/README.md",
+        "documentationUrl": "https://github.com/am-impact/amforms/blob/master/README.md"
     }
 }
