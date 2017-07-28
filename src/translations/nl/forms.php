@@ -8,5 +8,10 @@
  */
 
 return [
-
+    'Exports' => 'Exports',
+    'Fields' => 'Velden',
+    'Forms' => 'Formulieren',
+    'Plugin name' => 'Plugin naam',
+    'Plugin name for the end user.' => 'Plugin naam voor de eind gebruiker.',
+    'Submissions' => 'Inzendingen',
 ];

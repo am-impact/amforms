@@ -1,0 +1,22 @@
+{% extends (elementType is defined ? '_layouts/elementindex' : '_layouts/cp') %}
+
+{# Active subnav item #}
+{% if selectedSubnavItem is not defined %}
+    {% set selectedSubnavItem = craft.request.getSegment(2) %}
+{% endif %}
+
+{% if crumbs is not defined %}
+    {# Find active crumb #}
+    {% set activeCrumb = attribute(craft.forms.getSubNav(), selectedSubnavItem) %}
+
+    {# Define crumbs #}
+    {% set crumbs = [
+        { label: craft.forms.getName(), url: url('forms') },
+        { label: activeCrumb.label, url: activeCrumb.url }
+    ] %}
+
+    {# Define title #}
+    {% if title is not defined %}
+        {% set title = activeCrumb.label %}
+    {% endif %}
+{% endif %}
