@@ -11,7 +11,7 @@ return [
     'Exports' => 'Exports',
     'Fields' => 'Velden',
     'Forms' => 'Formulieren',
-    'Form manager' => 'Formulier manager',
+    'Form Manager' => 'Formulier manager',
     'Plugin name' => 'Plugin naam',
     'Plugin name for the end user.' => 'Plugin naam voor de eind gebruiker.',
     'Submissions' => 'Inzendingen',

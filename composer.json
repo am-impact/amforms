@@ -26,7 +26,7 @@
         }
     },
     "extra": {
-        "name": "Form manager",
+        "name": "Form Manager",
         "handle": "form-manager",
         "version": "3.0.0",
         "schemaVersion": "3.0.0",
