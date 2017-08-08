@@ -14,7 +14,6 @@ use amimpact\formmanager\variables\Forms;
 
 use Craft;
 use craft\base\Plugin;
-use craft\events\DefineComponentsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\helpers\UrlHelper;
 use craft\web\twig\variables\CraftVariable;
@@ -143,8 +142,9 @@ class FormManager extends Plugin
      */
     private function _registerVariables()
     {
-        Event::on(CraftVariable::class, CraftVariable::EVENT_DEFINE_COMPONENTS, function(DefineComponentsEvent $event) {
-            $event->components['formmanager'] = Forms::class;
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
+            $variable = $event->sender;
+            $variable->set('formmanager', Forms::class);
         });
     }
 }
