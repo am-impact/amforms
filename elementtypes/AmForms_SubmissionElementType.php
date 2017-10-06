@@ -211,6 +211,7 @@ class AmForms_SubmissionElementType extends BaseElementType
         return array(
             'order'      => array(AttributeType::String, 'default' => 'dateCreated desc'),
             'title'      => AttributeType::String,
+            'authorId'   => AttributeType::Number,
             'formId'     => AttributeType::Number,
             'formHandle' => AttributeType::String
         );
@@ -237,6 +238,7 @@ class AmForms_SubmissionElementType extends BaseElementType
     public function modifyElementsQuery(DbCommand $query, ElementCriteriaModel $criteria)
     {
         $query->addSelect('submissions.id,
+                           submissions.authorId,
                            submissions.ipAddress,
                            submissions.userAgent,
                            submissions.submittedFrom,
@@ -250,6 +252,9 @@ class AmForms_SubmissionElementType extends BaseElementType
 
         if ($criteria->id) {
             $query->andWhere(DbHelper::parseParam('submissions.id', $criteria->id, $query->params));
+        }
+        if ($criteria->authorId) {
+            $query->andWhere(DbHelper::parseParam('submissions.authorId', $criteria->authorId, $query->params));
         }
         if ($criteria->formId) {
             $query->andWhere(DbHelper::parseParam('submissions.formId', $criteria->formId, $query->params));

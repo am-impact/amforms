@@ -141,6 +141,14 @@ class AmForms_SubmissionsController extends BaseController
                 }
             }
         }
+        else {
+            // Possible user author?
+            $authorId = craft()->request->getPost('authorId');
+            if (is_array($authorId)) {
+                $authorId = current($authorId);
+            }
+            $submission->authorId = $authorId;
+        }
 
         // Add the form to the submission
         $submission->form = $form;

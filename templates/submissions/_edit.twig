@@ -11,6 +11,8 @@
     { label: 'Submissions'|t, url: url('amforms/submissions') }
 ] %}
 
+{% set userElementType = craft.elements.getElementType('User') %}
+
 {% if namespace is not defined %}{% set namespace = 'fields' %}{% endif %}
 
 {% block main %}
@@ -63,6 +65,17 @@
                 <p>{{ 'Form name'|t }}<br/><strong>{{ form.name }}</strong></p>
 
                 <p>{{ 'Submitted from'|t }}<br /><strong>{{ submission.submittedFrom }}</strong></p>
+                <hr>
+                {{ forms.elementSelectField({
+                    label: 'Author'|t,
+                    id: 'authorId',
+                    name: 'authorId',
+                    elementType: userElementType,
+                    elements: (submission.authorId ? [craft.users.id(submission.authorId).first()] : []),
+                    addButtonLabel: 'Select a user'|t,
+                    limit: 1,
+                    errors: submission.getErrors('authorId'),
+                }) }}
             </div>
         </div>
     </div>
