@@ -689,6 +689,32 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     }
                     $criteria->{$field->handle} = $setCriteria;
                     break;
+                case 'Date':
+
+                  $occurances = array_count_values( $export->criteria[ 'fields' ] );
+
+
+                  if ( isset( $occurances[ $field->id ] ) ) {
+                    $dateCriteria = array();
+
+                    // Multiple dates for field
+                    if ( $occurances[ $field->id ] > 1 ) {
+                      $dateCriteria = array( 'and' );
+
+                      foreach ( $export->criteria[ $field->id ] as $key => $value ) {
+                        $dateCriteria[] = $export->criteria[ $field->id . '-operator' ][ $key ] . ' ' . $value[ 'date' ];
+                      }
+
+                    // Single date for field
+                    } else {
+                      $dateCriteria = $export->criteria[ $field->id . '-operator' ][ 0 ] . ' ' . $export->criteria[ $field->id ][ 0 ][ 'date' ];
+                    }
+
+                    if ( !empty( $dateCriteria ) ) {
+                      $criteria->{$field->handle} = $dateCriteria;
+                    }
+                  }
+                  break;
             }
         }
 

@@ -140,11 +140,13 @@
                 <tbody>
                     {% if export.criteria|length and export.criteria.fields|length -%}
                         {% for criteriaKey, criteriaField in export.criteria.fields %}
+                            {% set givenValue = (attribute(attribute(export.criteria, criteriaField), criteriaKey) is defined ? attribute(attribute(export.criteria, criteriaField), criteriaKey) : null) %}
+
                             {% include 'amforms/exports/_fields/template' with {
                                 fields: exportFields,
                                 criteriaCounter: loop.index0,
                                 givenField: criteriaField,
-                                givenValue: (attribute(attribute(export.criteria, criteriaField), criteriaKey) is defined ? attribute(attribute(export.criteria, criteriaField), criteriaKey) : null)
+                                givenValue: givenValue
                             } %}
                         {% endfor %}
                     {% endif -%}
