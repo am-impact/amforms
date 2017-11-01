@@ -133,6 +133,8 @@ class FormManager extends Plugin
                 'form-manager' => '',
                 'form-manager/forms/new' => 'form-manager/forms/edit',
                 'form-manager/forms/edit/<formId:\d+>' => 'form-manager/forms/edit',
+                'form-manager/fields/new' => 'form-manager/fields/edit',
+                'form-manager/fields/edit/<fieldId:\d+>' => 'form-manager/fields/edit',
                 'settings/plugins/<handle>/<settingsType>' => 'plugins/edit-plugin-settings',
             ];
 

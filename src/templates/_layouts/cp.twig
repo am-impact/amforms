@@ -2,7 +2,7 @@
 
 {# Active subnav item #}
 {% if selectedSubnavItem is not defined %}
-    {% set selectedSubnavItem = craft.request.getSegment(2) %}
+    {% set selectedSubnavItem = craft.app.request.getSegment(2) %}
 {% endif %}
 
 {% if crumbs is not defined %}
