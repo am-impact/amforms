@@ -1,0 +1,48 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.lightswitchField({
+    label: 'Honeypot enabled'|t('form-manager'),
+    id: 'antispamHoneypotEnabled',
+    name: 'antispamHoneypotEnabled',
+    on: plugin.settings.antispamHoneypotEnabled,
+    instructions: 'Add a hidden field to the forms that could be filled out by spambots.'|t('form-manager'),
+    first: true
+}) }}
+{{ forms.textField({
+    label: 'Honeypot name'|t('form-manager'),
+    id: 'antispamHoneypotName',
+    name: 'antispamHoneypotName',
+    value: plugin.settings.antispamHoneypotName,
+    instructions: 'The name of the honeypot field.'|t('form-manager')
+}) }}
+<hr>
+{{ forms.lightswitchField({
+    label: 'Time check enabled'|t('form-manager'),
+    id: 'antispamTimeCheckEnabled',
+    name: 'antispamTimeCheckEnabled',
+    on: plugin.settings.antispamTimeCheckEnabled,
+    instructions: 'Check how long someone took to fill out a form.'|t('form-manager')
+}) }}
+{{ forms.textField({
+    label: 'Minimum time in seconds'|t('form-manager'),
+    id: 'antispamMinimumTimeInSeconds',
+    name: 'antispamMinimumTimeInSeconds',
+    value: plugin.settings.antispamMinimumTimeInSeconds,
+    instructions: 'The minimum amount of seconds that is required to fill out a form.'|t('form-manager')
+}) }}
+<hr>
+{{ forms.lightswitchField({
+    label: 'Duplicate check enabled'|t('form-manager'),
+    id: 'antispamDuplicateCheckEnabled',
+    name: 'antispamDuplicateCheckEnabled',
+    on: plugin.settings.antispamDuplicateCheckEnabled,
+    instructions: 'Check for duplications on submission.'|t('form-manager')
+}) }}
+<hr>
+{{ forms.lightswitchField({
+    label: 'Origin check enabled'|t('form-manager'),
+    id: 'antispamOriginCheckEnabled',
+    name: 'antispamOriginCheckEnabled',
+    on: plugin.settings.antispamOriginCheckEnabled,
+    instructions: 'Check the domain and user agent.'|t('form-manager')
+}) }}

@@ -1,0 +1,10 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+    label: 'Delimiter'|t('form-manager'),
+    id: 'exportDelimiter',
+    name: 'exportDelimiter',
+    value: plugin.settings.exportDelimiter,
+    instructions: 'Which character should be used as delimiter?'|t('form-manager'),
+    first: true
+}) }}

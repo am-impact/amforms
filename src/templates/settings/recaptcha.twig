@@ -1,0 +1,24 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.lightswitchField({
+    label: 'Google reCAPTCHA enabled'|t('form-manager'),
+    id: 'recaptchaEnabled',
+    name: 'recaptchaEnabled',
+    on: plugin.settings.recaptchaEnabled,
+    instructions: 'Use Google reCAPTCHA in forms.'|t('form-manager'),
+    first: true
+}) }}
+{{ forms.textField({
+    label: 'Site key'|t('form-manager'),
+    id: 'recaptchaSiteKey',
+    name: 'recaptchaSiteKey',
+    value: plugin.settings.recaptchaSiteKey,
+    instructions: 'Go to Google reCAPTCHA and register the site. Use the site key that is given.'|t('form-manager')
+}) }}
+{{ forms.textField({
+    label: 'Secret key'|t('form-manager'),
+    id: 'recaptchaSecretKey',
+    name: 'recaptchaSecretKey',
+    value: plugin.settings.recaptchaSecretKey,
+    instructions: 'Go to Google reCAPTCHA and register the site. Use the secret key that is given.'|t('form-manager')
+}) }}

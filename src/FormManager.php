@@ -74,6 +74,10 @@ class FormManager extends Plugin
                 'label' => Craft::t('form-manager', 'Forms'),
                 'url' => UrlHelper::cpUrl('form-manager/forms/'),
             ],
+            'notifications' => [
+                'label' => Craft::t('form-manager', 'Notifications'),
+                'url' => UrlHelper::cpUrl('form-manager/notifications/'),
+            ],
             'fields' => [
                 'label' => Craft::t('form-manager', 'Fields'),
                 'url' => UrlHelper::cpUrl('form-manager/fields/'),
@@ -129,6 +133,7 @@ class FormManager extends Plugin
                 'form-manager' => '',
                 'form-manager/forms/new' => 'form-manager/forms/edit',
                 'form-manager/forms/edit/<formId:\d+>' => 'form-manager/forms/edit',
+                'settings/plugins/<handle>/<settingsType>' => 'plugins/edit-plugin-settings',
             ];
 
             $event->rules = array_merge($event->rules, $rules);

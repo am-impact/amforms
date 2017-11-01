@@ -1,0 +1,46 @@
+{% requireAdmin %}
+
+{% extends "_layouts/cp" %}
+
+{% set crumbs = [
+    { label: "Settings"|t('app'), url: url('settings') },
+    { label: "Plugins"|t('app'), url: url('settings/plugins') },
+    { label: plugin.name, url: '#' }
+] %}
+
+{% set navItems = {
+    'general': { title: "General"|t('form-manager') },
+    'antispam': { title: "AntiSpam"|t('form-manager') },
+    'recaptcha': { title: "reCAPTCHA"|t('form-manager') },
+    'exports': { title: "Exports"|t('form-manager') },
+} %}
+{% set selectedItem = craft.app.request.getSegment(4) %}
+
+{% set title = plugin.name %}
+{% set docTitle = title ~ ' - ' ~ "Plugins"|t('app') %}
+
+{% set fullPageForm = true %}
+
+{% block sidebar %}
+    <nav>
+        <ul>
+            {% for id, item in navItems %}
+                {% if item.heading is defined %}
+                    <li class="heading"><span>{{ item.heading }}</span></li>
+                {% else %}
+                    <li><a href="{{ url('settings/plugins/form-manager/' ~ id) }}"{% if id == selectedItem %} class="sel"{% endif %}>{{ item.title }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <input type="hidden" name="action" value="plugins/save-plugin-settings">
+    <input type="hidden" name="pluginHandle" value="{{ plugin.handle }}">
+    {{ redirectInput(craft.app.request.pathInfo) }}
+
+    {% namespace 'settings' %}
+        {% block fields %}{% endblock %}
+    {% endnamespace %}
+{% endblock %}

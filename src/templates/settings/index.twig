@@ -1,33 +1,17 @@
-{% requireAdmin %}
+{% extends 'form-manager/_layouts/settings' %}
 
-{% extends "_layouts/cp" %}
+{% set settingsType = craft.app.request.getParam('settingsType') %}
 
-{% import "_includes/forms" as forms %}
-
-{% set crumbs = [
-    { label: "Settings"|t('app'), url: url('settings') },
-    { label: "Plugins"|t('app'), url: url('settings/plugins') }
-] %}
-
-{% set title = plugin.name %}
-{% set docTitle = title ~ ' - ' ~ "Plugins"|t('app') %}
-
-{% set fullPageForm = true %}
-
-{% block content %}
-    <input type="hidden" name="action" value="plugins/save-plugin-settings">
-    <input type="hidden" name="pluginHandle" value="{{ plugin.handle }}">
-    {{ redirectInput('settings/plugins') }}
-
-    {% namespace 'settings' %}
-        {{ forms.textField({
-            label: "Plugin name"|t('form-manager'),
-            instructions: "Plugin name for the end user."|t('form-manager'),
-            placeholder: "Form Manager"|t('form-manager'),
-            id: 'pluginName',
-            name: 'pluginName',
-            value: plugin.settings.pluginName,
-            first: true
-        }) }}
-    {% endnamespace %}
+{% block fields %}
+    {% if settingsType =='general' %}
+        {% include 'form-manager/settings/general' %}
+    {% elseif settingsType =='antispam' %}
+        {% include 'form-manager/settings/antispam' %}
+    {% elseif settingsType =='recaptcha' %}
+        {% include 'form-manager/settings/recaptcha' %}
+    {% elseif settingsType =='exports' %}
+        {% include 'form-manager/settings/exports' %}
+    {% else %}
+        {% redirect craft.app.request.pathInfo ~ '/general' %}
+    {% endif %}
 {% endblock %}

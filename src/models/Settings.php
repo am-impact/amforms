@@ -22,6 +22,28 @@ class Settings extends Model
     public $pluginName = '';
 
     /**
+     * Antispam settings.
+     */
+    public $antispamHoneypotEnabled = true;
+    public $antispamHoneypotName = 'yourssince1615';
+    public $antispamTimeCheckEnabled = true;
+    public $antispamMinimumTimeInSeconds = 3;
+    public $antispamDuplicateCheckEnabled = true;
+    public $antispamOriginCheckEnabled = true;
+
+    /**
+     * Google reCAPTCHA settings.
+     */
+    public $recaptchaEnabled = false;
+    public $recaptchaSiteKey = '';
+    public $recaptchaSecretKey = '';
+
+    /**
+     * Export settings.
+     */
+    public $exportDelimiter = ';';
+
+    /**
      * Returns the validation rules for attributes.
      *
      * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
@@ -31,7 +53,27 @@ class Settings extends Model
     public function rules()
     {
         return [
-            ['pluginName', 'string'],
+            [
+                [
+                    'pluginName',
+                    'antispamHoneypotName',
+                    'recaptchaSiteKey',
+                    'recaptchaSecretKey',
+                    'exportDelimiter'
+                ],
+                'string'
+            ],
+            [
+                [
+                    'antispamHoneypotEnabled',
+                    'antispamTimeCheckEnabled',
+                    'antispamDuplicateCheckEnabled',
+                    'antispamOriginCheckEnabled',
+                    'recaptchaEnabled'
+                ],
+                'boolean'
+            ],
+            ['antispamMinimumTimeInSeconds', 'number', 'integerOnly' => true],
         ];
     }
 }

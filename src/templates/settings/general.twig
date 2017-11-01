@@ -1,0 +1,11 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+    label: "Plugin name"|t('form-manager'),
+    instructions: "Plugin name for the end user."|t('form-manager'),
+    placeholder: "Form Manager"|t('form-manager'),
+    id: 'pluginName',
+    name: 'pluginName',
+    value: plugin.settings.pluginName,
+    first: true
+}) }}
