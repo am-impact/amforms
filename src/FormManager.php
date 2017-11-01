@@ -10,7 +10,7 @@
 namespace amimpact\formmanager;
 
 use amimpact\formmanager\models\Settings;
-use amimpact\formmanager\variables\Forms;
+use amimpact\formmanager\variables\General;
 
 use Craft;
 use craft\base\Plugin;
@@ -151,7 +151,7 @@ class FormManager extends Plugin
     {
         Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
             $variable = $event->sender;
-            $variable->set('formmanager', Forms::class);
+            $variable->set('formManager', General::class);
         });
     }
 }
