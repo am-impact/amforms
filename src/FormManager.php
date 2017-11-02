@@ -11,14 +11,12 @@ namespace amimpact\formmanager;
 
 use amimpact\formmanager\models\Settings;
 use amimpact\formmanager\variables\General;
-
 use Craft;
 use craft\base\Plugin;
 use craft\events\RegisterUrlRulesEvent;
 use craft\helpers\UrlHelper;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
-
 use yii\base\Event;
 
 /**
@@ -71,7 +69,7 @@ class FormManager extends Plugin
     /**
      * Returns the forms service.
      *
-     * @throws \yii\base\InvalidConfigException
+     * @return \amimpact\formmanager\services\Forms
      */
     public function getForms()
     {
