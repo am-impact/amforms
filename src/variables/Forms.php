@@ -13,13 +13,8 @@ use amimpact\formmanager\FormManager;
 
 class Forms
 {
-    public function getName()
+    public function getAll()
     {
-        return FormManager::$plugin->name;
-    }
-
-    public function getSubNav()
-    {
-        return FormManager::$plugin->getCpNavItem()['subnav'];
+        return [];
     }
 }

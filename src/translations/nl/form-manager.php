@@ -27,6 +27,8 @@ return [
     'Honeypot enabled' => 'Honeypot inschakelen',
     'Honeypot name' => 'Honeypot naam',
     'Minimum time in seconds' => 'Het minimum aantal seconden',
+    'New form' => 'Nieuw formulier',
+    'No forms exist yet.' => 'Er bestaan nog geen formulieren.',
     'Notifications' => 'Notificaties',
     'Origin check enabled' => 'Oorsprong controle inschakelen',
     'Plugin name' => 'Plugin naam',

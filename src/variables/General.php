@@ -10,10 +10,15 @@
 namespace amimpact\formmanager\variables;
 
 use amimpact\formmanager\FormManager;
-use amimpact\formmanager\variables\Forms;
-
 use yii\di\ServiceLocator;
 
+/**
+ * Class General
+ *
+ * @package amimpact\formmanager\variables
+ * @property null|string $name
+ * @property mixed       $subNav
+ */
 class General extends ServiceLocator
 {
     public function init()
@@ -23,11 +28,17 @@ class General extends ServiceLocator
         $this->set('forms', Forms::class);
     }
 
+    /**
+     * @return null|string
+     */
     public function getName()
     {
         return FormManager::$plugin->name;
     }
 
+    /**
+     * @return mixed
+     */
     public function getSubNav()
     {
         return FormManager::$plugin->getCpNavItem()['subnav'];

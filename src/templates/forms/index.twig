@@ -1,0 +1,42 @@
+{% extends 'form-manager/_layouts/cp' %}
+
+{% set forms = craft.formManager.forms.getAll() %}
+
+{% set extraPageHeaderHtml %}
+    <div class="buttons right">
+        <a class="submit btn add icon" href="{{ url('form-manager/forms/new') }}">{{ 'New form'|t('form-manager') }}</a>
+    </div>
+{% endset %}
+
+{% block content %}
+    <p id="noforms"{% if forms %} class="hidden"{% endif %}>
+        {{ "No forms exist yet."|t('form-manager') }}
+    </p>
+
+    {% if forms %}
+        <table id="forms" class="data fullwidth collapsible">
+            <thead>
+                <th scope="col">{{ "Name"|t('app') }}</th>
+                <th scope="col">{{ "Handle"|t('app') }}</th>
+                <td class="thin"></td>
+            </thead>
+            <tbody>
+                {% for form in forms %}
+                    <tr data-id="{{ form.id }}" data-name="{{ form.name|t('site') }}">
+                        <th scope="row" data-title="{{ 'Name'|t('app') }}"><a href="{{ url('amforms/forms/edit/' ~ form.id) }}">{{ form.name|t('site') }}</a></th>
+                        <td data-title="{{ 'Handle'|t('app') }}"><code>{{ form.handle }}</code></td>
+                        <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('app') }}" role="button"></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
+
+{% js %}
+    new Craft.AdminTable({
+        tableSelector: '#forms',
+        noItemsSelector: '#noforms',
+        deleteAction: 'form-manager/forms/delete-form'
+    });
+{% endjs %}

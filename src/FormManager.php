@@ -21,8 +21,18 @@ use craft\web\UrlManager;
 
 use yii\base\Event;
 
+/**
+ * Class FormManager
+ *
+ * @property Settings                             $settings The plugin's settings.
+ * @property \amimpact\formmanager\services\Forms $forms    The forms service.
+ * @method Settings getSettings()
+ */
 class FormManager extends Plugin
 {
+    /**
+     * @var FormManager
+     */
     public static $plugin;
 
     /**
@@ -54,9 +64,18 @@ class FormManager extends Plugin
         }
 
         // Register stuff
-        $this->_registerServices();
         $this->_registerRoutes();
         $this->_registerVariables();
+    }
+
+    /**
+     * Returns the forms service.
+     *
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getForms()
+    {
+        return $this->get('forms');
     }
 
     /**
@@ -107,18 +126,6 @@ class FormManager extends Plugin
     protected function createSettingsModel()
     {
         return new Settings();
-    }
-
-    /**
-     * Register our plugin's services.
-     *
-     * @return void
-     */
-    private function _registerServices()
-    {
-        $this->setComponents([
-            'general' => \amimpact\formmanager\services\General::class,
-        ]);
     }
 
     /**

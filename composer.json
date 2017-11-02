@@ -34,6 +34,9 @@
         "developerUrl": "http://www.am-impact.nl",
         "description": "Form manager in Craft.",
         "documentationUrl": "https://github.com/am-impact/amforms/blob/master/README.md",
+        "components": {
+            "forms": "amimpact\\formmanager\\services\\Forms"
+        },
         "class": "amimpact\\formmanager\\FormManager"
     }
 }

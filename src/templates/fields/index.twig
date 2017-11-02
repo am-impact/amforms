@@ -10,37 +10,37 @@
 
 {% block content %}
     <p id="nofields"{% if fields %} class="hidden"{% endif %}>
-            {{ "No fields exist yet."|t('app') }}
-        </p>
+        {{ "No fields exist yet."|t('app') }}
+    </p>
 
-        {% if fields %}
-            <table id="fields" class="data fullwidth collapsible">
-                <thead>
-                    <th scope="col">{{ "Name"|t('app') }}</th>
-                    <th scope="col">{{ "Handle"|t('app') }}</th>
-                    <th scope="col">{{ "Type"|t('app') }}</th>
-                    <td class="thin"></td>
-                </thead>
-                <tbody>
-                    {% for field in fields %}
-                        <tr data-id="{{ field.id }}" data-name="{{ field.name|t('site') }}">
-                            <th scope="row" data-title="{{ 'Name'|t('app') }}"><a href="{{ url('amforms/fields/edit/' ~ field.id) }}">{{ field.name|t('site') }}</a>
-                                {%- if field.required %} <span class="required"></span>{% endif -%}
-                            </th>
-                            <td data-title="{{ 'Handle'|t('app') }}"><code>{{ field.handle }}</code></td>
-                            <td data-title="{{ 'Type'|t('app') }}">
-                                {% if field is missing %}
-                                    <span class="error">{{ field.expectedType }}</span>
-                                {% else %}
-                                    {{ field.displayName() }}
-                                {% endif %}
-                            </td>
-                            <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('app') }}" role="button"></a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
+    {% if fields %}
+        <table id="fields" class="data fullwidth collapsible">
+            <thead>
+                <th scope="col">{{ "Name"|t('app') }}</th>
+                <th scope="col">{{ "Handle"|t('app') }}</th>
+                <th scope="col">{{ "Type"|t('app') }}</th>
+                <td class="thin"></td>
+            </thead>
+            <tbody>
+                {% for field in fields %}
+                    <tr data-id="{{ field.id }}" data-name="{{ field.name|t('site') }}">
+                        <th scope="row" data-title="{{ 'Name'|t('app') }}"><a href="{{ url('amforms/fields/edit/' ~ field.id) }}">{{ field.name|t('site') }}</a>
+                            {%- if field.required %} <span class="required"></span>{% endif -%}
+                        </th>
+                        <td data-title="{{ 'Handle'|t('app') }}"><code>{{ field.handle }}</code></td>
+                        <td data-title="{{ 'Type'|t('app') }}">
+                            {% if field is missing %}
+                                <span class="error">{{ field.expectedType }}</span>
+                            {% else %}
+                                {{ field.displayName() }}
+                            {% endif %}
+                        </td>
+                        <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('app') }}" role="button"></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock %}
 
 {% js %}
