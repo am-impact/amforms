@@ -130,7 +130,9 @@ class AmForms_AntispamService extends BaseApplicationComponent
 
         // Fire an 'onVerifyAntispam' event
         $event = new Event($this);
-        $this->onVerifyAntispam($event);
+        $this->onVerifyAntispam($event, array(
+            'formHandle' => $formHandle
+        ));
 
         // Is the event letting us now it was still spam?
         if (! $event->performAction) {
