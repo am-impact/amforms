@@ -21,6 +21,7 @@ class AmForms_SubmissionRecord extends BaseRecord
     public function defineAttributes()
     {
         return array(
+            'authorId'      => AttributeType::Number,
             'ipAddress'     => AttributeType::String,
             'userAgent'     => AttributeType::Mixed,
             'submittedFrom' => AttributeType::String

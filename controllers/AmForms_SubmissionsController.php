@@ -141,6 +141,14 @@ class AmForms_SubmissionsController extends BaseController
                 }
             }
         }
+        else {
+            // Possible user author?
+            $authorId = craft()->request->getPost('authorId');
+            if (is_array($authorId)) {
+                $authorId = current($authorId);
+            }
+            $submission->authorId = $authorId;
+        }
 
         // Add the form to the submission
         $submission->form = $form;
@@ -222,8 +230,21 @@ class AmForms_SubmissionsController extends BaseController
      */
     public function actionSaveSubmissionByAngular()
     {
-        $this->requirePostRequest();
-        $this->requireAjaxRequest();
+        // We need to allow additional request headers
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization");
+        header('Access-Control-Allow-Methods: POST, GET');
+
+        // Skip our checks when we get an OPTIONS request
+        if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+            throw new HttpException(200);
+        }
+
+        // Do we have POST data?
+        if (empty($_POST)) {
+            // Try to find it!
+            $_POST = json_decode(file_get_contents('php://input'), true);
+        }
 
         // Get the form
         $handle = craft()->request->getRequiredPost('handle');

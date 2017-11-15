@@ -10,9 +10,12 @@ class AmForms_SubmissionModel extends BaseElementModel
      */
     protected function defineAttributes()
     {
+        $currentUser = craft()->userSession->getUser();
+
         return array_merge(parent::defineAttributes(),
             array(
                 'id'            => AttributeType::Number,
+                'authorId'      => array(AttributeType::Number, 'default' => ($currentUser && $currentUser->id ? $currentUser->id : null)),
                 'form'          => AttributeType::Mixed,
                 'formId'        => AttributeType::Number,
                 'formName'      => AttributeType::String,
