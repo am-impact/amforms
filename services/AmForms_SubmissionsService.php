@@ -255,6 +255,7 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         }
 
         // Other email attributes
+        $replyTo = null;
         if ($form->notificationReplyToEmail) {
             $replyTo = $this->_translatedObjectPlusEnvironment($form->notificationReplyToEmail, $submission);
             if (! filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
