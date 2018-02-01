@@ -71,7 +71,7 @@
                     id: 'authorId',
                     name: 'authorId',
                     elementType: userElementType,
-                    elements: (submission.authorId ? [craft.users.id(submission.authorId).first()] : []),
+                    elements: (craft.users is null ? '' : (submission.authorId ? [craft.users.id(submission.authorId).first()] : [])),
                     addButtonLabel: 'Select a user'|t,
                     limit: 1,
                     errors: submission.getErrors('authorId'),
