@@ -1,5 +1,18 @@
 [
     {
+        "version": "1.8.0",
+        "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
+        "date": "2018-02-27T16:30:00+01:00",
+        "notes": [
+            "[Added] Added author for submissions.",
+            "[Added] Added verify antispam event.",
+            "[Improved] Display submission information in Craft's way.",
+            "[Improved] Allow requests from external sources e.g. mobile apps.",
+            "[Fixed] Fix submission recipients when using a field within the settings.",
+            "[Fixed] Fix reply to email address on empty"
+        ]
+    },
+    {
         "version": "1.7.0",
         "downloadUrl": "https://github.com/am-impact/amforms/archive/master.zip",
         "date": "2017-06-12T10:00:00+01:00",
