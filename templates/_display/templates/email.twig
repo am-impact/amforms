@@ -30,7 +30,9 @@
                         <td>
                             {% switch field.type %}
                                 {% case "Date" %}
-                                    {{ value|date('d-m-Y  H:i:s') }}
+                                    {% if value|length %}
+                                        {{ value|date('d-m-Y  H:i:s') }}
+                                    {% endif %}
 
                                 {% case "Lightswitch" %}
                                     {% if value == '1' %}
