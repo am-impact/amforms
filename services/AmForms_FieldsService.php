@@ -46,7 +46,7 @@ class AmForms_FieldsService extends BaseApplicationComponent
 
         return $fieldTypeGroups;
     }
-
+    
     /**
      * Get supported field types.
      *
@@ -54,7 +54,7 @@ class AmForms_FieldsService extends BaseApplicationComponent
      */
     public function getSupportedFieldTypes()
     {
-        return array(
+        $supportedFields = array(
             'AmForms_Hidden',
             'Assets',
             'Checkboxes',
@@ -66,5 +66,24 @@ class AmForms_FieldsService extends BaseApplicationComponent
             'RadioButtons',
             'AmForms_Email',
         );
+
+        return array_merge($supportedFields, $this->getCustomFieldTypes());
+    }
+
+    /**
+     * Get custom field types.
+     *
+     * @return array
+     */
+    public function getCustomFieldTypes()
+    {
+        $customFieldTypes = [];
+
+        foreach (craft()->plugins->call('amFormsCustomField') as $customFieldType) {
+            /* something happens here */
+            $customFieldTypes[] = $customFieldType;
+        }
+
+        return array_merge($customFieldTypes);
     }
 }
