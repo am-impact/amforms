@@ -46,7 +46,7 @@ class AmForms_FieldsService extends BaseApplicationComponent
 
         return $fieldTypeGroups;
     }
-    
+
     /**
      * Get supported field types.
      *
