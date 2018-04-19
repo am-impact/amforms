@@ -79,11 +79,12 @@ class AmForms_FieldsService extends BaseApplicationComponent
     {
         $customFieldTypes = [];
 
-        foreach (craft()->plugins->call('amFormsCustomField') as $customFieldType) {
-            /* something happens here */
-            $customFieldTypes[] = $customFieldType;
+        foreach (craft()->plugins->call('amFormsCustomFields') as $customFieldTypes) {
+            foreach ($customFieldTypes as $customFieldType) {
+                $customFieldTypes[] = $customFieldType;
+            }
         }
 
-        return array_merge($customFieldTypes);
+        return $customFieldTypes;
     }
 }
