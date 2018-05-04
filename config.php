@@ -21,6 +21,8 @@ return array(
             'name' => 'Bcc email address',
             'value' => '',
         ),
+    ),
+    'submissions' => array(
         array(
             'name' => 'Clean up submissions',
             'value' => true,

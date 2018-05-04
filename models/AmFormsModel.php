@@ -15,6 +15,7 @@ class AmFormsModel extends BaseModel
 
     // Setting types
     const SettingGeneral = 'general';
+    const SettingSubmissions = 'submissions';
     const SettingExport = 'export';
     const SettingAntispam = 'antispam';
     const SettingRecaptcha = 'recaptcha';

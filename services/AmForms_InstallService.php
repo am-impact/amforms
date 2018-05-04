@@ -13,6 +13,7 @@ class AmForms_InstallService extends BaseApplicationComponent
     {
         $this->_createContentTable();
         $this->_installGeneral();
+        $this->_installSubmissions();
         $this->_installExport();
         $this->_installAntiSpam();
         $this->_installRecaptcha();
@@ -98,6 +99,15 @@ class AmForms_InstallService extends BaseApplicationComponent
     {
         $settings = craft()->config->get('general', 'amforms');
         $this->installSettings($settings, AmFormsModel::SettingGeneral);
+    }
+
+    /**
+     * Install Submissions settings.
+     */
+    private function _installSubmissions()
+    {
+        $settings = craft()->config->get('submissions', 'amforms');
+        $this->installSettings($settings, AmFormsModel::SettingSubmissions);
     }
 
     /**

@@ -1,0 +1,21 @@
+{% extends 'amforms/_layouts/settings' %}
+
+{% set title = 'Submissions'|t %}
+
+{% block fields %}
+    {{ forms.lightswitchField({
+        label: submissions.cleanUpSubmissions.name|t,
+        id: submissions.cleanUpSubmissions.handle,
+        name: submissions.cleanUpSubmissions.handle,
+        on: submissions.cleanUpSubmissions.value,
+        instructions: 'Allow a cronjob to clean up submissions from a certain date.'|t,
+        first: true,
+    }) }}
+    {{ forms.textField({
+        label: submissions.cleanUpSubmissionsFrom.name|t,
+        id: submissions.cleanUpSubmissionsFrom.handle,
+        name: submissions.cleanUpSubmissionsFrom.handle,
+        value: submissions.cleanUpSubmissionsFrom.value,
+        instructions: 'The submissions that will be cleaned up are from when the cronjob gets triggered minus this given date.'|t
+    }) }}
+{% endblock %}

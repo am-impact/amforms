@@ -6,7 +6,7 @@ namespace Craft;
  */
 class AmForms_SubmissionsController extends BaseController
 {
-    protected $allowAnonymous = array('actionSaveSubmission', 'actionSaveSubmissionByAngular');
+    protected $allowAnonymous = array('actionSaveSubmission', 'actionSaveSubmissionByAngular', 'actionCleanUp');
 
     /**
      * Show submissions.
@@ -321,6 +321,39 @@ class AmForms_SubmissionsController extends BaseController
         $success = craft()->amForms_submissions->deleteSubmission($submission);
 
         $this->redirectToPostedUrl($submission);
+    }
+
+    /**
+     * Clean up submissions.
+     */
+    public function actionCleanUp()
+    {
+        $success = false;
+
+        // Can we clean up?
+        $cleanUp = (bool)craft()->amForms_settings->getSettingValue('cleanUpSubmissions', AmFormsModel::SettingSubmissions, true);
+        if ($cleanUp) {
+            // From when do we have to clean up?
+            $cleanUpFrom = craft()->amForms_settings->getSettingValue('cleanUpSubmissionsFrom', AmFormsModel::SettingSubmissions, '-4 weeks');
+
+            // Get accurate date (by UTC)
+            $now = new DateTime();
+            $cleanUpFromDate = $now->modify($cleanUpFrom);
+
+            // Get submissions
+            $submissionIds = craft()->db->createCommand()
+                ->select('id')
+                ->from('amforms_submissions')
+                ->where('dateCreated <= "' . $cleanUpFromDate->format(DateTime::MYSQL_DATETIME, 'UTC') . '"')
+                ->queryColumn();
+
+            // Delete them!
+            $success = craft()->elements->deleteElementById($submissionIds);
+        }
+
+        return $this->returnJson(array(
+            'success' => $success
+        ));
     }
 
     /**
