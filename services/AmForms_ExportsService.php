@@ -15,7 +15,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
 
     public function __construct()
     {
-        $this->_delimiter = craft()->amForms_settings->getSettingsValueByHandleAndType('delimiter', AmFormsModel::SettingExport, ';');
+        $this->_delimiter = craft()->amForms_settings->getSettingValue('delimiter', AmFormsModel::SettingExport, ';');
         $this->_ignoreMatrixMultipleRows = craft()->amForms_settings->isSettingValueEnabled('ignoreMatrixMultipleRows', AmFormsModel::SettingExport);
     }
 
@@ -185,7 +185,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     // Start task
                     $params = array(
                         'exportId'  => $exportRecord->id,
-                        'batchSize' => craft()->amForms_settings->getSettingsValueByHandleAndType('exportRowsPerSet', AmFormsModel::SettingExport, 100)
+                        'batchSize' => craft()->amForms_settings->getSettingValue('exportRowsPerSet', AmFormsModel::SettingExport, 100)
                     );
                     craft()->tasks->createTask('AmForms_Export', Craft::t('{form} export', array('form' => $form->name)), $params);
 
@@ -274,7 +274,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
             // Start task
             $params = array(
                 'exportId'  => $export->id,
-                'batchSize' => craft()->amForms_settings->getSettingsValueByHandleAndType('exportRowsPerSet', AmFormsModel::SettingExport, 100)
+                'batchSize' => craft()->amForms_settings->getSettingValue('exportRowsPerSet', AmFormsModel::SettingExport, 100)
             );
             craft()->tasks->createTask('AmForms_Export', Craft::t('{form} export', array('form' => $form->name)), $params);
 

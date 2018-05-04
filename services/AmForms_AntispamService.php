@@ -36,7 +36,7 @@ class AmForms_AntispamService extends BaseApplicationComponent
     public function render()
     {
         // Get AntiSpam settings
-        $antispamSettings = craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingAntispam);
+        $antispamSettings = craft()->amForms_settings->getSettingsByType(AmFormsModel::SettingAntispam);
 
         // Do we have proper settings?
         if ($antispamSettings) {
@@ -95,7 +95,7 @@ class AmForms_AntispamService extends BaseApplicationComponent
     public function verify($formHandle)
     {
         // Get AntiSpam settings
-        $antispamSettings = craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingAntispam);
+        $antispamSettings = craft()->amForms_settings->getSettingsByType(AmFormsModel::SettingAntispam);
 
         // Do we have proper settings?
         if ($antispamSettings) {

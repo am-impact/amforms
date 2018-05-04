@@ -21,6 +21,14 @@ return array(
             'name' => 'Bcc email address',
             'value' => '',
         ),
+        array(
+            'name' => 'Clean up submissions',
+            'value' => true,
+        ),
+        array(
+            'name' => 'Clean up submissions from',
+            'value' => '-4 weeks',
+        ),
     ),
     'export' => array(
         array(

@@ -16,7 +16,7 @@ class AmForms_RecaptchaService extends BaseApplicationComponent
     public function render()
     {
         // Get reCAPTCHA settings
-        $recaptchaSettings = craft()->amForms_settings->getAllSettingsByType(AmFormsModel::SettingRecaptcha);
+        $recaptchaSettings = craft()->amForms_settings->getSettingsByType(AmFormsModel::SettingRecaptcha);
 
         // Is reCAPTCHA enabled?
         if ($recaptchaSettings && $recaptchaSettings['googleRecaptchaEnabled']->value) {
@@ -55,7 +55,7 @@ class AmForms_RecaptchaService extends BaseApplicationComponent
         $captcha = craft()->request->getPost('g-recaptcha-response');
 
         // Get reCAPTCHA secret key
-        $secretKey = craft()->amForms_settings->getSettingsByHandleAndType('secretKey', AmFormsModel::SettingRecaptcha);
+        $secretKey = craft()->amForms_settings->getSettingByHandleAndType('secretKey', AmFormsModel::SettingRecaptcha);
         if (! $secretKey) {
             return false;
         }

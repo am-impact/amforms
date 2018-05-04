@@ -15,7 +15,7 @@ class AmFormsPlugin extends BasePlugin
     public function getName()
     {
         if (craft()->plugins->getPlugin('amforms')) {
-            $pluginName = craft()->amForms_settings->getSettingsByHandleAndType('pluginName', AmFormsModel::SettingGeneral);
+            $pluginName = craft()->amForms_settings->getSettingByHandleAndType('pluginName', AmFormsModel::SettingGeneral);
             if ($pluginName && $pluginName->value) {
                 return $pluginName->value;
             }

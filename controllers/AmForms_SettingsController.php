@@ -39,7 +39,7 @@ class AmForms_SettingsController extends BaseController
         $settingsType = $variables['settingsType'];
 
         // Do we have any settings?
-        $settings = craft()->amForms_settings->getAllSettingsByType($settingsType);
+        $settings = craft()->amForms_settings->getSettingsByType($settingsType);
         if (! $settings) {
             throw new Exception(Craft::t('There are no settings available for settings type “{type}”.', array('type' => $settingsType)));
         }
@@ -81,7 +81,7 @@ class AmForms_SettingsController extends BaseController
         $success = true;
 
         // Get all available settings for this type
-        $availableSettings = craft()->amForms_settings->getAllSettingsByType($type);
+        $availableSettings = craft()->amForms_settings->getSettingsByType($type);
 
         // Save each available setting
         foreach ($availableSettings as $setting) {

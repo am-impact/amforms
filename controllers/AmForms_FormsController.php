@@ -51,7 +51,7 @@ class AmForms_FormsController extends BaseController
         }
 
         // Fields per set setting
-        $fieldsPerSet = craft()->amForms_settings->getSettingsByHandleAndType('fieldsPerSet', AmFormsModel::SettingGeneral);
+        $fieldsPerSet = craft()->amForms_settings->getSettingByHandleAndType('fieldsPerSet', AmFormsModel::SettingGeneral);
         $fieldsPerSet = ($fieldsPerSet && is_numeric($fieldsPerSet->value)) ? (int) $fieldsPerSet->value : 8;
 
         // Get available fields with our context

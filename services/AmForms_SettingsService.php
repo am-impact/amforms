@@ -14,7 +14,7 @@ class AmForms_SettingsService extends BaseApplicationComponent
      *
      * @return AmForms_SettingModel
      */
-    public function getAllSettingsByType($type, $enabled = '*')
+    public function getSettingsByType($type, $enabled = '*')
     {
         $attributes = array(
             'type' => $type
@@ -30,18 +30,18 @@ class AmForms_SettingsService extends BaseApplicationComponent
         if ($settingRecords) {
             return AmForms_SettingModel::populateModels($settingRecords, 'handle');
         }
-        return null;
-    }
 
-    /**
-     * Get all settings.
-     *
-     * @return array
-     */
-    public function getAllSettings()
-    {
-        $settingRecords = AmForms_SettingRecord::model()->ordered()->findAll();
-        return AmForms_SettingModel::populateModels($settingRecords, 'handle');
+        // Try to find setting in config file
+        $settings = craft()->config->get($type, 'amforms');
+        if ($settings) {
+            // Install the settings
+            if (craft()->amForms_install->installSettings($settings, $type)) {
+                // Try to find the records once more
+                return $this->getSettingsByType($type, $enabled);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -52,7 +52,7 @@ class AmForms_SettingsService extends BaseApplicationComponent
      *
      * @return AmForms_SettingModel
      */
-    public function getSettingsByHandleAndType($handle, $type)
+    public function getSettingByHandleAndType($handle, $type)
     {
         $attributes = array(
             'type' => $type,
@@ -64,6 +64,17 @@ class AmForms_SettingsService extends BaseApplicationComponent
         if ($settingRecord) {
             return AmForms_SettingModel::populateModel($settingRecord);
         }
+
+        // Try to find setting in config file
+        $settings = craft()->config->get($type, 'amforms');
+        if ($settings) {
+            // Install the settings
+            if (craft()->amForms_install->installSettings($settings, $type)) {
+                // Try to find the record once more
+                return $this->getSettingByHandleAndType($handle, $type);
+            }
+        }
+
         return null;
     }
 
@@ -76,9 +87,9 @@ class AmForms_SettingsService extends BaseApplicationComponent
      *
      * @return mixed
      */
-    public function getSettingsValueByHandleAndType($handle, $type, $defaultValue)
+    public function getSettingValue($handle, $type, $defaultValue = null)
     {
-        $setting = $this->getSettingsByHandleAndType($handle, $type);
+        $setting = $this->getSettingByHandleAndType($handle, $type);
         if ($setting) {
             return $setting->value;
         }
@@ -93,7 +104,7 @@ class AmForms_SettingsService extends BaseApplicationComponent
      */
     public function isSettingValueEnabled($handle, $type)
     {
-        $setting = $this->getSettingsByHandleAndType($handle, $type);
+        $setting = $this->getSettingByHandleAndType($handle, $type);
         if (is_null($setting)) {
             return false;
         }

@@ -24,9 +24,23 @@ class AmFormsVariable
      *
      * @return mixed
      */
+    public function getSettingValue($handle, $type, $defaultValue = null)
+    {
+        return craft()->amForms_settings->getSettingValue($handle, $type, $defaultValue);
+    }
+
+    /**
+     * Get a setting value by their handle and type.
+     *
+     * @param string $handle
+     * @param string $type
+     * @param mixed  $defaultValue
+     *
+     * @return mixed
+     */
     public function getSettingsValueByHandleAndType($handle, $type, $defaultValue = null)
     {
-        return craft()->amForms_settings->getSettingsValueByHandleAndType($handle, $type, $defaultValue);
+        return $this->getSettingValue($handle, $type, $defaultValue);
     }
 
 

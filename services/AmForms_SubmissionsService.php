@@ -292,7 +292,7 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
         }
 
         // Add Bcc?
-        $bccEmailAddress = craft()->amForms_settings->getSettingsByHandleAndType('bccEmailAddress', AmFormsModel::SettingGeneral);
+        $bccEmailAddress = craft()->amForms_settings->getSettingByHandleAndType('bccEmailAddress', AmFormsModel::SettingGeneral);
         if ($bccEmailAddress && $bccEmailAddress->value) {
             $bccAddresses = ArrayHelper::stringToArray($bccEmailAddress->value);
             $bccAddresses = array_unique($bccAddresses);

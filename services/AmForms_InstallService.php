@@ -67,7 +67,7 @@ class AmForms_InstallService extends BaseApplicationComponent
 
         // Remove settings
         foreach ($settings as $settingName) {
-            $setting = craft()->amForms_settings->getSettingsByHandleAndType($this->_camelCase($settingName), $settingType);
+            $setting = craft()->amForms_settings->getSettingByHandleAndType($this->_camelCase($settingName), $settingType);
             if ($setting) {
                 craft()->amForms_settings->deleteSettingById($setting->id);
             }
