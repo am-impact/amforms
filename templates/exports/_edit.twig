@@ -168,7 +168,7 @@
                     formId: {{ currentForm.id }}
                 });
                 $('#formId').on('change', function() {
-                    window.location = '?formId=' + $(this).val();
+                    window.location = window.location.pathname + '?formId=' + $(this).val();
                 });
             {% endset %}
             {% includeJs js %}
