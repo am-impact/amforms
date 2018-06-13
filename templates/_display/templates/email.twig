@@ -31,7 +31,12 @@
                             {% switch field.type %}
                                 {% case "Date" %}
                                     {% if value|length %}
-                                        {{ value|date('d-m-Y  H:i:s') }}
+                                        {% if field.settings['showDate'] is defined and field.settings.showDate %}
+                                            {{ value|date('d-m-Y') }}
+                                        {% endif %}
+                                        {% if field.settings['showTime'] is defined and field.settings.showTime %}
+                                            {{ value|date('H:i') }}
+                                        {% endif %}
                                     {% endif %}
 
                                 {% case "Lightswitch" %}
