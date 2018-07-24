@@ -114,6 +114,7 @@ class AmForms_FormModel extends BaseElementModel
             $layoutFields = $this->getFieldLayout()->getFields();
             foreach ($layoutFields as $layoutField) {
                 $field = $layoutField->getField();
+                $field->required = $layoutField->required;
                 $this->_fields[ $field->handle ] = $field;
             }
         }
