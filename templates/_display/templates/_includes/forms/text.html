@@ -26,6 +26,6 @@
 	{%- if autocomplete is not defined or not autocomplete %} autocomplete="off"{% endif %}
 	{%- if disabled is defined and disabled %} disabled {% endif %}
 	{%- if readonly is defined and readonly %} readonly {% endif %}
-	{%- if placeholder is defined %} placeholder="{{ placeholder }}"{% endif %}
+	{%- if placeholder is defined %} placeholder="{{ placeholder | t }}"{% endif %}
     {%- if required is defined and required %} required {% endif %}>
 {%- if type == 'password' %}</div>{% endif %}
