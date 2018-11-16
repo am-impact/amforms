@@ -81,11 +81,6 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
     {
         $isNewSubmission = ! $submission->id;
 
-        // If we don't need to save it, return a success for other events
-        if ($isNewSubmission && ! $submission->form->submissionEnabled) {
-            return true;
-        }
-
         // Get the submission record
         if ($submission->id) {
             $submissionRecord = AmForms_SubmissionRecord::model()->findById($submission->id);
@@ -126,6 +121,13 @@ class AmForms_SubmissionsService extends BaseApplicationComponent
                     $oldContentTable = craft()->content->contentTable;
                     craft()->content->fieldContext = $submission->getFieldContext();
                     craft()->content->contentTable = $submission->getContentTable();
+
+                    // If we don't need to save it, validate the content and return based on errors or no errors
+                    if ($isNewSubmission && ! $submission->form->submissionEnabled) {
+                        craft()->content->validateContent($submission);
+                        $submission->addErrors($submission->getContent()->getErrors());
+                        return empty($submission->getErrors());
+                    }
 
                     // Save the element!
                     if (craft()->elements->saveElement($submission)) {
