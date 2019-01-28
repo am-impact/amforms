@@ -746,7 +746,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
 
                 case 'Checkboxes':
                 case 'MultiSelect':
-                    if (isset($submission->$fieldHandle) && count($submission->$fieldHandle)) {
+                    if (isset($submission->$fieldHandle) && (is_array($submission->$fieldHandle) || (is_object($submission->$fieldHandle) && $submission->$fieldHandle instanceof \Countable)) && count($submission->$fieldHandle)) {
                         $fieldExportData = array();
                         foreach ($submission->$fieldHandle as $fieldData) {
                             $fieldExportData[] = $fieldData->value;
@@ -815,7 +815,7 @@ class AmForms_ExportsService extends BaseApplicationComponent
                     break;
 
                 case 'Table':
-                    if (isset($submission->$fieldHandle) && count($submission->$fieldHandle)) {
+                    if (isset($submission->$fieldHandle) && (is_array($submission->$fieldHandle) || (is_object($submission->$fieldHandle) && $submission->$fieldHandle instanceof \Countable)) && count($submission->$fieldHandle)) {
                         $fieldExportData = array();
                         foreach ($submission->$fieldHandle as $fieldData) {
                             foreach ($fieldData as $columnKey => $columnValue) {
