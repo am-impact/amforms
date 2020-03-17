@@ -50,6 +50,15 @@ By default, the anti-spam is activated for your forms, but there's also an optio
 
 ![reCAPTCHA](https://raw.githubusercontent.com/am-impact/am-impact.github.io/master/img/readme/amforms/recaptcha.png "reCAPTCHA")
 
+### Automatic clean up
+
+To automatically delete old submissions, enable **Clean up submissions**, configure the threshold (e.g. `-4 weeks`) and set up a cronjob to periodically call `https://<yourDomain>/actions/amForms/submissions/cleanUp`.
+
+**Example `/etc/crontab` entry** (cleans up every day at 1:23 AM):
+
+```
+23 1 * * * root curl -s https://<yourDomain>/actions/amForms/submissions/cleanUp &>> /var/log/amforms-cleanup.log
+```
 
 ## Display your forms
 
