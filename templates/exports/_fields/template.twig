@@ -103,6 +103,44 @@
                             value: fieldValue
                         }) }}
 
+                    {% case 'Date' %}
+                        {# If we are dealing with a date field we need to do a little extra processign #}
+                        {% if fieldValue is iterable and 'date' in fieldValue|keys %}
+                          {% set fieldValue = {
+                            date: attribute( fieldValue, 'date' ) ?? null,
+                            time: attribute( attribute( attribute( export.criteria, criteriaField ~ '-time' ), criteriaKey ), 'time' ) ?? null,
+                            operator: attribute( attribute( export.criteria, criteriaField ~ '-operator' ), criteriaKey ) ?? null,
+                          } %}
+                        {% endif %}
+
+                        {# Operator #}
+                        {{ forms.select({
+                            id: form.id ~ criteriaCounter ~ field.handle ~ '-operator',
+                            name: form.id ~ '[criteria][' ~ field.id ~ '-operator][]',
+                            options: [
+                              { label: '=', value: '=' },
+                              { label: '>', value: '>' },
+                              { label: '>=', value: '>=' },
+                              { label: '<', value: '<' },
+                              { label: '<=', value: '<=' },
+                              { label: '!=', value: '!=' },
+                            ],
+                            value: fieldValue.operator ?? ''
+                        }) }}
+
+                        {# Date #}
+
+                        {{ forms.date({
+                            id: form.id ~ criteriaCounter ~ field.handle,
+                            name: form.id ~ '[criteria][' ~ field.id ~ '][]',
+                            value: fieldValue.date ?? ''
+                        }) }}
+                        {{ forms.time({
+                            id: form.id ~ criteriaCounter ~ field.handle ~ '-time',
+                            name: form.id ~ '[criteria][' ~ field.id ~ '-time][]',
+                            value: fieldValue.time ?? ''
+                        }) }}
+
                     {% default %}
                         {{ 'Not supported yet'|t }}
 

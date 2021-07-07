@@ -41,6 +41,24 @@ class AmForms_ExportsController extends BaseController
             if (! empty($variables['exportId'])) {
                 $variables['export'] = craft()->amForms_exports->getExportById($variables['exportId']);
 
+                if ( isset( $variables[ 'export' ][ 'criteria' ] ) and !empty( $variables[ 'export' ][ 'criteria' ] ) ) {
+                  foreach ( $variables[ 'export' ][ 'criteria' ] as $key => $value ) {
+                    if ( $key != 'fields' ) {
+
+                      if ( !empty( $value ) and isset( $value[0] ) and !empty( $value[0] ) and is_array( $value[0] ) and in_array( 'date', array_keys( $value[0] ) ) ) {
+                        foreach ( $value as $subKey => $subValue ) {
+                          $tmpCriteria = $variables[ 'export' ][ 'criteria' ];
+                          $tmpCriteria[ $key ][ $subKey ][ 'date' ] = DateTime::createFromString( $subValue[ 'date' ] );
+
+                          $variables[ 'export' ]->setAttributes( array(
+                            'criteria' => $tmpCriteria
+                          ) );
+                        }
+                      }
+                    }
+                  }
+                }
+
                 if (! $variables['export']) {
                     throw new Exception(Craft::t('No export exists with the ID “{id}”.', array('id' => $variables['exportId'])));
                 }
@@ -131,6 +149,18 @@ class AmForms_ExportsController extends BaseController
                         }
                     }
                 }
+            }
+
+            // Reformat date fields for better usability
+            foreach ($criteria['fields'] as $key => $field) {
+              if ( isset( $criteria[ $field ] ) and !empty( $criteria[ $field ] ) and is_array( $criteria[ $field ][ $key ] ) and in_array( 'date', array_keys( $criteria[ $field ][ $key ] ) ) ) {
+                $localeData = craft()->i18n->getLocaleData(craft()->language);
+                $dateFormatter = $localeData->getDateFormatter();
+                $format = $dateFormatter->getDatepickerPhpFormat();
+
+                $criteria[ $field ][ $key ][ 'date' ] = DateTime::createFromFormat( '!' . $format, $criteria[ $field ][ $key ][ 'date' ], craft()->timezone )
+                                  ->format( 'Y-m-d' ) . ' ' . ( $criteria[ $field . '-time' ][ $key ][ 'time' ] ? $criteria[ $field . '-time' ][ $key ][ 'time' ] : '00:00' );
+              }
             }
 
             // Remove unnecessary criteria
